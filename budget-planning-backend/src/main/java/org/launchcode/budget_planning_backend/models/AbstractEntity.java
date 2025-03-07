@@ -1,10 +1,8 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@MappedSuperclass
 public class AbstractEntity extends BaseAbstractEntity{
 
     @NotBlank
