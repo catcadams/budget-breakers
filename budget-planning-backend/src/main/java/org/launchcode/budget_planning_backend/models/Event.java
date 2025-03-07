@@ -81,11 +81,11 @@ public class Event extends AbstractEntity{
         this.earnings = earnings;
     }
 
-    public @NotNull(message = "Group is required") Group getGroup() {
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(@NotNull(message = "Group is required") Group group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 }

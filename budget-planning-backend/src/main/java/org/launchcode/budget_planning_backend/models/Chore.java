@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotNull;
 
 public class Chore extends AbstractEntity{
 
-    private User user = null;
+    private User user;
 
-    private Event event = null;
+    private Event event;
 
-    private Contributions contribution = null;
+    private Contributions contribution;
 
     @NotNull
     @NotBlank(message = "A group selection is required.")

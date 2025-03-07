@@ -47,6 +47,8 @@ public class User extends BaseAbstractEntity{
         nextId++;
     }
 
+    public User(){}
+
     public String getFirstName() {
         return firstName;
     }
@@ -87,11 +89,11 @@ public class User extends BaseAbstractEntity{
         this.password = password;
     }
 
-    public @NotNull @Email String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@NotNull @Email String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 

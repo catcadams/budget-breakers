@@ -11,10 +11,14 @@ public class Group extends AbstractEntity{
 
     private final List<Event> events = new ArrayList<>();
 
+    private  final List<Chore> chores = new ArrayList<>();
+
     public Group(List<User> users, List<Event> events){
         this.setId(nextId);
         nextId++;
     }
+
+    public Group(){}
 
     public List<User> getUsers() {
         return users;
@@ -24,4 +28,7 @@ public class Group extends AbstractEntity{
         return events;
     }
 
+    public List<Chore> getChores() {
+        return chores;
+    }
 }

@@ -2,7 +2,7 @@ package org.launchcode.budget_planning_backend.models;
 
 import java.util.Objects;
 
-public class BaseAbstractEntity {
+public abstract class BaseAbstractEntity {
 
     private int id;
 
