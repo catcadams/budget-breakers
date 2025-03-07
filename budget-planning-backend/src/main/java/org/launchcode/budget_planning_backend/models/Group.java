@@ -1,20 +1,27 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 public class Group extends AbstractEntity{
 
-    @ManyToMany(mappedBy = "group")
+    private static int nextId = 1;
+
     private final List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group")
     private final List<Event> events = new ArrayList<>();
 
-    public Group(){}
+    public Group(List<User> users, List<Event> events){
+        this.setId(nextId);
+        nextId++;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
 }

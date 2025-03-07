@@ -1,17 +1,14 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
-@Entity
 public class Event extends AbstractEntity{
+
+    private static int nextId = 1;
 
     @NotNull
     @NotBlank(message = "Budget amount is required")
@@ -24,16 +21,23 @@ public class Event extends AbstractEntity{
 
     private Date date;
 
-    @Enumerated(EnumType.STRING)
     private Status status;
 
     private double earnings;
 
-    @ManyToOne
     @NotNull(message = "Group is required")
     private Group group;
 
-
+    public Event(double budget, String location, Date date, Status status, double earnings, Group group) {
+        this.budget = budget;
+        this.location = location;
+        this.date = date;
+        this.status = status;
+        this.earnings = earnings;
+        this.group = group;
+        this.setId(nextId);
+        nextId++;
+    }
 
     public Event(){}
 
@@ -75,5 +79,13 @@ public class Event extends AbstractEntity{
 
     public void setEarnings(double earnings) {
         this.earnings = earnings;
+    }
+
+    public @NotNull(message = "Group is required") Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(@NotNull(message = "Group is required") Group group) {
+        this.group = group;
     }
 }
