@@ -24,13 +24,11 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Date of Birth is required")
     private Date dateOfBirth;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
+    @NotNull
     private String username;
 
     @NotNull
-    @NotBlank(message = "Password is required")
-    private String password;
+    private String pwHash;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
@@ -75,18 +73,6 @@ public class User extends BaseAbstractEntity{
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
