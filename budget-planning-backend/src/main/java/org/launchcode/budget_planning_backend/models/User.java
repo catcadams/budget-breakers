@@ -3,7 +3,7 @@ package org.launchcode.budget_planning_backend.models;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,18 +34,24 @@ public class User extends BaseAbstractEntity{
     @Email(message = "Invalid Email.Try Again")
     private String email;
 
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
-        this.password = password;
+        this.pwHash = encoder.encode(password);
         this.email = email;
         this.setId(nextId);
         nextId++;
     }
 
     public User(){}
+
+    public User(String username, String password) {
+        super();
+    }
 
     public String getFirstName() {
         return firstName;
@@ -81,6 +87,10 @@ public class User extends BaseAbstractEntity{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 
 }
