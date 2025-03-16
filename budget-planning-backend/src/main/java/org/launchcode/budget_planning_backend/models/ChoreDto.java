@@ -1,7 +1,7 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class ChoreDto extends AbstractEntity {
 
@@ -9,12 +9,10 @@ public class ChoreDto extends AbstractEntity {
 
     //private Event event;
 
-    //private Contributions contribution;
-
     //private Group group;
 
-    //private String status;
-
+    @Positive(message = "Amount must be a positive number.")
+    @NotNull(message = "Amount is required.")
     private Double amountOfEarnings;
 
     public ChoreDto() {}
@@ -27,19 +25,9 @@ public class ChoreDto extends AbstractEntity {
 
     //public void setEvent(Event event) {this.event = event;}
 
-    //public Contributions getContribution() {return contribution;}
-
-//    public void setContribution(Contributions contribution) {
-//        this.contribution = contribution;
-//    }
-
     //public Group getGroup() {return group;}
 
     //public void setGroup(Group group) {this.group = group;}
-
-    //public String getStatus() {return status;}
-
-    //public void setStatus(String status) {this.status = status;}
 
     public Double getAmountOfEarnings() {return amountOfEarnings;}
 
