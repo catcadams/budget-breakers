@@ -30,12 +30,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-task startFrontend(type: Exec) {
-	workingDir '../budget-planning-frontend'
-	commandLine 'npm', 'run', 'dev'
-}
-
-task startBackend(type: JavaExec) {
-	mainClass = 'BudgetPlanningBackendApplication'
-}
