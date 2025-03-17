@@ -13,6 +13,12 @@ export default function RegisterForm () {
         setInputs(values => ({...values, [name]: value}))
       }
 
+  let navigate = useNavigate();
+    const routeChange = () =>{
+      let path = `/login`;
+      navigate(path);
+      };
+
       const handleSubmit = (event) => {
         event.preventDefault();
         fetch("http://localhost:8080/user/register", {
@@ -25,13 +31,9 @@ export default function RegisterForm () {
                     .catch((error) => {
                         alert("error", error);
                     });
-            }
 
-let navigate = useNavigate();
-  const routeChange = () =>{
-    let path = `/login`;
-    navigate(path);
-    };
+                routeChange;
+            }
 
       return (
         <form onSubmit={handleSubmit}>
