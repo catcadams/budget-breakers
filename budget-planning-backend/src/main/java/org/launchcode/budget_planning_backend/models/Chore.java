@@ -13,7 +13,7 @@ public class Chore extends AbstractEntity {
 
     private Group group;
 
-    private String status;
+    private Status status;
 
     private Double amountOfEarnings;
 
@@ -36,11 +36,11 @@ public class Chore extends AbstractEntity {
         this.amountOfEarnings = amountOfEarnings;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

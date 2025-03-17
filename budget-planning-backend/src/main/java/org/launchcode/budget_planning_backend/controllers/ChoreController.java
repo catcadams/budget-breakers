@@ -20,7 +20,7 @@ public class ChoreController {
     @PostMapping(value="/create")
     public Chore postChore(@Valid @RequestBody ChoreDto choreDto) {
         Chore chore = createChore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
-        chore.setStatus(Status.OPEN.getValue());
+        chore.setStatus(Status.OPEN);
         logger.info("New Chore created: ".concat(chore.toString()));
         return chore;
     }
