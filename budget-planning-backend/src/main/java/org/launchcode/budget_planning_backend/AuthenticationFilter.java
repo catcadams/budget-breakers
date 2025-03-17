@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
-import org.launchcode.budget_planning_backend.data.UserRepository;
+//import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,8 +15,8 @@ import java.util.List;
 
 public class AuthenticationFilter implements HandlerInterceptor {
 
-    @Autowired
-    UserRepository userRepository;
+   // @Autowired
+//    UserRepository userRepository;
 
     @Autowired
     AuthenticationController authenticationController;
@@ -34,12 +34,12 @@ public class AuthenticationFilter implements HandlerInterceptor {
         }
 
         HttpSession session = request.getSession();
-        User user = authenticationController.getUserFromSession(session);
+        //        User user = authenticationController.getUserFromSession(session);
 
         // The user is logged in
-        if (user != null) {
-            return true;
-        }
+//        if (user != null) {
+//            return true;
+//        }
 
         // The user is NOT logged in
         response.sendRedirect("/login");
