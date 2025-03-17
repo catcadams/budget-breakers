@@ -20,9 +20,8 @@ export default function RegisterForm () {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(inputs),
                 })
-                    .then((response) => {
-                        alert("response", response);
-                    })
+            .then(response => response.text())
+            .then(data => alert(data))
                     .catch((error) => {
                         alert("error", error);
                     });
