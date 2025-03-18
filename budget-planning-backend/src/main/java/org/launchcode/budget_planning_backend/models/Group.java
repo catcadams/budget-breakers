@@ -1,11 +1,12 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.Entity;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Group extends AbstractEntity{
-
-    private static int nextId = 1;
 
     private final List<User> users = new ArrayList<>();
 
@@ -14,8 +15,6 @@ public class Group extends AbstractEntity{
     private  final List<Chore> chores = new ArrayList<>();
 
     public Group(List<User> users, List<Event> events){
-        this.setId(nextId);
-        nextId++;
     }
 
     public Group(){}

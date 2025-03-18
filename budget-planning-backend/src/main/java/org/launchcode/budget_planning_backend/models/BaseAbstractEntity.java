@@ -1,17 +1,20 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class BaseAbstractEntity {
 
+    @Id
+    @GeneratedValue
     private int id;
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,9 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class User extends BaseAbstractEntity{
-
-    private static int nextId = 1;
 
     private final List<Group> groups = new ArrayList<>();
 
@@ -43,8 +43,6 @@ public class User extends BaseAbstractEntity{
         this.username = username;
         this.password = password;
         this.email = email;
-        this.setId(nextId);
-        nextId++;
     }
 
     public User(){}

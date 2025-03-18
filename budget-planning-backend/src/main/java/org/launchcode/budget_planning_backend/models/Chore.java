@@ -1,8 +1,10 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Entity
 public class Chore extends AbstractEntity{
 
     private User user;
@@ -21,7 +23,13 @@ public class Chore extends AbstractEntity{
     @NotBlank(message = "Amount of earnings for this chore is required.")
     private Double amountOfEarnings;
 
-    public Chore() {}
+    public Chore(String name, String description, Double amountOfEarnings) {
+        setName(name);
+        setDescription(description);
+        this.amountOfEarnings = amountOfEarnings;
+    }
+
+    public Chore(){}
 
     public User getUser() {return user;}
 

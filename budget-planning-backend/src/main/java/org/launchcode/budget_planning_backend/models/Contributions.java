@@ -1,9 +1,11 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
+@Entity
 public class Contributions extends BaseAbstractEntity{
 
     @NotNull
@@ -20,6 +22,13 @@ public class Contributions extends BaseAbstractEntity{
 
     @NotNull
     private String status;
+
+    public Contributions(User user, Double amountOfContribution, Date date, Event event) {
+        this.user = user;
+        this.amountOfContribution = amountOfContribution;
+        this.date = date;
+        this.event = event;
+    }
 
     public Contributions() {}
 
@@ -44,4 +53,5 @@ public class Contributions extends BaseAbstractEntity{
     public String getStatus() {return status;}
 
     public void setStatus(String status) {this.status = status;}
+
 }
