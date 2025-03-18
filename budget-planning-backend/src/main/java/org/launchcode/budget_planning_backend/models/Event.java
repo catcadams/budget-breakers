@@ -28,7 +28,9 @@ public class Event extends AbstractEntity{
     @NotNull(message = "Group is required")
     private Group group;
 
-    public Event(double budget, String location, Date date, Status status, double earnings, Group group) {
+    public Event(String name, double budget, String location, String description, Date date, Status status, double earnings, Group group) {
+        this.setName(name);
+        this.setDescription(description);
         this.budget = budget;
         this.location = location;
         this.date = date;
