@@ -1,6 +1,9 @@
 package org.launchcode.budget_planning_backend.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +11,18 @@ import java.util.List;
 @Entity
 public class Group extends AbstractEntity{
 
+    @ManyToMany
     private final List<User> users = new ArrayList<>();
 
+    @OneToMany
     private final List<Event> events = new ArrayList<>();
 
-    private  final List<Chore> chores = new ArrayList<>();
+    @OneToMany
+    private final List<Chore> chores = new ArrayList<>();
 
-    public Group(List<User> users, List<Event> events){
+    public Group(String name, String description){
+        setName(name);
+        setDescription(description);
     }
 
     public Group(){}
@@ -29,5 +37,17 @@ public class Group extends AbstractEntity{
 
     public List<Chore> getChores() {
         return chores;
+    }
+
+    public void addUsers(User user) {
+        this.users.add(user);
+    }
+
+    public void addEvents(Event event) {
+        this.events.add(event);
+    }
+
+    public void addChores(Chore chore) {
+        this.chores.add(chore);
     }
 }

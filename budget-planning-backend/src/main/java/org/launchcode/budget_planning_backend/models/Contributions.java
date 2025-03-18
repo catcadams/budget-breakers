@@ -1,6 +1,9 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
@@ -8,6 +11,7 @@ import java.util.Date;
 @Entity
 public class Contributions extends BaseAbstractEntity{
 
+    @OneToOne(cascade = CascadeType.ALL)
     @NotNull
     private User user;
 
@@ -17,6 +21,7 @@ public class Contributions extends BaseAbstractEntity{
     @NotNull
     private Date date;
 
+    @ManyToOne
     @NotNull
     private Event event;
 

@@ -1,25 +1,27 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Chore extends AbstractEntity{
 
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
+    @ManyToOne
     private Event event;
 
+    @OneToOne(cascade = CascadeType.ALL)
     private Contributions contribution;
 
-    @NotNull
+    @ManyToOne
     @NotBlank(message = "A group selection is required.")
     private Group group;
 
     private String status;
 
-    @NotNull
     @NotBlank(message = "Amount of earnings for this chore is required.")
     private Double amountOfEarnings;
 

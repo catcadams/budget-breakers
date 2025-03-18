@@ -1,20 +1,22 @@
 package org.launchcode.budget_planning_backend.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Event extends AbstractEntity{
 
-    @NotNull
     @NotBlank(message = "Budget amount is required")
     private double budget;
 
-    @NotNull
     @NotBlank(message = "Location is required")
     @Size(min = 4, max = 50 , message = "Location must be  between 4 and 50 characters")
     private String location;
@@ -25,8 +27,12 @@ public class Event extends AbstractEntity{
 
     private double earnings;
 
+    @ManyToOne
     @NotNull(message = "Group is required")
     private Group group;
+
+    @OneToMany
+    private final List<Contributions> contributions = new ArrayList<>();
 
     public Event(double budget, String location, Date date, Status status, double earnings, Group group) {
         this.budget = budget;
@@ -85,5 +91,13 @@ public class Event extends AbstractEntity{
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public List<Contributions> getContributions() {
+        return contributions;
+    }
+
+    public void addContribution(Contributions contribution) {
+        this.contributions.add(contribution);
     }
 }
