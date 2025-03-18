@@ -1,114 +1,172 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactDOM from 'react-dom/client';
 import '../index.css'
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
 
 export default function RegisterForm () {
 
-    const [inputs, setInputs] = useState({});
+// const [user, setUser] = useState({ name: '', email: '' });
+    const initialValues = { firstName: "", lastName: "", dateOfBirth: "", email: "", username: "", password: "", confirmPassword: "" };
+    const [formValues, setFormValues] = useState(initialValues);
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmit, setIsSubmit] = useState(false);
 
-      const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}))
-      }
 
-  let navigate = useNavigate();
-    const routeChange = () =>{
-      let path = `/login`;
-      navigate(path);
-      };
+       const handleSubmit = (event) => {
+          event.preventDefault();
+          setFormErrors(validate(formValues));
+          setIsSubmit(true);
+          fetch("http://localhost:8080/user/register", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(user),
+    })
+//     .then(response => response.json())
+//     .then(data => console.log('User created:', data))
+//     .catch(error => console.error('Error creating user:', error));
+  };
 
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        fetch("http://localhost:8080/user/register", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(inputs),
-                })
-            .then(response => response.text())
-            .then(data => alert(data))
-                    .catch((error) => {
-                        alert("error", error);
-                    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
-                routeChange;
-            }
+          let navigate = useNavigate();
+            const routeChange = () =>{
+              let path = `/login`;
+              navigate(path);
+              };
+
+          useEffect(() => {
+          if (Object.keys(formErrors).length === 0 && isSubmit) {
+            console.log(formValues);
+          }
+        }, [formErrors]);
+
+        const validate = (values) => {
+          const errors = {};
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+          if (!values.firstName) {
+            errors.firstName = "First name is required!";
+          }
+          if (!values.lastName) {
+            errors.lastName = "Last name is required!";
+          }
+          if (!values.dateOfBirth) {
+            errors.dateOfBirth = "Date of birth is required!";
+          }
+          if (!values.email) {
+            errors.email = "Email is required!";
+          } else if (!regex.test(values.email)) {
+            errors.email = "This is not a valid email format!";
+          }
+          if (!values.username) {
+            errors.username = "Username is required!";
+          } else if (values.username.length < 4) {
+              errors.username = "Username must be more than 4 characters";
+          } else if (values.username.length > 15) {
+              errors.username = "Username cannot exceed more than 15 characters";
+          }
+          if (!values.password) {
+            errors.password = "Password is required";
+          } else if (values.password.length < 4) {
+            errors.password = "Password must be more than 4 characters";
+          } else if (values.password.length > 15) {
+            errors.password = "Password cannot exceed more than 15 characters";
+          }
+          if (!values.confirmPassword) {
+            errors.confirmPassword = "Password confirmation is required";
+          } else if (values.confirmPassword.length < 4) {
+            errors.confirmPassword = "Password confirmation must be more than 4 characters";
+          } else if (values.confirmPassword.length > 15) {
+            errors.confirmPassword = "Password confirmation exceeds more than 15 characters";
+          }
+          return errors;
+        };
 
       return (
+        <div className="container">
         <form onSubmit={handleSubmit}>
             <h1>Registration</h1>
           <label>First name:
             <input
               type="text"
               name="firstName"
-        value={inputs.firstName || ""}
-        onChange={handleChange}
+              value={formValues.firstName}
+              onChange={handleChange}
             />
           </label>
-          <br></br>
+          <p>{formErrors.firstName}</p>
 
           <label>Last name:
                    <input
                    type="text"
                    name="lastName"
-                   value={inputs.lastName || ""}
+                   value={formValues.lastName}
                    onChange={handleChange}
                    />
                </label>
-               <br></br>
+               <p>{formErrors.lastName}</p>
 
           <label>Date of birth:
                           <input
                           type="date"
                           name="dateOfBirth"
-                          value={inputs.dateOfBirth || ""}
+                          value={formValues.dateOfBirth}
                           onChange={handleChange}
                           />
                       </label>
-                      <br></br>
+                      <p>{formErrors.dateOfBirth}</p>
 
                        <label>Email:
                            <input
                            type="email"
                            name="email"
-                           value={inputs.email || ""}
+                           value={formValues.email}
                            onChange={handleChange}
                            />
                        </label>
-                       <br></br>
+                       <p>{formErrors.email}</p>
 
                        <label>Username:
                            <input
                            type="text"
                            name="username"
-                           value={inputs.username || ""}
+                           value={formValues.username}
                            onChange={handleChange}
                            />
                        </label>
-                       <br></br>
+                       <p>{formErrors.username}</p>
 
                        <label>Password:
                            <input
                            type="password"
                            name="password"
-                           value={inputs.password || ""}
+                           value={formValues.password}
                            onChange={handleChange}
                            />
                        </label>
-                       <br></br>
+                       <p>{formErrors.password}</p>
 
                        <label>Confirm password:
                            <input
                            type="password"
                            name="confirmPassword"
-                           value={inputs.confirmPassword || ""}
+                           value={formValues.confirmPassword}
                            onChange={handleChange}
                            />
                        </label>
-                       <br></br>
-                         <button onClick={routeChange}>Register</button>
+                       <p>{formErrors.confirmPassword}</p>
+                         <Button label="Register" onClick={handleSubmit} />
+                         <Button label="Login" onClick={handleSubmit, routeChange} />
                    </form>
+                               {Object.keys(formErrors).length === 0 && isSubmit === true ? (
+                                       <div className="success">Registration successful</div>
+                                     ) : (
+                                       <div className="failure">Registration not complete.</div>
+                                     )}
+                   </div>
                    )
     }
 
