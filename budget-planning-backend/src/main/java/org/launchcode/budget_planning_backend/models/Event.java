@@ -42,12 +42,10 @@ public class Event extends AbstractEntity{
     public Event(){}
 
     public void updateEventStatus() {
-        if(this.getStatus().equals(Status.IN_PROGRESS)) {
+        if(this.getStatus().equals(Status.OPEN)) {
             if(this.earnings == this.budget) {
                 setStatus(Status.COMPLETE);
             }
-        } else {
-            setStatus(Status.IN_PROGRESS);
         }
     }
 
