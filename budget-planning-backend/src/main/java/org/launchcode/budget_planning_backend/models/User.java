@@ -36,6 +36,8 @@ public class User extends BaseAbstractEntity{
     @Email(message = "Invalid Email.Try Again")
     private String email;
 
+    private AccountType accountType;
+
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -97,4 +99,15 @@ public class User extends BaseAbstractEntity{
         this.email = email;
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
 }
