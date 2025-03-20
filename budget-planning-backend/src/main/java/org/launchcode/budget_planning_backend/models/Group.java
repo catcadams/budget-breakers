@@ -42,7 +42,7 @@ public class Group extends AbstractEntity{
         this.events.add(event);
     }
 
-    public void addChores(Chore chore){
-        this.chores.add(chore);
+    public void addChores(ChoreDto chore){
+        this.choreDTOS.add(chore);
     }
 }
