@@ -6,43 +6,54 @@ import Button from "./Button";
 
 export default function RegisterForm () {
 
-// const [user, setUser] = useState({ name: '', email: '' });
     const initialValues = { firstName: "", lastName: "", dateOfBirth: "", email: "", username: "", password: "", confirmPassword: "" };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
 
+    const handleChange = (event) => {
+      const { name, value } = event.target;
+      setFormValues({ ...formValues, [name]: value });
+    };
 
        const handleSubmit = (event) => {
           event.preventDefault();
           setFormErrors(validate(formValues));
           setIsSubmit(true);
-          fetch("http://localhost:8080/user/register", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify(user),
-    })
-//     .then(response => response.json())
-//     .then(data => console.log('User created:', data))
-//     .catch(error => console.error('Error creating user:', error));
-  };
+          };
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log(formValues);
+
+      const newUser = {
+        ...formValues,
+      };
+
+      fetch("http://localhost:8080/user/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formValues),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("User successfully registered");
+            console.log(newUser);
+            setFormValues(initialValues); // Reset form values after successful submit
+            setIsSubmit(false); // Reset submit flag
+          } else {
+            console.error("Registration failed");
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+  }, [formErrors, formValues, isSubmit]);
 
           let navigate = useNavigate();
             const routeChange = () =>{
               let path = `/login`;
               navigate(path);
               };
-
-          useEffect(() => {
-          if (Object.keys(formErrors).length === 0 && isSubmit) {
-            console.log(formValues);
-          }
-        }, [formErrors]);
 
         const validate = (values) => {
           const errors = {};
@@ -161,14 +172,9 @@ export default function RegisterForm () {
                          <Button label="Register" onClick={handleSubmit} />
                          <Button label="Login" onClick={handleSubmit, routeChange} />
                    </form>
-                               {Object.keys(formErrors).length === 0 && isSubmit === true ? (
-                                       <div className="success">Registration successful</div>
-                                     ) : (
-                                       <div className="failure">Registration not complete.</div>
-                                     )}
                    </div>
                    )
-    }
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<RegisterForm />);

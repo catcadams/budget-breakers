@@ -11,8 +11,6 @@ export default function LoginForm () {
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
 
-//     const [user, setUser] = useState({ name: '', email: '' });
-
            const handleSubmit = (event) => {
               event.preventDefault();
               setFormErrors(validate(formValues));
@@ -22,9 +20,6 @@ export default function LoginForm () {
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify(user)
         })
-//         .then(response => response.json())
-//         .then(data => console.log('User logged in:', data))
-//         .catch(error => console.error('Error logging in:', error));
       };
 
       const handleChange = (event) => {
