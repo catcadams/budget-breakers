@@ -13,7 +13,9 @@ public class Group extends AbstractEntity{
 
     private  final List<ChoreDto> choreDTOS = new ArrayList<>();
 
-    public Group(List<User> users, List<Event> events){
+    public Group(String name, String description){
+        setName(name);
+        setDescription(description);
         this.setId(nextId);
         nextId++;
     }
@@ -30,5 +32,17 @@ public class Group extends AbstractEntity{
 
     public List<ChoreDto> getChores() {
         return choreDTOS;
+    }
+
+    public void addUsers(User user){
+        this.users.add(user);
+    }
+
+    public void addEvents(Event event){
+        this.events.add(event);
+    }
+
+    public void addChores(Chore chore){
+        this.chores.add(chore);
     }
 }
