@@ -11,7 +11,7 @@ public class Chore extends AbstractEntity {
 
     private Contributions contribution;
 
-    private Group group;
+    private UserGroup userGroup;
 
     private Status status;
 
@@ -54,6 +54,6 @@ public class Chore extends AbstractEntity {
                 ", user=" + user +
                 ", event=" + event +
                 ", contribution=" + contribution +
-                ", group=" + group + '}';
+                ", group=" + userGroup + '}';
     }
 }
