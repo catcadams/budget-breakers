@@ -15,8 +15,6 @@ public class User extends BaseAbstractEntity{
 
     private final List<Group> groups = new ArrayList<>();
 
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     @NotBlank(message = "Firstname is required")
     private String firstName;
 
@@ -36,6 +34,10 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private AccountType accountType;
 
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
@@ -102,4 +104,15 @@ public class User extends BaseAbstractEntity{
         return encoder.matches(password, pwHash);
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
 }
