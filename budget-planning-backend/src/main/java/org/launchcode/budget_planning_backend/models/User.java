@@ -40,6 +40,8 @@ public class User extends BaseAbstractEntity{
     private String email;
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+  
+    private AccountType accountType;
 
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
@@ -110,4 +112,15 @@ public class User extends BaseAbstractEntity{
         return encoder.matches(password, pwHash);
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
 }
