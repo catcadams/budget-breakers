@@ -14,7 +14,7 @@ public class User extends BaseAbstractEntity{
 
     private static int nextId = 1;
 
-    private final List<Group> groups = new ArrayList<>();
+    private final List<UserGroup> userGroups = new ArrayList<>();
 
     @NotBlank(message = "Firstname is required")
     private String firstName;
@@ -108,12 +108,11 @@ public class User extends BaseAbstractEntity{
         this.email = email;
     }
 
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+      
     public boolean isMatchingPassword(String password) {
         return encoder.matches(password, pwHash);
-    }
-
-    public List<Group> getGroups() {
-        return groups;
     }
 
     public AccountType getAccountType() {
