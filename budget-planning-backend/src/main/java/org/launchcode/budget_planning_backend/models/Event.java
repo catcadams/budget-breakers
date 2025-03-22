@@ -29,18 +29,18 @@ public class Event extends AbstractEntity{
 
     @ManyToOne
     @NotNull(message = "Group is required")
-    private Group group;
+    private UserGroup userGroup;
 
     @OneToMany
     private final List<Contributions> contributions = new ArrayList<>();
 
-    public Event(double budget, String location, Date date, Status status, double earnings, Group group) {
+    public Event(double budget, String location, Date date, Status status, double earnings, UserGroup userGroup) {
         this.budget = budget;
         this.location = location;
         this.date = date;
         this.status = status;
         this.earnings = earnings;
-        this.group = group;
+        this.userGroup = userGroup;
     }
 
     public Event(){}
@@ -93,12 +93,12 @@ public class Event extends AbstractEntity{
         this.earnings = earnings;
     }
 
-    public Group getGroup() {
-        return group;
+    public UserGroup getUserGroup() {
+        return userGroup;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
     }
 
     public List<Contributions> getContributions() {

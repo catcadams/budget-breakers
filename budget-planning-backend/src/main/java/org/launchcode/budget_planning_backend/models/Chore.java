@@ -18,7 +18,7 @@ public class Chore extends AbstractEntity{
 
     @ManyToOne
     @NotBlank(message = "A group selection is required.")
-    private Group group;
+    private UserGroup userGroup;
 
     private Status status;
 
@@ -30,14 +30,6 @@ public class Chore extends AbstractEntity{
         setDescription(description);
         this.amountOfEarnings = amountOfEarnings;
     }
-
-    public Chore(){}
-
-    public User getUser() {return user;}
-
-    public void setUser(User user) {this.user = user;}
-
-    public Event getEvent() {return event;}
 
     public static Chore createChore(String name, String description, Double amountOfEarnings) {
         return new Chore(name, description, amountOfEarnings);
@@ -69,6 +61,6 @@ public class Chore extends AbstractEntity{
                 ", user=" + user +
                 ", event=" + event +
                 ", contribution=" + contribution +
-                ", group=" + group + '}';
+                ", group=" + userGroup + '}';
     }
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Group extends AbstractEntity{
+public class UserGroup extends AbstractEntity{
 
     @ManyToMany
     private final List<User> users = new ArrayList<>();
@@ -21,12 +21,12 @@ public class Group extends AbstractEntity{
     private final List<Chore> chores = new ArrayList<>();
     private  final List<ChoreDto> choreDTOS = new ArrayList<>();
 
-    public Group(String name, String description){
+    public UserGroup(String name, String description){
         setName(name);
         setDescription(description);
     }
 
-    public Group(){}
+    public UserGroup(){}
 
     public List<User> getUsers() {
         return users;
