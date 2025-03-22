@@ -20,7 +20,7 @@ public class Chore extends AbstractEntity{
     @NotBlank(message = "A group selection is required.")
     private Group group;
 
-    private String status;
+    private Status status;
 
     @NotBlank(message = "Amount of earnings for this chore is required.")
     private Double amountOfEarnings;
@@ -39,25 +39,36 @@ public class Chore extends AbstractEntity{
 
     public Event getEvent() {return event;}
 
-    public void setEvent(Event event) {this.event = event;}
-
-    public Contributions getContribution() {return contribution;}
-
-    public void setContribution(Contributions contribution) {
-        this.contribution = contribution;
+    public static Chore createChore(String name, String description, Double amountOfEarnings) {
+        return new Chore(name, description, amountOfEarnings);
     }
 
-    public Group getGroup() {return group;}
-
-    public void setGroup(Group group) {this.group = group;}
-
-    public String getStatus() {return status;}
-
-    public void setStatus(String status) {this.status = status;}
-
-    public Double getAmountOfEarnings() {return amountOfEarnings;}
+    public Double getAmountOfEarnings() {
+        return amountOfEarnings;
+    }
 
     public void setAmountOfEarnings(Double amountOfEarnings) {
         this.amountOfEarnings = amountOfEarnings;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Chore{" + "id=" + getId() + ", " +
+                "name=" + getName() +
+                ", description=" + getDescription() +
+                ", amountOfEarnings=" + getAmountOfEarnings() +
+                ", status=" + getStatus() +
+                ", user=" + user +
+                ", event=" + event +
+                ", contribution=" + contribution +
+                ", group=" + group + '}';
     }
 }

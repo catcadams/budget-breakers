@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Date of Birth is required")
     private Date dateOfBirth;
 
+    @NotNull
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
@@ -33,21 +35,30 @@ public class User extends BaseAbstractEntity{
     @NotNull
     @NotBlank(message = "Password is required")
     private String password;
+    private String pwHash;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+  
+    private AccountType accountType;
 
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
-        this.password = password;
+        this.pwHash = encoder.encode(password);
         this.email = email;
     }
 
     public User(){}
+
+    public User(String username, String password) {
+        super();
+    }
 
     public String getFirstName() {
         return firstName;
@@ -97,4 +108,19 @@ public class User extends BaseAbstractEntity{
         this.email = email;
     }
 
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
 }

@@ -19,6 +19,7 @@ public class Group extends AbstractEntity{
 
     @OneToMany
     private final List<Chore> chores = new ArrayList<>();
+    private  final List<ChoreDto> choreDTOS = new ArrayList<>();
 
     public Group(String name, String description){
         setName(name);
@@ -35,19 +36,19 @@ public class Group extends AbstractEntity{
         return events;
     }
 
-    public List<Chore> getChores() {
-        return chores;
+    public List<ChoreDto> getChores() {
+        return choreDTOS;
     }
 
-    public void addUsers(User user) {
+    public void addUsers(User user){
         this.users.add(user);
     }
 
-    public void addEvents(Event event) {
+    public void addEvents(Event event){
         this.events.add(event);
     }
 
-    public void addChores(Chore chore) {
-        this.chores.add(chore);
+    public void addChores(ChoreDto chore){
+        this.choreDTOS.add(chore);
     }
 }
