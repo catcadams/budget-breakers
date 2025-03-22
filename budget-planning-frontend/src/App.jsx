@@ -1,19 +1,21 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Routes, Route, Link } from 'react-router-dom';
+import RegisterForm from './components/RegisterForm';
+import LoginForm from './components/LoginForm';
+import { BrowserRouter } from 'react-router-dom'
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-    <p>Placeholder for the main app page</p>
+function App(){
 
-    </>
-
-  )
+  return(
+          <>
+              <Routes>
+                  <Route path="/register" element={<RegisterForm />} />
+                  <Route path="/login" element={<LoginForm />} />
+                  </Routes>
+            </>
+  );
 }
 
-export default App
+export default App;

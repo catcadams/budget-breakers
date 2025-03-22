@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Date of Birth is required")
     private Date dateOfBirth;
 
+    @NotNull
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
@@ -31,11 +33,14 @@ public class User extends BaseAbstractEntity{
     @NotNull
     @NotBlank(message = "Password is required")
     private String password;
+    private String pwHash;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
 
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+  
     private AccountType accountType;
 
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
@@ -43,13 +48,17 @@ public class User extends BaseAbstractEntity{
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
-        this.password = password;
+        this.pwHash = encoder.encode(password);
         this.email = email;
         this.setId(nextId);
         nextId++;
     }
 
     public User(){}
+
+    public User(String username, String password) {
+        super();
+    }
 
     public String getFirstName() {
         return firstName;
@@ -101,6 +110,9 @@ public class User extends BaseAbstractEntity{
 
     public List<UserGroup> getUserGroups() {
         return userGroups;
+      
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 
     public AccountType getAccountType() {
