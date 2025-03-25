@@ -13,8 +13,8 @@ export default function CreateEvent() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    setData((prev) => ({ ...prev, [name]: value }));
+};
 
   const validateForm = () => {
     let isValid = true;
@@ -34,13 +34,12 @@ export default function CreateEvent() {
       isValid = false;
     }
     setErrors(newErrors);
-    alert(isValid);
     return isValid;
   };
 
   const createEvent = (event) => {
     event.preventDefault();
-   // if (!validateForm()) return;
+    if (!validateForm()) return;
 
     fetch("http://localhost:8080/events/create", {
       method: "POST",
@@ -54,7 +53,7 @@ export default function CreateEvent() {
     <div class="pageBody">
       <form class="createEventForm">
         <h3> Create Event</h3>
-        <label for="eventName">Name: </label>
+        <label for="eventName">Event Name: </label>
         <input
           type="text"
           id="eventName"
