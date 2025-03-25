@@ -3,7 +3,6 @@ import "./App.css";
 import Banner from "./components/Banner";
 import CreateEvent from "./components/CreateEvent";
 import Navbar from "./components/Navbar";
-import NavbarUI from "./components/NavbarUI";
 import Home from "./components/Pages/Home";
 import Events from "./components/Pages/Events";
 import Chores from "./components/Pages/Chores";
