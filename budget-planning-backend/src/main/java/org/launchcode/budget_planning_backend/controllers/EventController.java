@@ -24,7 +24,7 @@ public class EventController {
     public String createEvent(@Valid @RequestBody EventDTO eventDto){
 
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
-                eventDto.getEventDate(), Status.OPEN, 0, new Group());
+                eventDto.getEventDate(), Status.OPEN, 0, new UserGroup());
         logger.info("Event created successfully".concat(event.toString()));
         return "Event Data";
     }
