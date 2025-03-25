@@ -90,4 +90,18 @@ public class Event extends AbstractEntity{
     public void setGroup(Group group) {
         this.group = group;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "Name="+ this.getName()+
+                ", budget=" + budget +
+                ", location='" + location + '\'' +
+                ", Description="+this.getDescription()+
+                ", date=" + date +
+                ", status=" + status +
+                ", earnings=" + earnings +
+                ", group=" + group +
+                '}';
+    }
 }
