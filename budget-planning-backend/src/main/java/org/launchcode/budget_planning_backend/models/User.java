@@ -2,8 +2,8 @@ package org.launchcode.budget_planning_backend.models;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +13,7 @@ public class User extends BaseAbstractEntity{
 
     private static int nextId = 1;
 
-    private final List<Group> groups = new ArrayList<>();
+    private final List<UserGroup> userGroups = new ArrayList<>();
 
     @NotBlank(message = "Firstname is required")
     private String firstName;
@@ -28,20 +28,23 @@ public class User extends BaseAbstractEntity{
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
 
-    @NotNull
     @NotBlank(message = "Password is required")
-    private String password;
+    private String pwHash;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private AccountType accountType;
 
     public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
-        this.password = password;
+        this.pwHash = encoder.encode(password);
         this.email = email;
         this.setId(nextId);
         nextId++;
@@ -81,12 +84,12 @@ public class User extends BaseAbstractEntity{
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPwHash() {
+        return pwHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPwHash(String password) {
+        this.pwHash = encoder.encode(password);
     }
 
     public String getEmail() {
@@ -97,4 +100,18 @@ public class User extends BaseAbstractEntity{
         this.email = email;
     }
 
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+      
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
 }

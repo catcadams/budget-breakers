@@ -1,11 +1,8 @@
-import { Routes ,Route} from "react-router";
-import "./App.css";
-import Banner from "./components/Banner";
-import CreateEvent from "./components/CreateEvent";
-import Navbar from "./components/Navbar";
-import Home from "./components/Pages/Home";
-import Events from "./components/Pages/Events";
-import Chores from "./components/Pages/Chores";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
@@ -13,11 +10,13 @@ function App() {
       <Navbar />
       <Routes>
       <Route path="/Home" element={<Home />} />
-        <Route path="/Events" element={<Events />} />
+         <Route path="/register" element={<RegisterForm />} />
+                          <Route path="/login" element={<LoginForm />} />
+                          <Route path="/Events" element={<Events />} />
         <Route path="/Chores" element={<Chores />} />
       </Routes>
     </>
   );
 }
 
-export default App;
+export default App
