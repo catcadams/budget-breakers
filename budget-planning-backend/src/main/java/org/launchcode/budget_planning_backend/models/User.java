@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.models;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -16,12 +17,12 @@ public class User extends BaseAbstractEntity{
     private final List<Group> groups = new ArrayList<>();
 
     @NotBlank(message = "Firstname is required")
-    private String firstName;
+    public String firstName;
 
     @NotBlank(message = "Lastname is required")
     private String lastName;
 
-    @NotBlank(message = "Date of Birth is required")
+    @NotNull(message = "Date of Birth is required")
     private Date dateOfBirth;
 
     @NotBlank(message = "Username is required")
@@ -29,26 +30,34 @@ public class User extends BaseAbstractEntity{
     private String username;
 
     @NotBlank(message = "Password is required")
-    private String pwHash;
+    protected String pwHash;
+
+    @NotBlank(message = "Password is required")
+    private String verifyPassword;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
 
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    protected static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private AccountType accountType;
 
-    public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
+    public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String verifyPassword, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.username = username;
         this.pwHash = encoder.encode(password);
+        this.verifyPassword = verifyPassword;
         this.email = email;
         this.setId(nextId);
         nextId++;
     }
+
+//    public static User addUser(String firstName, String lastName, Date dateOfBirth, String email, String username, String pwHash) {
+//        return new User(firstName, lastName, dateOfBirth, email, username, pwHash);
+//    }
 
     public User(){}
 
@@ -84,12 +93,20 @@ public class User extends BaseAbstractEntity{
         this.username = username;
     }
 
-    public String getPwHash() {
+    public String getPassword() {
         return pwHash;
     }
 
-    public void setPwHash(String password) {
-        this.pwHash = encoder.encode(password);
+    public void setPassword(String pwHash) {
+        this.pwHash = pwHash;
+    }
+
+    public String getVerifyPassword() {
+        return verifyPassword;
+    }
+
+    public void setVerifyPassword(String verifyPassword) {
+        this.verifyPassword = verifyPassword;
     }
 
     public String getEmail() {
@@ -103,7 +120,6 @@ public class User extends BaseAbstractEntity{
     public boolean isMatchingPassword(String password) {
         return encoder.matches(password, pwHash);
     }
-
     public List<Group> getGroups() {
         return groups;
     }
