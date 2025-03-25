@@ -3,7 +3,7 @@ package org.launchcode.budget_planning_backend.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group extends AbstractEntity{
+public class UserGroup extends AbstractEntity{
 
     private static int nextId = 1;
 
@@ -13,14 +13,14 @@ public class Group extends AbstractEntity{
 
     private  final List<ChoreDto> choreDTOS = new ArrayList<>();
 
-    public Group(String name, String description){
+    public UserGroup(String name, String description){
         setName(name);
         setDescription(description);
         this.setId(nextId);
         nextId++;
     }
 
-    public Group(){}
+    public UserGroup(){}
 
     public List<User> getUsers() {
         return users;

@@ -14,10 +14,10 @@ public class User extends BaseAbstractEntity{
 
     private static int nextId = 1;
 
-    private final List<Group> groups = new ArrayList<>();
+    private final List<UserGroup> userGroups = new ArrayList<>();
 
     @NotBlank(message = "Firstname is required")
-    public String firstName;
+    private String firstName;
 
     @NotBlank(message = "Lastname is required")
     private String lastName;
@@ -54,10 +54,6 @@ public class User extends BaseAbstractEntity{
         this.setId(nextId);
         nextId++;
     }
-
-//    public static User addUser(String firstName, String lastName, Date dateOfBirth, String email, String username, String pwHash) {
-//        return new User(firstName, lastName, dateOfBirth, email, username, pwHash);
-//    }
 
     public User(){}
 
@@ -117,11 +113,11 @@ public class User extends BaseAbstractEntity{
         this.email = email;
     }
 
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+
     public boolean isMatchingPassword(String password) {
         return encoder.matches(password, pwHash);
-    }
-    public List<Group> getGroups() {
-        return groups;
     }
 
     public AccountType getAccountType() {
