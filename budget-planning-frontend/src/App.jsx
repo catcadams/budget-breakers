@@ -1,33 +1,24 @@
-import { useState } from 'react'
-import './App.css'
-import "bootstrap/dist/css/bootstrap.min.css";
-import ChoreCreationForm from './components/ChoreCreationForm';
-import Banner from "./components/Banner"
-import CreateEvent from './components/CreateEvent';
-import Navbar from './components/Navbar'
-import Groups from './Pages/Groups'
-import Events from './Pages/Events'
-import Chores from './Pages/Chores'
+import { Routes ,Route} from "react-router";
+import "./App.css";
+import Banner from "./components/Banner";
+import CreateEvent from "./components/CreateEvent";
+import Navbar from "./components/Navbar";
+import NavbarUI from "./components/NavbarUI";
+import Home from "./components/Pages/Home";
+import Events from "./components/Pages/Events";
+import Chores from "./components/Pages/Chores";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-    <Banner />
-    <CreateEvent />
-    </>
-
-  )
-}
-
-export default App
-/*<BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/chores" element={<Chores />} />
+      <Route path="/Home" element={<Home />} />
+        <Route path="/Events" element={<Events />} />
+        <Route path="/Chores" element={<Chores />} />
       </Routes>
-      </BrowserRouter> */
+    </>
+  );
+}
+
+export default App;

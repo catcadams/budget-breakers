@@ -1,0 +1,71 @@
+.active {
+    background-color: burlywood;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightcyan;
+    position: sticky;
+    top: 0;
+}
+
+nav .title{
+    font-size: 3rem;
+    margin: 1rem;
+    font-weight: bold;
+    color: chocolate;
+    text-decoration: none;
+}
+
+nav ul{
+     display: flex;
+}
+
+nav ul li{
+    list-style: none;
+
+}
+
+nav ul li a{
+    display: block;
+    text-decoration: none;
+    color: chocolate;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+nav ul li a:not(.active):hover{
+    background-color: burlywood;
+}
+
+.logo {
+    height: 10em;
+    width: 10em;
+    float: left;
+  }
+
+  nav .menu{
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 2.25rem;
+    height: 2rem;
+  }
+
+  nav .menu span{
+    height: 0.4rem;
+    width:100%;
+    background-color: chocolate;
+    border-radius: 0.2rem;
+  }
+
+  @media(max-width: 480px){
+    nav .menu{
+        display: flex;
+    }
+  }

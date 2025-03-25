@@ -25,12 +25,12 @@ export default function CreateEvent() {
       data.eventName.length > 50
     ) {
       newErrors.eventName =
-        "Name is required and must be between 3 and 50 characters.";
+        "Name is required";
       isValid = false;
     }
     if (!data.eventBudget || isNaN(data.eventBudget) || data.eventBudget < 0) {
       newErrors.eventBudget =
-        "Budget is required and must be a positive number";
+        "Budget is required";
       isValid = false;
     }
     setErrors(newErrors);

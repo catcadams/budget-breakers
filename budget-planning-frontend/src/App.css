@@ -1,35 +1,10 @@
-.logo {
-  height: 10em;
-  width: 10em;
-  float: left;
-}
-
-.title {
-  padding-top: 1em;
-  float: inline-start;
-  color: chocolate;
-  text-align: center;
-}
-
-#header {
-  z-index: 1;
-  position: fixed;
-}
-
-.full-page-background {
-  background-color: bisque;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  min-height: 100vh;
-   width: 100vw;
-}
-
-.pageBody {
-  margin-top: 2%;
-}
-
 .createEventForm {
   align-items: center;
   text-align: center;
+}
+
+.App{
+  background-color: aliceblue;
+  height: 100%;
+  width: 100%;
 }
