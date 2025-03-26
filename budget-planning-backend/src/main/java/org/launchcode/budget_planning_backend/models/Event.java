@@ -102,14 +102,15 @@ public class Event extends AbstractEntity{
     @Override
     public String toString() {
         return "Event{" +
-                "Name="+ this.getName()+
-                ", budget=" + budget +
-                ", location='" + location + '\'' +
-                ", Description="+this.getDescription()+
-                ", date=" + date +
-                ", status=" + status +
-                ", earnings=" + earnings +
-                ", group=" + userGroup +
+                "Event ID= "+ this.getId()+
+                ", Name= "+ this.getName()+
+                ", budget= " + budget +
+                ", location= '" + location + '\'' +
+                ", Description= "+this.getDescription()+
+                ", date= " + date +
+                ", status= " + status +
+                ", earnings= " + earnings +
+                ", group= " + userGroup +
                 '}';
     }
 }

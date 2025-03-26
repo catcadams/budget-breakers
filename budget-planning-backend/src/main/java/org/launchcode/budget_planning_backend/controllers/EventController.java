@@ -22,9 +22,10 @@ public class EventController {
 
     @PostMapping("/create")
     public String createEvent(@Valid @RequestBody EventDTO eventDto){
-
+        UserGroup group = new UserGroup();
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
-                eventDto.getEventDate(), Status.OPEN, 0, new UserGroup());
+                eventDto.getEventDate(), Status.OPEN, 0, group);
+        group.addEvents(event);
         logger.info("Event created successfully".concat(event.toString()));
         return "Event Data";
     }

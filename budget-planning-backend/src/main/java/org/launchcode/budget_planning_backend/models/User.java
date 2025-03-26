@@ -1,3 +1,4 @@
+
 package org.launchcode.budget_planning_backend.models;
 
 import jakarta.validation.constraints.Email;
@@ -102,7 +103,7 @@ public class User extends BaseAbstractEntity{
 
     public List<UserGroup> getUserGroups() {
         return userGroups;
-      
+    }
     public boolean isMatchingPassword(String password) {
         return encoder.matches(password, pwHash);
     }
