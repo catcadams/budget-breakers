@@ -176,5 +176,5 @@ useEffect(() => {
                    )
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<RegisterForm />);
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<RegisterForm />);
