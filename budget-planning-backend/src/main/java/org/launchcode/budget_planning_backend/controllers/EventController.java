@@ -5,8 +5,7 @@ import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -16,8 +15,8 @@ public class EventController {
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     @GetMapping("/view")
-    public ArrayList<Event> getEvents(){
-        return new ArrayList<>();
+    public List<Event> getEvents(UserGroup group){
+        return group.getEvents();
     }
 
     @PostMapping("/create")

@@ -28,12 +28,12 @@ public class Event extends AbstractEntity{
     @NotNull(message = "Group is required")
     private UserGroup userGroup;
 
-    public Event(String name, double budget, String location, String description, Date date, Status status, double earnings, UserGroup group) {
+    public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
         this.setName(name);
         this.setDescription(description);
         this.budget = budget;
         this.location = location;
-        this.date = date;
+        this.date = DateHandler.parseDate(date);
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;

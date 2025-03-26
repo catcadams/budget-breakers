@@ -8,7 +8,7 @@ public class EventDTO {
     private double eventBudget;
     private String eventLocation;
     private String eventDescription;
-    private Date eventDate;
+    private String eventDate;
 
     public EventDTO(){}
 
@@ -44,11 +44,11 @@ public class EventDTO {
         this.eventDescription = eventDescription;
     }
 
-    public Date getEventDate() {
+    public String getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
     }
 }
