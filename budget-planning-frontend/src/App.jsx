@@ -1,24 +1,20 @@
-import "./App.css";
-import { Route, Routes } from "react-router-dom";
-import Home from "./components/Pages/Home";
-import Events from "./components/Pages/Events";
-import Chores from "./components/Pages/Chores";
+import { useState } from 'react'
+import './App.css'
+import { Routes, Route, Link } from 'react-router-dom';
 import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
-import Navbar from './components/Navbar'
+import { BrowserRouter } from 'react-router-dom'
 
-function App() {
-  return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/Home" element={<Home />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/Events" element={<Events />} />
-        <Route path="/Chores" element={<Chores />} />
-      </Routes>
-    </>
+
+function App(){
+
+  return(
+          <>
+              <Routes>
+                  <Route path="/register" element={<RegisterForm />} />
+                  <Route path="/login" element={<LoginForm />} />
+                  </Routes>
+            </>
   );
 }
 
