@@ -31,6 +31,7 @@ useEffect(() => {
       fetch("http://localhost:8080/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(newUser),
       })
         .then((response) => {
@@ -120,7 +121,7 @@ useEffect(() => {
             <p>{formErrors.verifyPassword}</p>
 
             <Button label="Register" onClick={handleSubmit} />
-            <Button label="Login" onClick={() => { handleSubmit(); routeChange(); }} />
+            <Button label="Login" onClick={routeChange} />
             </div>
         </form>
       )

@@ -43,14 +43,14 @@ public class User extends BaseAbstractEntity{
 
     private AccountType accountType;
 
-    public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String verifyPassword, String email) {
+    public User(String firstName, String lastName, Date dateOfBirth, String email, String username, String password, String verifyPassword) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
+        this.email = email;
         this.username = username;
         this.pwHash = encoder.encode(password);
         this.verifyPassword = verifyPassword;
-        this.email = email;
         this.setId(nextId);
         nextId++;
     }

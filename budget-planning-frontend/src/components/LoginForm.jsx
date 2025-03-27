@@ -14,6 +14,7 @@ export default function LoginForm () {
 
            let navigate = useNavigate();
            const routeChange = () =>{
+                 event.preventDefault();
                  let path = `/register`;
                  navigate(path);
            };
@@ -28,6 +29,7 @@ export default function LoginForm () {
               const response = await fetch("http://localhost:8080/user/login", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
+                          credentials: "include",
                           body: JSON.stringify(formData)
         });
                 if(response.ok) {

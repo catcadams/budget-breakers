@@ -23,6 +23,8 @@ import java.util.*;
 @CrossOrigin
 public class AuthenticationController {
 
+    List<User> users = new ArrayList<>();
+    Map<String, String> response = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
 //    @Autowired
@@ -32,7 +34,9 @@ public class AuthenticationController {
 
     User user;
 
-//    public User getUserFromSession(HttpSession session) {
+    public User getUserFromSession(HttpSession session) {
+        return (User) session.getAttribute(userSessionKey);
+    }
 //        Integer userId = (Integer) session.getAttribute(userSessionKey);
 //        if (userId == null) {
 //            return null;
@@ -48,24 +52,24 @@ public class AuthenticationController {
 //
 //    }
 //
-//    private static void setUserInSession(HttpSession session, User user) {
+    private static void setUserInSession(HttpSession session, User user) {
 //        session.setAttribute(userSessionKey, user.getId());
-//    }
+        session.setAttribute(userSessionKey, user);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> processRegistrationForm(@RequestBody @Valid RegisterFormDTO registerFormDTO,
-                                          Errors errors, HttpServletRequest request) {
+                                                                       Errors errors, HttpServletRequest request) {
+        // Check if session already exists
+        HttpSession session = request.getSession(true); // This ensures a session is created if it doesn't exist already
+        logger.info("Session ID Register: " + session.getId());
 
-
-
-        Map<String, String> response = new HashMap<>();
         if (errors.hasErrors()) {
-            System.out.println(errors.toString());
             response.put("message", "Registration errors occurred");
             return ResponseEntity.badRequest().body(response);
         }
 
-        logger.info("New User: ".concat(registerFormDTO.getFirstName()));
+     //   logger.info("New User: ".concat(registerFormDTO.getFirstName()));
 
 //        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
 //
@@ -82,9 +86,6 @@ public class AuthenticationController {
             response.put("message", "Password confirmation error occurred");
             return ResponseEntity.badRequest().body(response);
         }
-        System.out.println("Password matched?");
-
-        List<User> users = new ArrayList<>();
 
         User newUser = new User(registerFormDTO.getFirstName(),
                 registerFormDTO.getLastName(),
@@ -94,7 +95,9 @@ public class AuthenticationController {
                 registerFormDTO.getPassword(),
                 registerFormDTO.getVerifyPassword());
         users.add(newUser);
-//        setUserInSession(request.getSession(), newUser);
+        logger.info("New user created: " + newUser.getUsername());
+        setUserInSession(request.getSession(), newUser);
+        logger.info("User stored in session: " + newUser.getUsername());
 //
         response.put("message", "Registration successful");
         return ResponseEntity.ok(response);
@@ -102,27 +105,50 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> processLoginForm(@RequestBody @Valid LoginFormDTO loginFormDTO,
+
                                                                 Errors errors, HttpServletRequest request) {
 
-        logger.info("New login: ".concat(loginFormDTO.getUsername()));
+        //        logger.info("Session" .concat(getUserFromSession(request.getSession()).getLastName()));
+//        logger.info("New login: ".concat(loginFormDTO.getUsername()));
+//
+//        logger.info("Session ID Login" .concat(request.getSession().getId()));
+//        // Ensure session is being retrieved properly
+//        HttpSession session = request.getSession();
+//        User sessionUser = getUserFromSession(session);
 
-        Map<String, String> response = new HashMap<>();
+        // Check if session already exists
+        HttpSession session = request.getSession(false); // This ensures a session is created if it doesn't exist already
+
+        if (session == null) {
+            // If no session exists, create a new one
+            session = request.getSession(true); // true creates a new session if none exists
+            logger.info("New session created with ID: " + session.getId());
+        } else {
+            logger.info("Session user: " + getUserFromSession(request.getSession()).getUsername());
+            logger.info("Session ID Login: " + session.getId());
+        }
+
+
+        logger.info("New login attempt for username: " + loginFormDTO.getUsername());
+
         if (errors.hasErrors()) {
             response.put("message", "Validation errors occurred");
             return ResponseEntity.badRequest().body(response);
         }
 
-        String dummyUsername = "user123";
-        String dummyPassword = "secure123";
-
-            if (loginFormDTO.getUsername().equals(dummyUsername) && loginFormDTO.getPassword().equals(dummyPassword)) {
+        //for (User user : users) {
+            user = getUserFromSession(request.getSession());
+            if (loginFormDTO.getUsername().equals(user.getUsername())) {
+                //setUserInSession(request.getSession(), user);
+                setUserInSession(session, user);
                 response.put("message", "Login successful");
                 return ResponseEntity.ok(response);
-            } else {
+            }
+        //}
                 response.put("message", "Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
-        }
+
 
 //        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
 //
@@ -138,17 +164,22 @@ public class AuthenticationController {
 //            errors.rejectValue("password", "password.invalid", "Invalid password");
 //            model.addAttribute("title", "Log In");
 //            return "login";
-//        }
+        }
 //
 //        setUserInSession(request.getSession(), theUser);
 
         //return "redirect:";
-    }
+//    }
 
 //    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request){
+//    public String ResponseEntity<Map<String, String>> logout(HttpServletRequest request){
+//        HttpSession session = request.getSession(false);
+//        if (sessions != null) {
+//          session.invalidate();
+//        }
 //        request.getSession().invalidate();
-//        return "redirect:/login";
+//        response.put("message", "Logged out successfully");
+//        return ResponseEntity.ok(response);
 //    }
 
 //}
