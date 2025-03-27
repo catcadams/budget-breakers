@@ -60,16 +60,15 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> processRegistrationForm(@RequestBody @Valid RegisterFormDTO registerFormDTO,
                                                                        Errors errors, HttpServletRequest request) {
-        // Check if session already exists
-        HttpSession session = request.getSession(true); // This ensures a session is created if it doesn't exist already
+
+        HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
         logger.info("Session ID Register: " + session.getId());
 
         if (errors.hasErrors()) {
+            logger.info("Errors:" + errors);
             response.put("message", "Registration errors occurred");
             return ResponseEntity.badRequest().body(response);
         }
-
-     //   logger.info("New User: ".concat(registerFormDTO.getFirstName()));
 
 //        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
 //
@@ -82,7 +81,7 @@ public class AuthenticationController {
         String password = registerFormDTO.getPassword();
         String verifyPassword = registerFormDTO.getVerifyPassword();
 
-        if (!registerFormDTO.isMatchingPassword(verifyPassword)) {
+        if (!password.equals(verifyPassword)) {
             response.put("message", "Password confirmation error occurred");
             return ResponseEntity.badRequest().body(response);
         }
@@ -95,10 +94,9 @@ public class AuthenticationController {
                 registerFormDTO.getPassword(),
                 registerFormDTO.getVerifyPassword());
         users.add(newUser);
-        logger.info("New user created: " + newUser.getUsername());
         setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
-//
+
         response.put("message", "Registration successful");
         return ResponseEntity.ok(response);
     }
@@ -108,16 +106,10 @@ public class AuthenticationController {
 
                                                                 Errors errors, HttpServletRequest request) {
 
-        //        logger.info("Session" .concat(getUserFromSession(request.getSession()).getLastName()));
-//        logger.info("New login: ".concat(loginFormDTO.getUsername()));
-//
-//        logger.info("Session ID Login" .concat(request.getSession().getId()));
-//        // Ensure session is being retrieved properly
-//        HttpSession session = request.getSession();
-//        User sessionUser = getUserFromSession(session);
-
-        // Check if session already exists
-        HttpSession session = request.getSession(false); // This ensures a session is created if it doesn't exist already
+        logger.info("Session ID Login" .concat(request.getSession().getId()));
+        // Ensure session is being retrieved properly
+        HttpSession session = request.getSession(false);
+        User sessionUser = getUserFromSession(session);
 
         if (session == null) {
             // If no session exists, create a new one
@@ -128,7 +120,6 @@ public class AuthenticationController {
             logger.info("Session ID Login: " + session.getId());
         }
 
-
         logger.info("New login attempt for username: " + loginFormDTO.getUsername());
 
         if (errors.hasErrors()) {
@@ -136,9 +127,8 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        //for (User user : users) {
             user = getUserFromSession(request.getSession());
-            if (loginFormDTO.getUsername().equals(user.getUsername())) {
+        if (loginFormDTO.getUsername().equals(user.getUsername()) && (loginFormDTO.getPassword().equals(user.getPassword()))) {
                 //setUserInSession(request.getSession(), user);
                 setUserInSession(session, user);
                 response.put("message", "Login successful");
@@ -148,7 +138,6 @@ public class AuthenticationController {
                 response.put("message", "Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
-
 
 //        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
 //

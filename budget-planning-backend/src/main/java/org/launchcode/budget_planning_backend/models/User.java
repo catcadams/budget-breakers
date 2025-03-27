@@ -30,7 +30,7 @@ public class User extends BaseAbstractEntity{
     private String username;
 
     @NotBlank(message = "Password is required")
-    protected String pwHash;
+    protected String password;
 
     @NotBlank(message = "Password is required")
     private String verifyPassword;
@@ -38,8 +38,6 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
-
-    protected static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private AccountType accountType;
 
@@ -49,7 +47,7 @@ public class User extends BaseAbstractEntity{
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.username = username;
-        this.pwHash = encoder.encode(password);
+        this.password = password;
         this.verifyPassword = verifyPassword;
         this.setId(nextId);
         nextId++;
@@ -90,11 +88,11 @@ public class User extends BaseAbstractEntity{
     }
 
     public String getPassword() {
-        return pwHash;
+        return password;
     }
 
-    public void setPassword(String pwHash) {
-        this.pwHash = pwHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getVerifyPassword() {
@@ -117,10 +115,6 @@ public class User extends BaseAbstractEntity{
         return userGroups;
     }
 
-    public boolean isMatchingPassword(String password) {
-        return encoder.matches(password, pwHash);
-    }
-
     public AccountType getAccountType() {
         return accountType;
     }
@@ -128,4 +122,19 @@ public class User extends BaseAbstractEntity{
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", verifyPassword='" + verifyPassword + '\'' +
+                ", email='" + email + '\'' +
+                ", accountType=" + accountType +
+                '}';
+    }
 }
+
