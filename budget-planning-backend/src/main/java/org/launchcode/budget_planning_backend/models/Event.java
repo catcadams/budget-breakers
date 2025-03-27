@@ -28,10 +28,12 @@ public class Event extends AbstractEntity{
     @NotNull(message = "Group is required")
     private UserGroup userGroup;
 
-    public Event(double budget, String location, Date date, Status status, double earnings, UserGroup userGroup) {
+    public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
+        this.setName(name);
+        this.setDescription(description);
         this.budget = budget;
         this.location = location;
-        this.date = date;
+        this.date = DateHandler.parseDate(date);
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
@@ -95,5 +97,20 @@ public class Event extends AbstractEntity{
 
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "Event ID= "+ this.getId()+
+                ", Name= "+ this.getName()+
+                ", budget= " + budget +
+                ", location= '" + location + '\'' +
+                ", Description= "+this.getDescription()+
+                ", date= " + date +
+                ", status= " + status +
+                ", earnings= " + earnings +
+                ", group= " + userGroup +
+                '}';
     }
 }
