@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.launchcode.budget_planning_backend.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +36,7 @@ public class AuthenticationController {
     public User getUserFromSession(HttpSession session) {
         return (User) session.getAttribute(userSessionKey);
     }
+    //For persistence with database connection
 //        Integer userId = (Integer) session.getAttribute(userSessionKey);
 //        if (userId == null) {
 //            return null;
@@ -70,6 +70,7 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        //For persistence with database connection
 //        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
 //
 //        if (existingUser != null) {
@@ -107,13 +108,13 @@ public class AuthenticationController {
                                                                 Errors errors, HttpServletRequest request) {
 
         logger.info("Session ID Login" .concat(request.getSession().getId()));
-        // Ensure session is being retrieved properly
+        // Conform session is retrieved properly
         HttpSession session = request.getSession(false);
         User sessionUser = getUserFromSession(session);
 
         if (session == null) {
             // If no session exists, create a new one
-            session = request.getSession(true); // true creates a new session if none exists
+            session = request.getSession(true); // true creates a new session if no session exists
             logger.info("New session created with ID: " + session.getId());
         } else {
             logger.info("Session user: " + getUserFromSession(request.getSession()).getUsername());
@@ -129,16 +130,16 @@ public class AuthenticationController {
 
             user = getUserFromSession(request.getSession());
         if (loginFormDTO.getUsername().equals(user.getUsername()) && (loginFormDTO.getPassword().equals(user.getPassword()))) {
-                //setUserInSession(request.getSession(), user);
                 setUserInSession(session, user);
                 response.put("message", "Login successful");
                 return ResponseEntity.ok(response);
             }
-        //}
+
                 response.put("message", "Invalid credentials");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
 
+            //For persistence with database connection
 //        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
 //
 //        if (theUser == null) {
@@ -160,6 +161,7 @@ public class AuthenticationController {
         //return "redirect:";
 //    }
 
+//logout functionality
 //    @GetMapping("/logout")
 //    public String ResponseEntity<Map<String, String>> logout(HttpServletRequest request){
 //        HttpSession session = request.getSession(false);
