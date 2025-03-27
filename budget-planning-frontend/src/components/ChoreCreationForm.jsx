@@ -4,6 +4,7 @@ import NumericInputField from "./NumericInputField";
 import Button from "./Button";
 import ModalWindow from "./ModalWindow";
 import TextAreaInputField from "./TextAreaInputField"
+import DropdownField from "./DropdownField";
 
 
 const ChoreCreationForm = () => {
@@ -12,6 +13,7 @@ const ChoreCreationForm = () => {
     const [errors, setErrors] = useState({});
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
+    const [options, setOptions] = useState({});
 
     const failedMessage = "Oops! Something went wrong while creating the chore. Looks like the universe is not ready for this one. Give it another try!";
     const successMessage = "Hooray! Your chore has been successfully created. Now get ready to watch the magic of hard work unfold!";
@@ -25,6 +27,16 @@ const ChoreCreationForm = () => {
         setErrors(errors);
         return Object.keys(errors).length === 0;
     }
+
+    //The code below will replace the hardcoded groups options once GET groups is implemented
+    // useEffect(() => {
+    //     fetch("http://localhost:8080/groups") 
+    //       .then((response) => response.json())
+    //       .then((data) => setOptions(data))
+    //       .catch((error) => console.error("Error fetching groups:", error));
+    //   }, []);
+
+    const dummyGroups = ['Smiths', 'Adams family']
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -65,6 +77,7 @@ const ChoreCreationForm = () => {
                 <TextAreaInputField label="Chore Description" name="description" value={formData.description} setFormData={setFormData} />
                 <NumericInputField label="Earning Amount, $" name="amountOfEarnings" value={formData.amountOfEarnings} setFormData={setFormData} />
                 {errors.amountOfEarnings && <p className="error">{errors.amountOfEarnings}</p>}
+                <DropdownField label="Group: " options={dummyGroups} name="userGroupName" placeholder="Select your group" setFormData={setFormData}/>
                 <Button label="Create Chore" onClick={handleSubmit} />
             </div>
             <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => setShowModal(false)} />
@@ -74,3 +87,5 @@ const ChoreCreationForm = () => {
 };
 
 export default ChoreCreationForm;
+
+
