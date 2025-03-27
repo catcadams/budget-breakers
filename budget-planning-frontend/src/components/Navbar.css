@@ -1,4 +1,4 @@
-.active {
+nav ul .active {
     background-color: burlywood;
 }
 nav{
@@ -16,6 +16,7 @@ nav .title{
     font-weight: bold;
     color: chocolate;
     text-decoration: none;
+
 }
 
 nav ul{

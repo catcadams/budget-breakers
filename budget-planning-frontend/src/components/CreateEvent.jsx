@@ -30,7 +30,7 @@ export default function CreateEvent() {
     }
     if (!data.eventBudget || isNaN(data.eventBudget) || data.eventBudget < 0) {
       newErrors.eventBudget =
-        "Budget is required";
+        "Budget is required and must be a postive number";
       isValid = false;
     }
     setErrors(newErrors);

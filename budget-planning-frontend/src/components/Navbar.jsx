@@ -10,7 +10,6 @@ function Navbar() {
         <nav>
           <img src={budgetLogo} className="logo" alt="Budget Breaker logo" />
           <NavLink to="/" className="title">
-            {" "}
             Red, Green, VACAY!
           </NavLink>
           <div className="menu">
