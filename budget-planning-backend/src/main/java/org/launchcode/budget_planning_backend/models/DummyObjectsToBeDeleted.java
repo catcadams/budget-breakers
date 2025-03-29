@@ -35,7 +35,7 @@ public class DummyObjectsToBeDeleted {
     public static AccountType createDummyUser() {
         LocalDate date = LocalDate.of(2003, 5, 10);
         User user1 = new User("Cat", "Adams", date, "catadams", "password", "cat@cat.com");
-        DetermineAccountType.determineAccountType(user1);
+        AccountTypeUtil.determineAccountType(user1);
         return user1.getAccountType();
     }
 
