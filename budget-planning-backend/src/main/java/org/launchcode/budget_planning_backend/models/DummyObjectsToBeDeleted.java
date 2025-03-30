@@ -6,6 +6,7 @@ import java.util.List;
 public class DummyObjectsToBeDeleted {
 
     private static List<UserGroup> dummyGroups = new ArrayList<>();
+    private static List<Chore> dummyChores = new ArrayList<>();
     private static final int OPENED_USER_GROUP_ID = 2;
 
     private static void setUpDummyUserGroups() {
@@ -25,6 +26,10 @@ public class DummyObjectsToBeDeleted {
             }
         }
         return null;
+    }
+
+    public static void setUpDummyChores() {
+
     }
 
     public static int getOpenedUserGroupId() {

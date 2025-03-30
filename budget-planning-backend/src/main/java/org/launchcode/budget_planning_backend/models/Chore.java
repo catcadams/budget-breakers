@@ -59,6 +59,15 @@ public class Chore extends AbstractEntity {
         this.userGroup = group;
     }
 
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Chore{" + "id=" + getId() + ", " +

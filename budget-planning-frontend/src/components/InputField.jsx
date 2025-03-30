@@ -6,10 +6,10 @@ const InputField = ({ label, name, value, setFormData, type }) => {
     };
 
     return (
-        <div data-mdb-input-init className="form-outline mb-4">
+        <div data-mdb-input-init className="mb-4 row">
             <label >{label}:
                 <input
-                className="form-control"
+                    className="form-control w-25 mx-auto"
                     type={type}
                     name={name}
                     value={value}

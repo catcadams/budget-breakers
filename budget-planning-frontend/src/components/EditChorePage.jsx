@@ -7,9 +7,12 @@ import DropdownField from "./DropdownField";
 import Button from "./Button";
 import ModalWindow from "./ModalWindow";
 import "../styles/choreCreationFormStyle.css";
+import "../styles/singleChoreStyle.css";
+import { GrClose } from "react-icons/gr";
+import { useFetchSingleChore } from "../hooks/useFetchChores";
 
 const EditChorePage = () => {
-    const { choreId } = useParams(); 
+    const { choreId } = useParams();
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -20,28 +23,22 @@ const EditChorePage = () => {
     const [errors, setErrors] = useState({});
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
-    const [dummyGroups, setDummyGroups] = useState([{ id: 1, name: 'Smiths' },{ id: 2, name: 'Adams family' }]); // Fetch  dummy groups, must be replaced later
     const navigate = useNavigate();
-    const dummyGroupNames = ['Smiths', 'Adams family'];
-
+    const [userGroupId, setUserGroupId] = useState(1);//will be replaced, hardcoded for now
+    const { chore, loading, error } = useFetchSingleChore(userGroupId, choreId);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/chores/${choreId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Group name from response:", data.group?.name);
-                setFormData({
-                    name: data.name,
-                    description: data.description,
-                    amountOfEarnings: data.amountOfEarnings,
-                    group: data.group || { id: "", name: "" },
-                })
-                
-            }) 
-            .catch((error) => console.error("Error fetching chore:", error));
-    }, [choreId]);
+        if (chore) {
+            setFormData({
+                name: chore.name,
+                description: chore.description,
+                amountOfEarnings: chore.amountOfEarnings,
+                group: chore.group || { id: "", name: "" },
+            });
+        }
+    }, [chore]);
 
-    const failedMessage = "Oops! Something went wrong while updating the chore.";
+    const failedMessage = "Oops! Something went wrong while updating the chore.Please try again.";
     const successMessage = "Chore successfully updated!";
 
     const validateUserInputs = () => {
@@ -86,34 +83,28 @@ const EditChorePage = () => {
     const handleModalClose = () => {
         setShowModal(false);
         if (modalType === "success") {
-            navigate(`/chores/${choreId}`); // Navigate to the chore details page
+            navigate(`/chores/${userGroupId}/${choreId}`);
         }
-    };
-
-    const handleGroupSelect = (groupName) => {
-        const selectedGroup = dummyGroups.find(group => group.name === groupName);
-        setFormData((prev) => ({
-            ...prev,
-            group: selectedGroup || { id: "", name: "" }, // Set group with both id and name
-        }));
     };
 
     return (
         <>
             <form className="chore-form-container">
-                <p>Edit Chore</p>
+                <div className="close-btn-container">
+                    <Button label={<GrClose size={24} />} onClick={() => navigate(`/chores/${userGroupId}/${choreId}`)} className="close-btn" />
+                </div>
+                <p>Update the Details of the Chore</p>
+                <div>Ready to update your family chores? Edit the details of the chore, adjust earnings, and keep your home running smoothly!</div>
                 <div>
                     <TextInputField label="Chore Name" name="name" value={formData.name} setFormData={setFormData} />
                     {errors.name && <p className="error">{errors.name}</p>}
                     <TextAreaInputField label="Chore Description" name="description" value={formData.description} setFormData={setFormData} />
                     <NumericInputField label="Earning Amount, $" name="amountOfEarnings" value={formData.amountOfEarnings} setFormData={setFormData} />
                     {errors.amountOfEarnings && <p className="error">{errors.amountOfEarnings}</p>}
-                    <DropdownField label="Group: " options={dummyGroupNames} value={formData.group.name} name="userGroupName"
-                     placeholder="Select your group" setFormData={setFormData} onSelect={handleGroupSelect}/>
-                    <Button label="Update Chore" onClick={handleSubmit} />
+                    <Button className="" label="Update Chore" onClick={handleSubmit} />
                 </div>
             </form>
-            <ModalWindow showState={showModal} message={message} type={modalType} onClose={handleModalClose} />
+            <ModalWindow showState={showModal} message={message} type={modalType} onConfirm={handleModalClose} onClose={handleModalClose}/>
         </>
     );
 };
