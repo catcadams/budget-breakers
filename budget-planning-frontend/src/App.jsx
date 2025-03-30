@@ -10,6 +10,8 @@ import ChoreCreationForm from "./components/ChoreCreationForm";
 import ChoresList from "./components/ChoresList";
 import SingleChorePage from "./components/SingleChorePage";
 import Home from "./components/Pages/Home";
+import EventDetails from "./components/EventDetails";
+import ViewEvents from "./components/ViewEvents";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Events" element={<Events />} />
+        <Route path="/events/:userGroupId/:eventId" element={<EventDetails />}/>
+        <Route path="/events/:userGroupId/list" element={<ViewEvents />}/>
         <Route path="/Chores" element={<Chores />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
         <Route path="/chores/1/list" element={<ChoresList />} />

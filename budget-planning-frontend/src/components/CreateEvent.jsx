@@ -51,7 +51,7 @@ export default function CreateEvent() {
 
   return (
     <div class="pageBody">
-      <form class="createEventForm">
+      <form>
         <h3> Create Event</h3>
         <label for="eventName">Event Name: </label>
         <input
@@ -99,7 +99,7 @@ export default function CreateEvent() {
           name="eventDate"
           onChange={handleChange}
           setData={setData}
-        />{" "}
+        />
         <br />
         <button type="submit" label="Create Event" onClick={createEvent}>
           Create Event

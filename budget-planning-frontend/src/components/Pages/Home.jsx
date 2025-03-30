@@ -1,9 +1,10 @@
 import React from 'react'
+import ViewEvents from '../ViewEvents'
 
 function Home() {
   return (
     <div>
-      Home
+      <ViewEvents />
     </div>
   )
 }
