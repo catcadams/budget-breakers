@@ -1,5 +1,7 @@
 package org.launchcode.budget_planning_backend.models;
 
+import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +46,16 @@ public class UserGroup extends AbstractEntity{
 
     public void addChores(ChoreDto chore){
         this.choreDTOS.add(chore);
+    }
+
+    @Override
+    public String toString() {
+        return "UserGroup{" +
+                "name=" + getName() +
+                "description=" + getDescription() +
+                "users=" + users +
+                ", events=" + events +
+                ", choreDTOS=" + choreDTOS +
+                '}';
     }
 }
