@@ -14,19 +14,56 @@ public class EventController {
 
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    @GetMapping("/view")
-    public List<Event> getEvents(UserGroup group){
+    public static User user = new User();
+    public static UserGroup group = new UserGroup(1,"Test");
+    public static boolean isGroupSet = false;
+
+    @GetMapping("/{userGroupId}/list")
+    public List<Event> getEvents(@PathVariable int userGroupId){
+        logger.info("Inside GetEvents");
         return group.getEvents();
     }
 
     @PostMapping("/create")
     public String createEvent(@Valid @RequestBody EventDTO eventDto){
-        UserGroup group = new UserGroup();
+        if(!isGroupSet) {
+            user.setAccountType(AccountType.ADULT);
+            user.addUserGroup(group);
+        }
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
                 eventDto.getEventDate(), Status.OPEN, 0, group);
         group.addEvents(event);
         logger.info("Event created successfully".concat(event.toString()));
         return "Event Data";
     }
+
+    @GetMapping("/{userGroupId}/{eventId}")
+    public Event viewEventDetails(@PathVariable int userGroupId, @PathVariable Integer eventId) {
+        logger.info("Inside viewEventDetails ");
+        List<Event> events = group.getEvents();
+        for(Event event: events){
+            if(event.getId() == eventId){
+                return event;
+            }
+        }
+        return null;
+    }
+    @PostMapping("/{userGroupId}/{eventId}/edit")
+    public String editEventDetails(@Valid @RequestBody EventDTO eventDto, @PathVariable int userGroupId, @PathVariable Integer eventId) {
+        logger.info("Inside editEventDetails ");
+        List<Event> events = group.getEvents();
+        for(Event event: events){
+            if(event.getId() == eventId) {
+                event.setName(eventDto.getEventName());
+                event.setDescription(eventDto.getEventDescription());
+                event.setBudget(eventDto.getEventBudget());
+                event.setLocation(eventDto.getEventLocation());
+                event.setDate(DateHandler.parseDate(eventDto.getEventDate()));
+                return "Event updated Succesfully";
+            }
+        }
+        return "Event updation failed";
+    }
+
 
 }

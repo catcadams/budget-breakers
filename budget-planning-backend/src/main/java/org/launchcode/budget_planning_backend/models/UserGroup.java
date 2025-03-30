@@ -22,6 +22,11 @@ public class UserGroup extends AbstractEntity{
 
     public UserGroup(){}
 
+    public UserGroup(int id, String name){
+        this.setId(id);
+        this.setName(name);
+    }
+
     public List<User> getUsers() {
         return users;
     }
