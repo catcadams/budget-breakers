@@ -43,7 +43,7 @@ export default function ViewEvents() {
               className="chore-tile"
               onClick={() => handleClick(event)}>
               <h3>{event.name}</h3>    
-              <p>Earnings: {event.earnings}$</p> 
+              <p>Fund Available: {event.earnings}$</p> 
               <p>Budget: {event.budget}$</p>
               <progress value={event.earnings} max={event.budget}/>                 
             </div>

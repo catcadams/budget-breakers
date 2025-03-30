@@ -68,13 +68,13 @@ export default function EventDetails() {
     <div className='pageBody'>
         <h3> View/Edit Event</h3>
         <div class="progressBar">
-        <ProgressBar animated now={50} max={event.budget} />  
+        <ProgressBar animated now={event.earnings} max={event.budget} />  
       </div>
     <form>
-      <TextInputField label="Event name" name="eventName" value={data.eventName} setData={setData}/>
-      <TextAreaInputField label ="Description" name="eventDescription" value={data.eventDescription} setData={setData}/>
-      <NumericInputField label="Fund Available" name="eventEarnings" value={0} setData={setData}/>
-      <NumericInputField label="Budget" name="eventBudget" value={data.eventBudget} setData={setData}/>
+      <TextInputField label="Event name" name="eventName" value={event.name} setData={setData}/>
+      <TextAreaInputField label ="Description" name="eventDescription" value={event.description} setData={setData}/>
+      <NumericInputField label="Fund Available" name="eventEarnings" value={event.earnings} setData={setData}/>
+      <NumericInputField label="Budget" name="eventBudget" value={event.budget} setData={setData}/>
       <TextInputField label="Location" name="eventLocation" value={event.location} setData={setData} />
       <label for="eventDate">Date: </label>
         <input
