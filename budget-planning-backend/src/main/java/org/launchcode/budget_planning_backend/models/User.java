@@ -2,9 +2,11 @@ package org.launchcode.budget_planning_backend.models;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,31 +23,33 @@ public class User extends BaseAbstractEntity{
     @NotBlank(message = "Lastname is required")
     private String lastName;
 
-    @NotBlank(message = "Date of Birth is required")
-    private Date dateOfBirth;
+    @NotNull(message = "Date of Birth is required")
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
 
     @NotBlank(message = "Password is required")
-    private String pwHash;
+    protected String password;
+
+    @NotBlank(message = "Password is required")
+    private String verifyPassword;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid Email.Try Again")
     private String email;
 
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     private AccountType accountType;
 
-    public User(String firstName, String lastName, Date dateOfBirth, String username, String password, String email) {
+    public User(String firstName, String lastName, LocalDate dateOfBirth, String email, String username, String password, String verifyPassword) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-        this.username = username;
-        this.pwHash = encoder.encode(password);
         this.email = email;
+        this.username = username;
+        this.password = password;
+        this.verifyPassword = verifyPassword;
         this.setId(nextId);
         nextId++;
     }
@@ -68,11 +72,11 @@ public class User extends BaseAbstractEntity{
         this.lastName = lastName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -84,12 +88,20 @@ public class User extends BaseAbstractEntity{
         this.username = username;
     }
 
-    public String getPwHash() {
-        return pwHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwHash(String password) {
-        this.pwHash = encoder.encode(password);
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getVerifyPassword() {
+        return verifyPassword;
+    }
+
+    public void setVerifyPassword(String verifyPassword) {
+        this.verifyPassword = verifyPassword;
     }
 
     public String getEmail() {
@@ -104,14 +116,6 @@ public class User extends BaseAbstractEntity{
         return userGroups;
     }
 
-    public void addUserGroup(UserGroup group){
-        userGroups.add(group);
-    }
-      
-    public boolean isMatchingPassword(String password) {
-        return encoder.matches(password, pwHash);
-    }
-
     public AccountType getAccountType() {
         return accountType;
     }
@@ -119,4 +123,19 @@ public class User extends BaseAbstractEntity{
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", verifyPassword='" + verifyPassword + '\'' +
+                ", email='" + email + '\'' +
+                ", accountType=" + accountType +
+                '}';
+    }
 }
+
