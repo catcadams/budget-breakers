@@ -3,7 +3,6 @@ package org.launchcode.budget_planning_backend.controllers;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.Chore;
 import org.launchcode.budget_planning_backend.models.ChoreDto;
-import org.launchcode.budget_planning_backend.models.Status;
 import org.launchcode.budget_planning_backend.service.ChoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

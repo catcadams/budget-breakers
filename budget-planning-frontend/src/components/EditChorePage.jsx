@@ -104,7 +104,7 @@ const EditChorePage = () => {
                     <Button className="" label="Update Chore" onClick={handleSubmit} />
                 </div>
             </form>
-            <ModalWindow showState={showModal} message={message} type={modalType} onConfirm={handleModalClose} onClose={handleModalClose}/>
+            <ModalWindow showState={showModal} message={message} type={modalType} onConfirm={handleModalClose} onClose={handleModalClose} />
         </>
     );
 };

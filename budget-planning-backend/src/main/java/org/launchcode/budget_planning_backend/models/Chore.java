@@ -1,8 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
 
-import static org.launchcode.budget_planning_backend.models.DummyObjectsToBeDeleted.getGroupByName;
-
 public class Chore extends AbstractEntity {
 
     private static int nextId = 0;

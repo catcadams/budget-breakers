@@ -4,18 +4,18 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect } from "react";
 
 const DropdownField = ({ options, label, name, placeholder, setFormData, value, handleSelect }) => {
-    const [selectedOption, setSelectedOption] = useState(placeholder);
+  const [selectedOption, setSelectedOption] = useState(placeholder);
 
   const handleSelectCommon = (eventKey) => {
     setSelectedOption(eventKey);
-	setFormData((prev) => ({ ...prev, [name]: eventKey }));  
+    setFormData((prev) => ({ ...prev, [name]: eventKey }));
   };
 
   useEffect(() => {
     if (value) {
-        setSelectedOption(value);
+      setSelectedOption(value);
     }
-}, [value]);
+  }, [value]);
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>

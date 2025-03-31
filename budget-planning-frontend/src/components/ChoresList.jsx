@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/choreListStyle.css";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { getChoreImage } from "../utils/choreUtils.jsx";
 
 import Button from "./Button";

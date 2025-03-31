@@ -5,12 +5,9 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Button from './Button';
 import "../styles/singleChoreStyle.css";
-import "../styles/modalStyles.css";
 import ModalWindow from "./ModalWindow";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
-import { isChoreEditableOrDeletable } from "../utils/choreUtils.jsx";
-import { getChoreImage } from "../utils/choreUtils.jsx";
-import { getChoreStatusMessage } from "../utils/choreUtils.jsx";
+import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage } from "../utils/choreUtils.jsx";
 
 const SingleChorePage = () => {
   const { choreId } = useParams();
