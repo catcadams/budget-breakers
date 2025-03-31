@@ -27,7 +27,7 @@ body {
 
   .tile {
     display: grid;
-    grid-template-rows: auto 1fr auto; /* divided into 3 parts: header, middle, footer */
+    grid-template-rows: 30% 50% 20%; /* divided into 3 parts: header, middle, footer */
     background: linear-gradient(135deg, #0077b6, #00b4d8); 
     color: white;
     font-weight: bold;

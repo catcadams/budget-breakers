@@ -37,7 +37,7 @@ const ChoresList = () => {
               className="tile"
               onClick={() => handleClick(chore)}>
               <h3 className="chore-title">{chore.name}</h3>
-              <img src={getChoreImage(chore.status)} alt="Chore" className="chore-image" />
+              <img src={getChoreImage(chore.status)} alt="Chore" className="chore-image-list" />
               <p className="chore-earnings">${chore.amountOfEarnings}</p>
             </div>
           ))}

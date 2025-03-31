@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
@@ -64,7 +64,7 @@ const SingleChorePage = () => {
         window.location.reload();
       })
       .catch((error) => {
-        console.error("Error marking chore as completed:", error);
+        console.error("Error marking chore as confirmed:", error);
       });
   };
 
@@ -98,43 +98,51 @@ const SingleChorePage = () => {
           <p className="single-chore-earnings">
             <strong>Earnings: </strong>${chore.amountOfEarnings}
           </p>
+
           <div className="chore-actions">
-            <div className="tooltip-container">
-              <Button
-                className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
-                onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`)}
-                label={<CiEdit size={24} />}
-              />
-              {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, edit not allowed</span>}
-            </div>
+            {chore.status !== "COMPLETE" && (
+              <>
+                <div className="tooltip-container">
+                  <Button
+                    className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
+                    onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`)}
+                    label={<CiEdit size={24} />}
+                  />
+                  {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, edit not allowed</span>}
+                </div>
+              </>
+            )}
             <Button
               className="action-button"
               label="Back to the List"
               onClick={() => navigate(`/chores/${userGroupId}/list`)}
             />
-            <div className="tooltip-container">
-              <Button
-                className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
-                onClick={() => isChoreEditableOrDeletable(chore.status) && setShowModal(true)}
-                label={<RiDeleteBin5Line size={24} />}
-              />
-              {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, delete not allowed</span>}
-            </div>
+            {chore.status !== "COMPLETE" && (
+              <>
+
+                <div className="tooltip-container">
+                  <Button
+                    className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
+                    onClick={() => isChoreEditableOrDeletable(chore.status) && setShowModal(true)}
+                    label={<RiDeleteBin5Line size={24} />}
+                  />
+                  {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, delete not allowed</span>}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {
-        showModal && (
-          <ModalWindow
-            showState={showModal}
-            type="warning"
-            message="You are about to delete the chore. Click OK to confirm or close the window to return."
-            onClose={handleModalClose}
-            onConfirm={handleDelete}
-          />
-        )
-      }
+      {showModal && (
+        <ModalWindow
+          showState={showModal}
+          type="warning"
+          message="You are about to delete the chore. Click OK to confirm or close the window to return."
+          onClose={handleModalClose}
+          onConfirm={handleDelete}
+        />
+      )}
     </div >
   );
 };
