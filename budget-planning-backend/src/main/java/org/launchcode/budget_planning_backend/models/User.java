@@ -116,18 +116,4 @@ public class User extends BaseAbstractEntity{
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userGroups=" + userGroups +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", username='" + username + '\'' +
-                ", pwHash='" + pwHash + '\'' +
-                ", email='" + email + '\'' +
-                ", accountType=" + accountType +
-                '}';
-    }
 }
