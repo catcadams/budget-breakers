@@ -26,15 +26,6 @@ public class Chore extends AbstractEntity {
         this.amountOfEarnings = amountOfEarnings;
     }
 
-    public static Chore createNewChore(ChoreDto choreDto) {
-        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
-        //temp userGroup handling, will be replaced after Groups controllers are implemented
-        UserGroup group = getGroupByName(choreDto.getUserGroupName());
-        chore.setStatus(Status.OPEN);
-        chore.setGroup(group);
-        return chore;
-    }
-
     public Double getAmountOfEarnings() {
         return amountOfEarnings;
     }
@@ -64,8 +55,25 @@ public class Chore extends AbstractEntity {
         return user;
     }
 
+
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Contributions getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(Contributions contribution) {
+        this.contribution = contribution;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override

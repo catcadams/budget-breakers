@@ -62,7 +62,29 @@ public class ChoreController {
     }
 
     @PutMapping("/{id}/assign")
-    public void assignChore(@PathVariable Integer id, @Valid @RequestBody ChoreDto choreDto) {
-        choreService.assignChoreToTheUser(id, choreDto);
+    public ResponseEntity<Chore> assignChore(@PathVariable Integer id) {
+        Chore chore = choreService.assignChoreToTheUser(id);
+        if (chore != null) {
+            return ResponseEntity.ok(chore);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<Chore> completeChore(@PathVariable Integer id) {
+        Chore chore = choreService.completeChoreByMinor(id);
+        if (chore != null) {
+            return ResponseEntity.ok(chore);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @PutMapping("/{id}/contribute")
+    public ResponseEntity<Chore> confirmChore(@PathVariable Integer id) {
+        Chore chore = choreService.confirmChoreByAdult(id);
+        if (chore != null) {
+            return ResponseEntity.ok(chore);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

@@ -8,87 +8,45 @@
   color: rgb(36, 49, 197);
   text-align: center;
   font-size: 20px;
-  position: relative; /* For positioning the close button */
-}
-
-.single-chore h1 {
-  font-size: 30px;
-  font-family: cursive;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.single-chore-description {
-  font-size: 20px;
-  color: #333;
-  line-height: 1.6;
-  margin-bottom: 25px;
-  text-align: justify;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .single-chore-earnings {
   font-size: 22px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 119, 182, 0.1); 
   padding: 12px 18px;
   border-radius: 8px;
-  color: #2354c8;
+  color: #0077b6;
   display: inline-block;
   font-weight: bold;
-  text-align: center;
-  margin-bottom: 30px;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Action Buttons Section */
+.chore-details-grid {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 20px;
+  width: 100%;
+}
+
+.chore-image-container {
+  text-align: center;
+}
+
 .chore-actions {
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
-.action-button {
-  background: #0077b6;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.action-button:hover {
-  background: #005f8b;
-}
-
-.action-button:disabled {
-  background: gray;
-  cursor: not-allowed;
-}
-
-/* Tooltip Styling for Disabled Buttons */
 .tooltip-container {
   position: relative;
   display: inline-block;
-}
-
-.tooltip {
-  visibility: hidden;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 6px 10px;
-  border-radius: 5px;
-  position: absolute;
-  bottom: 130%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 14px;
-  white-space: nowrap;
 }
 
 .tooltip-container:hover .tooltip {
@@ -96,39 +54,6 @@
   opacity: 1;
 }
 
-.single-chore-header {
-  text-align: center;
-  font-size: 34px;
-  color: #0077b6;
-  margin-bottom: 15px;
-}
-
-.single-chore-description {
-  font-size: 18px;
-  color: #333;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.single-chore-earnings {
-  font-size: 22px;
-  background: rgba(0, 119, 182, 0.1); /* Light blue tint */
-  padding: 12px 18px;
-  border-radius: 8px;
-  color: #0077b6;
-  display: inline-block;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.chore-actions {
-  display: flex;
-  justify-content: center; 
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* Button styling (same for all buttons) */
 .action-button {
   background: #0077b6;
   color: white;
@@ -148,20 +73,12 @@
   transform: translateY(-2px);
 }
 
-/* Disabled buttons */
-.action-button.disabled {
-  background: gray;
+.action-button-disabled {
+  background: gray !important;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-/* Tooltip container */
-.tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-
-/* Tooltip text */
 .tooltip {
   visibility: hidden;
   background-color: black;
@@ -175,7 +92,13 @@
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s;
-  white-space: nowrap;
   font-size: 14px;
+  white-space: nowrap;
 }
 
+.chore-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
