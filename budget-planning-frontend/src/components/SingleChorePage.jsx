@@ -45,6 +45,16 @@ const SingleChorePage = () => {
       });
   };
 
+  const handleUnassign = () => {
+    axios.put(`http://localhost:8080/chores/${choreId}/unassign`, { userGroupId })
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error removing the assignment:", error);
+      });
+  };
+
   const handleMarkAsCompleted = () => {
     axios.put(`http://localhost:8080/chores/${choreId}/complete`)
       .then(() => {
@@ -76,7 +86,10 @@ const SingleChorePage = () => {
               <Button onClick={handleAssignToMe} label="Assign to Me" />
             )}
             {chore.status === "IN_PROGRESS" && (
+              <>
+              <Button onClick={handleUnassign} label="Unassign" />
               <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
+              </>
             )}
             {chore.status === "PENDING" && (
               <Button onClick={handleConfirmContribution} label="Confirm to Contribute" />

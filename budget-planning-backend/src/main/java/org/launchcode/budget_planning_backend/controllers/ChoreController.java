@@ -68,6 +68,15 @@ public class ChoreController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    @PutMapping("/{id}/unassign")
+    public ResponseEntity<Chore> unassignChore(@PathVariable Integer id) {
+        Chore chore = choreService.unassignChore(id);
+        if (chore != null) {
+            return ResponseEntity.ok(chore);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
     @PutMapping("/{id}/complete")
     public ResponseEntity<Chore> completeChore(@PathVariable Integer id) {
         Chore chore = choreService.completeChoreByMinor(id);

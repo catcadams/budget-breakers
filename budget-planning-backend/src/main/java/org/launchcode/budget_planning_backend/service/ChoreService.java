@@ -81,6 +81,14 @@ public class ChoreService {
         return chore;
     }
 
+    public Chore unassignChore(int choreId) {
+        Chore chore = getChoreById(choreId);
+        chore.setStatus(Status.OPEN);
+        chore.setUser(null);
+        logger.info("The chore was unassigned:" + chore.toString());
+        return chore;
+    }
+
     public Chore completeChoreByMinor(int choreId) {
         Chore chore = getChoreById(choreId);
         Event dummyEvent = new Event(); //to be replaced with real Event as user selection on UI

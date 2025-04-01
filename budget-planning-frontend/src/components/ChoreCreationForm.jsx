@@ -23,7 +23,7 @@ const ChoreCreationForm = () => {
 
     let validateUserInputs = () => {
         let errors = {};
-        if (!formData.name.trim() ||formData.name.length < 3 || formData.name.length > 50 ) errors.name = "Name is required and must be between 3 and 50 characters.";
+        if (!formData.name.trim() || formData.name.length < 3 || formData.name.length > 50) errors.name = "Name is required and must be between 3 and 50 characters.";
         if (!formData.amountOfEarnings || isNaN(formData.amountOfEarnings) || formData.amountOfEarnings < 0) {
             errors.amountOfEarnings = "Amount is required and must be a positive number";
         }
@@ -33,14 +33,6 @@ const ChoreCreationForm = () => {
         setErrors(errors);
         return Object.keys(errors).length === 0;
     }
-
-    //The code below will replace the hardcoded groups options once GET groups is implemented
-    // useEffect(() => {
-    //     fetch("http://localhost:8080/groups") 
-    //       .then((response) => response.json())
-    //       .then((data) => setOptions(data))
-    //       .catch((error) => console.error("Error fetching groups:", error));
-    //   }, []);
 
     const dummyGroups = ['Smiths', 'Adams family']
 
@@ -80,24 +72,24 @@ const ChoreCreationForm = () => {
 
     return (
         <>
-        <form className="chore-form-container">
-            <p>Create Chores, Fund the Fun!</p>
-            <div>Got a family event you're excited about? Time to get things done! Create chores now and let your kids
-                complete them. Watch them contributing towards the next big family adventure! The cleaner the room,
-                the closer the goal!
-            </div>
-            <div>
-                <TextInputField label="Chore Name" name="name" value={formData.name} setFormData={setFormData} />
-                {errors.name && <p className="error">{errors.name}</p>}
-                <TextAreaInputField label="Chore Description" name="description" value={formData.description} setFormData={setFormData} />
-                <NumericInputField label="Earning Amount, $" name="amountOfEarnings" value={formData.amountOfEarnings} setFormData={setFormData} />
-                {errors.amountOfEarnings && <p className="error">{errors.amountOfEarnings}</p>}
-                <DropdownField label="Group: " options={dummyGroups} name="userGroupName" placeholder="Select your group" setFormData={setFormData}/>
-                {errors.userGroupName && <p className="error">{errors.userGroupName}</p>}
-                <Button className="chore-btn" label="Create Chore" onClick={handleSubmit} disabled={showModal}/>
-            </div>
+            <form className="chore-form-container">
+                <p>Create Chores, Fund the Fun!</p>
+                <div>Got a family event you're excited about? Time to get things done! Create chores now and let your kids
+                    complete them. Watch them contributing towards the next big family adventure! The cleaner the room,
+                    the closer the goal!
+                </div>
+                <div>
+                    <TextInputField label="Chore Name" name="name" value={formData.name} setFormData={setFormData} />
+                    {errors.name && <p className="error">{errors.name}</p>}
+                    <TextAreaInputField label="Chore Description" name="description" value={formData.description} setFormData={setFormData} />
+                    <NumericInputField label="Earning Amount, $" name="amountOfEarnings" value={formData.amountOfEarnings} setFormData={setFormData} />
+                    {errors.amountOfEarnings && <p className="error">{errors.amountOfEarnings}</p>}
+                    <DropdownField label="Group: " options={dummyGroups} name="userGroupName" placeholder="Select your group" setFormData={setFormData} />
+                    {errors.userGroupName && <p className="error">{errors.userGroupName}</p>}
+                    <Button className="chore-btn" label="Create Chore" onClick={handleSubmit} disabled={showModal} />
+                </div>
             </form>
-            <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleModalClose()} onConfirm={handleModalClose}/>
+            <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleModalClose()} onConfirm={handleModalClose} />
         </>
 
     );
