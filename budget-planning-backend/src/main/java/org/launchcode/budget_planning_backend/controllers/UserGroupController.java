@@ -23,7 +23,7 @@ public class UserGroupController {
 
     private final Logger logger = LoggerFactory.getLogger(UserGroupController.class);
 
-    private final List<UserGroup> groupsList = new ArrayList<>();
+    public final List<UserGroup> groupsList = new ArrayList<>();
 
     private final List<UserGroup> groupsByUser = new ArrayList<>();
 
