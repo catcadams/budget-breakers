@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class User extends BaseAbstractEntity{
@@ -23,7 +23,7 @@ public class User extends BaseAbstractEntity{
     private String lastName;
 
     @NotNull(message = "Date of Birth is required")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
@@ -41,7 +41,7 @@ public class User extends BaseAbstractEntity{
 
     private AccountType accountType;
 
-    public User(String firstName, String lastName, Date dateOfBirth, String email, String username, String password, String verifyPassword) {
+    public User(String firstName, String lastName, LocalDate dateOfBirth, String email, String username, String password, String verifyPassword) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -71,11 +71,11 @@ public class User extends BaseAbstractEntity{
         this.lastName = lastName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
