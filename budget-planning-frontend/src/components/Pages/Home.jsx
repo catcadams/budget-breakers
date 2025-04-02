@@ -1,9 +1,10 @@
 import React from 'react'
+import WeatherTile from "../WeatherTile"
 
 function Home() {
   return (
     <div>
-      Home
+      <WeatherTile />
     </div>
   )
 }
