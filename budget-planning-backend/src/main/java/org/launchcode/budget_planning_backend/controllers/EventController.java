@@ -5,6 +5,8 @@ import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,7 +27,7 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public String createEvent(@Valid @RequestBody EventDTO eventDto){
+    public void createEvent(@Valid @RequestBody EventDTO eventDto){
         if(!isGroupSet) {
             user.setAccountType(AccountType.ADULT);
             user.addUserGroup(group);
@@ -34,16 +36,23 @@ public class EventController {
                 eventDto.getEventDate(), Status.OPEN, 0, group);
         group.addEvents(event);
         logger.info("Event created successfully".concat(event.toString()));
-        return "Event Data";
     }
 
     @GetMapping("/{userGroupId}/{eventId}")
-    public Event viewEventDetails(@PathVariable int userGroupId, @PathVariable Integer eventId) {
+    public EventDTO viewEventDetails(@PathVariable int userGroupId, @PathVariable Integer eventId) {
         logger.info("Inside viewEventDetails ");
         List<Event> events = group.getEvents();
+        EventDTO eventDto = new EventDTO();
         for(Event event: events){
             if(event.getId() == eventId){
-                return event;
+                eventDto.setEventName(event.getName());
+                eventDto.setEventEarnings(event.getEarnings());
+                eventDto.setEventBudget((event.getBudget()));
+                eventDto.setEventDescription(event.getDescription());
+                eventDto.setEventDate(  event.getDate().toString());
+                eventDto.setEventLocation(event.getLocation());
+                return eventDto;
+
             }
         }
         return null;
@@ -58,11 +67,12 @@ public class EventController {
                 event.setDescription(eventDto.getEventDescription());
                 event.setBudget(eventDto.getEventBudget());
                 event.setLocation(eventDto.getEventLocation());
-                event.setDate(DateHandler.parseDate(eventDto.getEventDate()));
-                return "Event updated Succesfully";
+                event.setDate(LocalDate.parse(eventDto.getEventDate()));
+                event.setEarnings(eventDto.getEventEarnings());
+                return "Event updated Successfully";
             }
         }
-        return "Event updation failed";
+        return "Update Event failed";
     }
 
 

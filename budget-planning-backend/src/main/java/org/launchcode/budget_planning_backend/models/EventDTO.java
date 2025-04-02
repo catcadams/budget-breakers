@@ -9,6 +9,7 @@ public class EventDTO {
     private String eventLocation;
     private String eventDescription;
     private String eventDate;
+    private double eventEarnings;
 
     public EventDTO(){}
 
@@ -50,5 +51,13 @@ public class EventDTO {
 
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public double getEventEarnings() {
+        return eventEarnings;
+    }
+
+    public void setEventEarnings(double eventEarnings) {
+        this.eventEarnings = eventEarnings;
     }
 }

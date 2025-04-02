@@ -116,6 +116,9 @@ public class User extends BaseAbstractEntity{
         return userGroups;
     }
 
+    public void addUserGroup(UserGroup group) {
+        this.userGroups.add(group);
+    }
     public AccountType getAccountType() {
         return accountType;
     }
