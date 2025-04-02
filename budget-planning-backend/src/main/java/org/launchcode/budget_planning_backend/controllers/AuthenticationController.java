@@ -116,10 +116,12 @@ public class AuthenticationController {
                                                                 Errors errors, HttpServletRequest request) {
 
         logger.info("Session ID Login".concat(request.getSession().getId()));
+
         HttpSession session = request.getSession(false);
         User sessionUser = getUserFromSession(session);
 
         if (session == null) {
+            // If no session exists, create a new one
             session = request.getSession(true); // true creates a new session if no session exists
             logger.info("New session created with ID: " + session.getId());
         } else {
@@ -160,7 +162,6 @@ public class AuthenticationController {
 //            errors.rejectValue("password", "password.invalid", "Invalid password");
 //            model.addAttribute("title", "Log In");
 //            return "login";
-
 //
 //        setUserInSession(request.getSession(), theUser);
 

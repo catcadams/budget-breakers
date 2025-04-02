@@ -35,6 +35,7 @@ export default function LoginForm () {
                 if(response.ok) {
                     const data = await response.json();
                           navigate("/Home");
+
                         } else {
                           const errorData = await response.json();
                           alert(errorData.message || "Login failed");

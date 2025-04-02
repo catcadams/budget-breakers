@@ -10,8 +10,8 @@ import ChoreCreationForm from "./components/ChoreCreationForm";
 import ChoresList from "./components/ChoresList";
 import SingleChorePage from "./components/SingleChorePage";
 import Home from "./components/Pages/Home";
-import CreateGroupForm from "./components/CreateGroupForm";
 import Logout from "./components/Logout";
+import CreateGroupForm from "./components/CreateGroupForm";
 
 function App() {
   return (
