@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
 //import org.launchcode.budget_planning_backend.data.UserRepository;
+import org.launchcode.budget_planning_backend.models.AccountTypeUtil;
 import org.launchcode.budget_planning_backend.models.dto.LoginFormDTO;
 import org.launchcode.budget_planning_backend.models.dto.RegisterFormDTO;
 import org.slf4j.Logger;
@@ -97,9 +98,14 @@ public class AuthenticationController {
                 registerFormDTO.getUsername(),
                 registerFormDTO.getPassword(),
                 registerFormDTO.getVerifyPassword());
+
+        AccountTypeUtil.determineAccountType(newUser);
+
+        //userRepository.save(user);
         users.add(newUser);
         setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
+        logger.info("User acct type: " + newUser.getAccountType());
 
         response.put("message", "Registration successful");
         return ResponseEntity.ok(response);
@@ -107,7 +113,6 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> processLoginForm(@RequestBody @Valid LoginFormDTO loginFormDTO,
-
                                                                 Errors errors, HttpServletRequest request) {
 
         logger.info("Session ID Login".concat(request.getSession().getId()));
