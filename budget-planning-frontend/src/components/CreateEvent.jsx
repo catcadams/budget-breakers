@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+import DateInputField from "./DateInputField";
+import TextInputField from "./TextInputField";
+import NumericInputField from "./NumericInputField";
+import TextAreaInputField from "./TextAreaInputField";
+import Button from "./Button";
+import ModalWindow from "./ModalWindow";
 
 export default function CreateEvent() {
   const today = new Date().toISOString().split("T")[0];
-  const [data, setData] = useState({
+  const [formData, setFormData] = useState({
     eventName: "",
     eventBudget: "",
     eventLocation: "",
@@ -10,27 +16,31 @@ export default function CreateEvent() {
     eventDate: "",
   });
   const [newErrors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
+  const [showModal, setShowModal] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-};
+  const failedMessage =
+    "Oops! Something went wrong while creating the event. Give it another try!";
+  const successMessage = "Hooray! Your event has been successfully created.";
 
   const validateForm = () => {
     let isValid = true;
     let newErrors = {};
     if (
-      !data.eventName.trim() ||
-      data.eventName.length < 3 ||
-      data.eventName.length > 50
+      !formData.eventName.trim() ||
+      formData.eventName.length < 3 ||
+      formData.eventName.length > 50
     ) {
-      newErrors.eventName =
-        "Name is required";
+      newErrors.eventName = "Name is required";
       isValid = false;
     }
-    if (!data.eventBudget || isNaN(data.eventBudget) || data.eventBudget < 0) {
-      newErrors.eventBudget =
-        "Budget is required and must be a postive number";
+    if (
+      !formData.eventBudget ||
+      isNaN(formData.eventBudget) ||
+      formData.eventBudget < 0
+    ) {
+      newErrors.eventBudget = "Budget is required and must be a postive number";
       isValid = false;
     }
     setErrors(newErrors);
@@ -44,67 +54,73 @@ export default function CreateEvent() {
     fetch("http://localhost:8080/events/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    alert("Event Created Successfully");
-  };
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setMessage(successMessage);
+          setModalType("success");
+          setErrors({});
+        } else {
+          setMessage(failedMessage);
+          setModalType("danger");
+        }
+        setShowModal(true);
+      })
+      .catch((error) => {
+        setMessage(failedMessage);
+        setModalType("danger");
+        setShowModal(true);
+      });
+  }
 
   return (
     <div class="pageBody">
-      <form>
+      <form class="createEventForm">
         <h3> Create Event</h3>
-        <label for="eventName">Event Name: </label>
-        <input
-          type="text"
-          id="eventName"
+        <TextInputField
+          label="Event Name"
           name="eventName"
-          onChange={handleChange}
-          setData={setData}
-        ></input>
-        <br></br>
+          value={formData.eventName}
+          setFormData={setFormData}
+        />
         {newErrors.eventName && <p className="error">{newErrors.eventName}</p>}
-        <label for="eventBudget">Budget: </label>
-        <input
-          type="number"
-          id="eventBudget"
+        <NumericInputField
+          label="Budget"
           name="eventBudget"
-          onChange={handleChange}
-          setData={setData}
-        ></input>
-        <br></br>
+          value={formData.eventBudget}
+          setFormData={setFormData}
+        />
         {newErrors.eventBudget && (
           <p className="error">{newErrors.eventBudget}</p>
         )}
-        <label for="eventLocation">Location: </label>
-        <input
-          type="text"
-          id="eventLocation"
+        <TextInputField
+          label="Location"
           name="eventLocation"
-          onChange={handleChange}
-          setDate={setData}
-        ></input>
-        <br />
-        <label for="eventDescription">Description: </label>
-        <textarea
-          id="eventDescription"
+          value={formData.eventLocation}
+          setFormData={setFormData}
+        />
+        <TextAreaInputField
+          label="Description"
           name="eventDescription"
-          onChange={handleChange}
-          setData={setData}
-        ></textarea>
-        <br />
-        <label for="eventDate">Date: </label>
-        <input
-          type="date"
-          min={today}
+          value={formData.eventDescription}
+          setFormData={setFormData}
+        />
+        <DateInputField
+          label="Event Date"
           name="eventDate"
-          onChange={handleChange}
-          setData={setData}
+          value={formData.eventDate}
+          setFormData={setFormData}
         />
         <br />
-        <button type="submit" label="Create Event" onClick={createEvent}>
-          Create Event
-        </button>
+        <Button label="Create Event" onClick={createEvent} />
+        <ModalWindow
+          showState={showModal}
+          message={message}
+          type={modalType}
+          onClose={() => setShowModal(false)}
+        />
       </form>
     </div>
-  );
+  )
 }
