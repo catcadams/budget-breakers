@@ -10,6 +10,7 @@ import ChoreCreationForm from "./components/ChoreCreationForm";
 import ChoresList from "./components/ChoresList";
 import SingleChorePage from "./components/SingleChorePage";
 import Home from "./components/Pages/Home";
+import CreateGroupForm from "./components/CreateGroupForm";
 import EventDetails from "./components/EventDetails";
 import ViewEvents from "./components/ViewEvents";
 
@@ -27,8 +28,8 @@ function App() {
         <Route path="/Chores" element={<Chores />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
         <Route path="/chores/1/list" element={<ChoresList />} />
-        <Route path="/chores/:userGroupId/:choreId" element={<SingleChorePage />}
-        />
+        <Route path="/chores/:userGroupId/:choreId" element={<SingleChorePage />} />
+        <Route path="/groups/create" element={<CreateGroupForm />} />
       </Routes>
     </>
   );
