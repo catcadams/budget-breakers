@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.models;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Contributions extends BaseAbstractEntity{
@@ -13,13 +14,13 @@ public class Contributions extends BaseAbstractEntity{
     private Double amountOfContribution;
 
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     @NotNull
     private Event event;
 
     @NotNull
-    private String status;
+    private Status status;
 
     public Contributions() {}
 
@@ -33,15 +34,27 @@ public class Contributions extends BaseAbstractEntity{
         this.amountOfContribution = amountOfContribution;
     }
 
-    public Date getDate() {return date;}
+    public LocalDate getDate() {return date;}
 
-    public void setDate(Date date) {this.date = date;}
+    public void setDate(LocalDate date) {this.date = date;}
 
     public Event getEvent() {return event;}
 
     public void setEvent(Event event) {this.event = event;}
 
-    public String getStatus() {return status;}
+    public Status getStatus() {return status;}
 
-    public void setStatus(String status) {this.status = status;}
+    public void setStatus(Status status) {this.status = status;}
+
+    @Override
+    public String toString() {
+        return "Contributions{" +
+                "id=" + getId() +
+                " user=" + user +
+                ", amountOfContribution=" + amountOfContribution +
+                ", date=" + date +
+                ", event=" + event +
+                ", status=" + status +
+                '}';
+    }
 }
