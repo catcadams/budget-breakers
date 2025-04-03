@@ -71,8 +71,7 @@ public class ChoreService {
         //setting dummy user for now to test the functionality
         ZoneId defaultZoneId = ZoneId.systemDefault();
         LocalDate localDate = LocalDate.of(2016, 8, 19);
-        Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-        User dummyUser = new User("John", "Smith", date, "test@gmail.com", "test", "1234", "1234");
+        User dummyUser = new User("John", "Smith", localDate, "test@gmail.com", "test", "1234", "1234");
         dummyUser.setAccountType(AccountType.MINOR);
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.IN_PROGRESS);
