@@ -16,20 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class HomeController {
 
-    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
+//    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @GetMapping
     public ResponseEntity<String> home(HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
 
-        if (session != null) {
-            logger.info("Session ID: " + session.getId());
-            logger.info("Session User: " + session.getAttribute("user"));
-        } else {
-            logger.info("No session found.");
-        }
+//        if (session != null) {
+//            logger.info("Session ID: " + session.getId());
+//            logger.info("Session User: " + session.getAttribute("user"));
+//        } else {
+//            logger.info("No session found.");
+//        }
 
         if (session == null || session.getAttribute("user") == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You need to be logged in to view this page.");

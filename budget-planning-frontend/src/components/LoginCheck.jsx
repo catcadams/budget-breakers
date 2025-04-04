@@ -34,11 +34,11 @@ function LoginCheck() {
     return <div>Loading...</div>;  // Show loading while checking login status
   }
 
-  return (
-    <div>
-      {loggedIn ? 'Home - User is logged in' : 'Home - User is not logged in'}
-    </div>
-  );
+//   return (
+//     <div>
+//       {loggedIn ? 'Home - User is logged in' : 'Home - User is not logged in'}
+//     </div>
+//   );
 }
 
 export default LoginCheck;

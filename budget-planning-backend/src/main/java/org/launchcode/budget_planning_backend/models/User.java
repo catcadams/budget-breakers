@@ -30,6 +30,7 @@ public class User extends BaseAbstractEntity{
     private String username;
 
     @NotBlank(message = "Password is required")
+    @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     protected String password;
 
     @NotBlank(message = "Password is required")
