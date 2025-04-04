@@ -1,8 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
 
-import static org.launchcode.budget_planning_backend.models.DummyObjectsToBeDeleted.getGroupByName;
-
 public class Chore extends AbstractEntity {
 
     private static int nextId = 0;
@@ -24,15 +22,6 @@ public class Chore extends AbstractEntity {
         setName(name);
         setDescription(description);
         this.amountOfEarnings = amountOfEarnings;
-    }
-
-    public static Chore createNewChore(ChoreDto choreDto) {
-        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
-        //temp userGroup handling, will be replaced after Groups controllers are implemented
-        UserGroup group = getGroupByName(choreDto.getUserGroupName());
-        chore.setStatus(Status.OPEN);
-        chore.setGroup(group);
-        return chore;
     }
 
     public Double getAmountOfEarnings() {
@@ -57,6 +46,32 @@ public class Chore extends AbstractEntity {
 
     public void setGroup(UserGroup group) {
         this.userGroup = group;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Contributions getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(Contributions contribution) {
+        this.contribution = contribution;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override
