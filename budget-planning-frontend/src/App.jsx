@@ -11,6 +11,7 @@ import ChoresList from "./components/ChoresList";
 import SingleChorePage from "./components/SingleChorePage";
 import Home from "./components/Pages/Home";
 import Logout from "./components/Logout";
+import EditChorePage from "./components/EditChorePage";
 import CreateGroupForm from "./components/CreateGroupForm";
 
 function App() {
@@ -26,7 +27,10 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
         <Route path="/chores/1/list" element={<ChoresList />} />
+        <Route path="/chores/:choreId" element={<SingleChorePage />} />
+        <Route path="/chores/:userGroupId/list" element={<ChoresList />} />
         <Route path="/chores/:userGroupId/:choreId" element={<SingleChorePage />} />
+        <Route path="/chores/:choreId/edit" element={<EditChorePage />} />
         <Route path="/groups/create" element={<CreateGroupForm />} />
       </Routes>
     </>

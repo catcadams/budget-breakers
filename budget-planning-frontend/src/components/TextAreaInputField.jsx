@@ -5,15 +5,16 @@ const TextAreaInputField = ({ label, name, value, setFormData }) => {
     };
 
     return (
-        <div data-mdb-input-init className="form-outline mb-4">
+        <div data-mdb-input-init className="mb-4 row">
             <label>{label}:
                 <textarea
-                    className="form-control"
+                    className="form-control w-75 mx-auto"
                     name={name}
                     value={value}
                     onChange={handleChange}
                     maxLength={250}
                     rows="5"
+                    
                 />
             </label>
             <div>

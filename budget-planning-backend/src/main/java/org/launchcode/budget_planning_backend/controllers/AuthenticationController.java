@@ -29,6 +29,14 @@ public class AuthenticationController {
     Map<String, String> response = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
+    private User findByUsername(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
 //    @Autowired
 //    UserRepository userRepository;
 
@@ -115,34 +123,20 @@ public class AuthenticationController {
     public ResponseEntity<Map<String, String>> processLoginForm(@RequestBody @Valid LoginFormDTO loginFormDTO,
                                                                 Errors errors, HttpServletRequest request) {
 
+        String username = loginFormDTO.getUsername().trim();
         logger.info("Session ID Login".concat(request.getSession().getId()));
 
         HttpSession session = request.getSession(false);
-        User sessionUser = getUserFromSession(session);
 
-        if (session == null) {
-            // If no session exists, create a new one
-            session = request.getSession(true); // true creates a new session if no session exists
-            logger.info("New session created with ID: " + session.getId());
-        } else {
-            logger.info("Session user: " + getUserFromSession(request.getSession()).getUsername());
-            logger.info("Session ID Login: " + session.getId());
-        }
-
-        logger.info("New login attempt for username: " + loginFormDTO.getUsername());
-
-        if (errors.hasErrors()) {
-            response.put("message", "Validation errors occurred");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        user = getUserFromSession(request.getSession());
-        if (loginFormDTO.getUsername().equals(user.getUsername()) && (loginFormDTO.getPassword().equals(user.getPassword()))) {
+        User user = findByUsername(username);
+        if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
+            if (session == null) {
+                session = request.getSession(true); // Create new session if invalid
+            }
             setUserInSession(session, user);
             response.put("message", "Login successful");
             return ResponseEntity.ok(response);
         }
-
         response.put("message", "Invalid credentials");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
