@@ -3,42 +3,33 @@ import axios from 'axios';
 import "../styles/singleChoreStyle.css";
 import Button from './Button';
 import { useParams,useNavigate } from 'react-router-dom';
-import TextInputField from './TextInputField';
-import TextAreaInputField from './TextAreaInputField';
 import NumericInputField from './NumericInputField';
-import DateInputField from './DateInputField';
 import { ProgressBar } from 'react-bootstrap';
+import ModalWindow from "./ModalWindow";
 
 export default function EventDetails() {
     sessionStorage.setItem("username", "Amy");
     sessionStorage.setItem("accountType", "ADULT");
-    const today = new Date().toISOString().split("T")[0];
     const [isVisible, setIsVisible] = useState(sessionStorage.getItem("accountType")== "ADULT");
 
-    const [data, setData] = useState({
-        eventName: "",
-        eventBudget: "",
-        eventLocation: "",
-        eventDescription: "",
-        eventDate: "",
-      });
-
     const {userGroupId, eventId } = useParams();
-    const [newErrors, setErrors] = useState(null);
+    const [newErrors, setErrors] = useState({});
     const navigate = useNavigate(); 
     const [event, setEvent] = useState(null);
+    const [formData, setFormData] = useState({amountOfContribution: "",});
+    const [message, setMessage] = useState("");
+    const [modalType, setModalType] = useState("success");
+    const [showModal, setShowModal] = useState(false);
     
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setData((prev) => ({ ...prev, [name]: value }));
-    };
-
+    const failedMessage =
+        "Oops! Something went wrong while contributing to the event. Give it another try!";
+    const successMessage = "Hooray! Your contribution to the event has been successfully made.";
+    
     useEffect(() => {
         const getEvent = () => {axios.get(`http://localhost:8080/events/${userGroupId}/${eventId}`)
           .then(response => {
             setEvent(response.data);
-            setData(response.data);
-            setErrors(null);
+            setErrors({});
           })
           .catch(error => {
             setErrors('Failed to load event details');
@@ -48,48 +39,81 @@ export default function EventDetails() {
         getEvent();
       }, [userGroupId, eventId]);
 
-      if (newErrors) return <div>{newErrors}</div>;
-
       if (event === null) {
         return <p>Loading event details...</p>;
       }
 
-      const editEvent = (event) => {
-        alert("inside editEvent");
-        axios.post(`http://localhost:8080/events/${userGroupId}/${eventId}/edit`, data).then(response => {
-            console.log(response.data);
+      const validateForm = () => {
+        let isValid = true;
+        let newErrors = {};
+        
+        if (
+          !formData.amountOfContribution ||
+          isNaN(formData.amountOfContribution) ||
+          formData.amountOfContribution < 0
+        ) {
+          newErrors.amountOfContribution = "Contribution is required and must be a postive number";
+          isValid = false;
+        }
+        setErrors(newErrors);
+        return isValid;
+      }
+
+      function addContribution(event){
+        event.preventDefault();
+        if(!validateForm()) return;
+        const url = `http://localhost:8080/events/contribute/${userGroupId}/${eventId}`; 
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => {
+            if (response.ok) {
+              setMessage(successMessage);
+              setModalType("success");
+              setErrors({});
+            } else {
+              setMessage(failedMessage);
+              setModalType("danger");
+            }
+            setShowModal(true);
           })
-          .catch(error => {
-            console.error(error);
+          .catch((error) => {
+            setMessage(failedMessage);
+            setModalType("danger");
+            setShowModal(true);
           });
-          alert("Event Modified Successfully");
-        };
+
+          setFormData({amountOfContribution: "",});
+      }
   return (
-    <div className='pageBody'>
-        <h3> View/Edit Event</h3>
+    <div className="tiles-container">
+      <div className='title'><h3> View Event</h3></div>
+      <div className="contribute-container">
         <div class="progressBar">
-        <ProgressBar animated now={event.earnings} max={event.budget} />  
-      </div>
-    <form>
-      <TextInputField label="Event name" name="eventName" value={event.name} setData={setData}/>
-      <TextAreaInputField label ="Description" name="eventDescription" value={event.description} setData={setData}/>
-      <NumericInputField label="Fund Available" name="eventEarnings" value={event.earnings} setData={setData}/>
-      <NumericInputField label="Budget" name="eventBudget" value={event.budget} setData={setData}/>
-      <TextInputField label="Location" name="eventLocation" value={event.location} setData={setData} />
-      <label for="eventDate">Date: </label>
-        <input
-          type="date"
-          min={today}
-          name="eventDate"
-          onChange={handleChange}
-          value={Date(event.date)}
-          setData={setData}/>
-      <p><strong>Date: </strong>{event.date}</p>
-      <Button label="Back to Event List" onClick={() => navigate(`/events/${userGroupId}/list`)}></Button>
-        <div style={{ display: isVisible ? 'block' : 'none' }}>
-            <Button label="Update Event" onClick={() => editEvent}></Button>
+          <ProgressBar animated now={event.eventEarnings} max={event.eventBudget} />        
         </div>
-      </form>
+        <form>
+          <NumericInputField label="Amount to Contribute" name="amountOfContribution" value ={formData.amountOfContribution} setFormData={setFormData} />
+          {newErrors.amountOfContribution && (
+          <p className="error">{newErrors.amountOfContribution}</p>
+        )}
+          <Button label="Contribute" onClick={addContribution}></Button>
+         </form>
+      </div>
+      <div className="event-form-container">
+        <p>Event Name: {event.eventName}</p>
+        <p>Event Description: {event.eventDescription}</p>
+        <p>Fund Available: {event.eventEarnings}</p>
+        <p>Budget: {event.eventBudget}</p>
+        <p>Location: {event.eventLocation}</p>
+        <p>Event Date: {event.eventDate}</p>
+        <Button label="Back to Event List" onClick={() => navigate(`/events/${userGroupId}/list`)}></Button>
+          <div style={{ display: isVisible ? 'block' : 'none' }}>
+              <Button label="Update" onClick={() => navigate(`/events/edit/${userGroupId}/${eventId}`)}></Button>
+          </div>
+      </div>
       </div>
   )
 }

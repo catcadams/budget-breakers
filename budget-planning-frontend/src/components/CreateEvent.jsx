@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams,useNavigate } from 'react-router-dom';
 import DateInputField from "./DateInputField";
 import TextInputField from "./TextInputField";
 import NumericInputField from "./NumericInputField";
@@ -19,6 +20,7 @@ export default function CreateEvent() {
   const [message, setMessage] = useState("");
   const [modalType, setModalType] = useState("success");
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const failedMessage =
     "Oops! Something went wrong while creating the event. Give it another try!";
@@ -74,6 +76,13 @@ export default function CreateEvent() {
       });
   }
 
+  const handleModalClose = () =>{
+    setShowModal(false);
+    if (modalType === "success") {
+        navigate(`/events/1/list`);//need to be replaced with /chores/${userGroupId}/list
+    }
+  }
+
   return (
     <div class="pageBody">
       <form class="createEventForm">
@@ -118,7 +127,7 @@ export default function CreateEvent() {
           showState={showModal}
           message={message}
           type={modalType}
-          onClose={() => setShowModal(false)}
+          onClose={() => handleModalClose()} onConfirm={handleModalClose}
         />
       </form>
     </div>

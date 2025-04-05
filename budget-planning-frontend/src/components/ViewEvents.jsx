@@ -34,18 +34,18 @@ export default function ViewEvents() {
         navigate(`/events/${userGroupId}/${event.id}`);
       }
   return (
-    <div className="chores-container">
-        <div className="chore-list">
+    <div className="tiles-container">
+        <div className="tile-list">
           {
             events.map((event, index) => (
             <div
               key={event.id}
-              className="chore-tile"
+              className="tile"
               onClick={() => handleClick(event)}>
               <h3>{event.name}</h3>    
               <p>Fund Available: {event.earnings}$</p> 
               <p>Budget: {event.budget}$</p>
-              <progress value={event.earnings} max={event.budget}/>                 
+             <p><progress value={event.earnings} max={event.budget}/></p>                 
             </div>
           ))}
         </div>
