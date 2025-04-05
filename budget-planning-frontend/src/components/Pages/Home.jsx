@@ -1,10 +1,11 @@
 import React from 'react'
-import ViewEvents from '../ViewEvents'
+import LoginCheck from "../LoginCheck.jsx"
 
 function Home() {
   return (
     <div>
-      <ViewEvents />
+      <LoginCheck />
+      Home
     </div>
   )
 }
