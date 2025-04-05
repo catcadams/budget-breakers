@@ -15,12 +15,11 @@ public class UserGroup extends AbstractEntity{
 
     private  final List<Chore> chores = new ArrayList<>();
 
-//    private List<Email> userEmails = new ArrayList<>();
+    private final List<Email> userEmails = new ArrayList<>();
 
     public UserGroup(String name, String description){
         setName(name);
         setDescription(description);
-//        this.userEmails = userEmails;
         this.setId(nextId);
         nextId++;
     }
@@ -51,19 +50,20 @@ public class UserGroup extends AbstractEntity{
         this.chores.add(chore);
     }
 
-//    public void addEmails(Email email) {
-//        this.userEmails.add(email);
-//    }
+    public void addEmails(Email email) {
+        this.userEmails.add(email);
+    }
 
     @Override
     public String toString() {
         return "UserGroup{" +
-                "id=" + getId() +
-                "name=" + getName() +
-                "description=" + getDescription() +
-                "users=" + users +
+                " id=" + getId() +
+                " name=" + getName() +
+                " description=" + getDescription() +
+                " users=" + users +
                 " events=" + events +
                 " chores=" + chores +
+                " emails=" + userEmails +
                 "}";
     }
 }

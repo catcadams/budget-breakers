@@ -13,6 +13,8 @@ import Home from "./components/Pages/Home";
 import EditChorePage from "./components/EditChorePage";
 import CreateGroupForm from "./components/CreateGroupForm";
 import GroupsList from "./components/GroupsList";
+import Groups from "./components/Pages/Groups";
+import SingleGroupPage from "./components/SingleGroupPage";
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/Events" element={<Events />} />
         <Route path="/Chores" element={<Chores />} />
+        <Route path="/Groups" element={<Groups />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
         <Route path="/chores/1/list" element={<ChoresList />} />
         <Route path="/chores/:choreId" element={<SingleChorePage />} />
@@ -32,6 +35,7 @@ function App() {
         <Route path="/chores/:choreId/edit" element={<EditChorePage />} />
         <Route path="/groups/create" element={<CreateGroupForm />} />
         <Route path="/groups/:userID/list" element={<GroupsList />} />
+        <Route path="groups/:userID/:groupID" element={<SingleGroupPage />} />
       </Routes>
     </>
   );

@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Email;
 import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 import org.launchcode.budget_planning_backend.models.*;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
@@ -90,5 +91,14 @@ public class UserGroupService {
             }
         }
         return null;
+    }
+
+    public void addUsersToGroup(int groupID, Email email) {
+        for (UserGroup group : groupsList) {
+            if (group.getId() == groupID) {
+                group.addEmails(email);
+                logger.info("New member emails were added: ".concat(group.toString()));
+            }
+        }
     }
 }

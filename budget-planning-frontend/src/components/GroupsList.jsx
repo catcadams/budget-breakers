@@ -22,12 +22,16 @@ const GroupsList = () => {
     <div className="tiles-container">
       {groups.length === 0 ? (
         <div>
-          <Button label="Create Group" onClick={() => navigate("/groups/create")}>
-            Create Group
+          <Button label="Create New Group" onClick={() => navigate("/groups/create")}>
+            Create New Group
           </Button>
         </div>
       ) : (
-        <div className="tile-list">
+        <div>
+          <div>
+            <h2>All Groups</h2>
+          </div>
+          <div className="tile-list">
           {groups.map((group) => (
             <div
             key={group.id}
@@ -37,6 +41,12 @@ const GroupsList = () => {
             <p>{group.description}</p>
             </div>
           ))}
+          </div>
+          <div>
+          <Button label="Create New Group" onClick={() => navigate("/groups/create")}>
+            Create New Group
+          </Button>
+          </div>
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 package org.launchcode.budget_planning_backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Email;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
 import org.launchcode.budget_planning_backend.service.UserGroupService;
@@ -46,6 +47,11 @@ public class UserGroupController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(group);
+    }
+
+    @PostMapping(value = "/{userID}/{groupID}/add-member")
+    public void addMembersToGroup( @PathVariable Integer groupID, @RequestBody Email email) {
+        groupService.addUsersToGroup(groupID, email);
     }
 
 
