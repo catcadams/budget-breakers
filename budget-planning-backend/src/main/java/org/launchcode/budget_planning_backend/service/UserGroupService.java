@@ -3,10 +3,7 @@ package org.launchcode.budget_planning_backend.service;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
-import org.launchcode.budget_planning_backend.models.Chore;
-import org.launchcode.budget_planning_backend.models.Event;
-import org.launchcode.budget_planning_backend.models.User;
-import org.launchcode.budget_planning_backend.models.UserGroup;
+import org.launchcode.budget_planning_backend.models.*;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +46,7 @@ public class UserGroupService {
     public List<UserGroup> getGroupsByUser (int userID) {
         for (UserGroup group : groupsList) {
             for (User user : group.getUsers()) {
-                if(user.getId() == userID) {
+                if(user.getId() == userID && !groupsByUser.contains(group)) {
                     groupsByUser.add(group);
                 }
             }
@@ -59,8 +56,9 @@ public class UserGroupService {
 
     public UserGroup createNewGroup (UserGroupDTO groupDTO, HttpServletRequest request) {
         UserGroup group = new UserGroup(groupDTO.getName(), groupDTO.getDescription());
-        User user = authenticationController.getUserFromSession(request.getSession());
-        if (user != null) {
+//        User user = authenticationController.getUserFromSession(request.getSession());
+        User user = DummyObjectsToBeDeleted.getUserByID(1);
+        if (user != null && user.getId() == 1) {
             group.addUsers(user);
         }
         logger.info("New Group: ".concat(group.toString()));
