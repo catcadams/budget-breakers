@@ -16,7 +16,8 @@ public class EventController {
 
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    public static User user = new User();
+    public static User user = new User("Cat", "Adams", LocalDate.now(), "cat@cat.com", "catadams", "password", "password");
+
     public static UserGroup group = new UserGroup(1,"Test");
     public static boolean isGroupSet = false;
 
@@ -31,6 +32,7 @@ public class EventController {
         if(!isGroupSet) {
             user.setAccountType(AccountType.ADULT);
             user.addUserGroup(group);
+            isGroupSet = true;
         }
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
                 eventDto.getEventDate(), Status.OPEN, 0, group);
@@ -45,11 +47,12 @@ public class EventController {
         EventDTO eventDto = new EventDTO();
         for(Event event: events){
             if(event.getId() == eventId){
+                eventDto.setEventId(eventId);
                 eventDto.setEventName(event.getName());
                 eventDto.setEventEarnings(event.getEarnings());
                 eventDto.setEventBudget((event.getBudget()));
                 eventDto.setEventDescription(event.getDescription());
-                eventDto.setEventDate(  event.getDate().toString());
+                if(event.getDate() == null)eventDto.setEventDate( ""); else eventDto.setEventDate(  event.getDate().toString());
                 eventDto.setEventLocation(event.getLocation());
                 return eventDto;
 
@@ -57,7 +60,7 @@ public class EventController {
         }
         return null;
     }
-    @PostMapping("/{userGroupId}/{eventId}/edit")
+    @PutMapping("/edit/{userGroupId}/{eventId}")
     public String editEventDetails(@Valid @RequestBody EventDTO eventDto, @PathVariable int userGroupId, @PathVariable Integer eventId) {
         logger.info("Inside editEventDetails ");
         List<Event> events = group.getEvents();
@@ -73,6 +76,48 @@ public class EventController {
             }
         }
         return "Update Event failed";
+    }
+
+    @PostMapping("/contribute/{userGroupId}/{eventId}")
+    public void addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable int userGroupId, @PathVariable int eventId){
+        logger.info("Inside Contribute");
+        // Need to implement get group with groupID
+        List<Event> events = group.getEvents();
+        Event event = null;
+        Contributions contributions = new Contributions();
+
+
+        //Get the event
+        for(Event eventDetail: events){
+            if(eventDetail.getId() == eventId){
+                event = eventDetail;
+                break;
+            }
+        }
+        //Set Contribution details to event
+        if(event !=null) {
+            event.setEarnings(event.getEarnings() + contributionDTO.getAmountOfContribution());
+            logger.info(event.toString());
+            //Set Status
+            if (event.getStatus() == Status.OPEN) {
+                event.setStatus(Status.IN_PROGRESS);
+            }
+            // event completion
+            if (event.getEarnings() == event.getBudget()) {
+                event.setStatus(Status.COMPLETE);
+            }
+
+            contributions.setDate(LocalDate.now());
+            //contributions.setEvent(event);
+            contributions.setAmountOfContribution(contributionDTO.getAmountOfContribution());
+            contributions.setUser(user); //contributions.setUser(); - implementation pending!
+            // based on the user - set the status to "PENDING" - child, "COMPLETED" - ADULT" - implementation pending!
+            contributions.setStatus(Status.COMPLETE);
+            event.addContributions(contributions);
+            contributions.setEventID(eventId);
+            //contributions.setEvent(event);
+        }
+        logger.info("Event created successfully".concat(contributions.toString()));
     }
 
 

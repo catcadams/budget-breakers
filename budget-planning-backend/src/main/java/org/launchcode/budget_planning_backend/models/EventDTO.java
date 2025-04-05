@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class EventDTO {
 
+    private int eventId;
     private String eventName;
     private double eventBudget;
     private String eventLocation;
@@ -59,5 +60,13 @@ public class EventDTO {
 
     public void setEventEarnings(double eventEarnings) {
         this.eventEarnings = eventEarnings;
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 }
