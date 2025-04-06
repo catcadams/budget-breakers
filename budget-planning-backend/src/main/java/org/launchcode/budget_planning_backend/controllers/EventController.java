@@ -1,4 +1,5 @@
 package org.launchcode.budget_planning_backend.controllers;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
@@ -31,13 +32,13 @@ public class EventController {
     public static boolean isGroupSet = false;
 
     @GetMapping("/{userGroupId}/list")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId){
+    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
         logger.info("Inside GetEvents");
+        User user = authenticationController.getUserFromSession(request.getSession(false));
+//        user.addUserGroup(group);
         if (user.hasAccessToGroup(userGroupId)) {
-            //For persistence with database connection
-//            userGroup.setId(userGroupId);
-//            return ResponseEntity.ok(userGroup.getEvents());
-            return ResponseEntity.ok(group.getEvents());
+            userGroup.setId(userGroupId);
+            return ResponseEntity.ok(userGroup.getEvents());
         }
         return ResponseEntity.badRequest().body(null);
     }
