@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
+import org.launchcode.budget_planning_backend.service.EmailService;
 import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,19 @@ public class UserGroupController {
     @Autowired
     UserGroupService groupService;
 
+    @Autowired
+    EmailService emailService;
 
     @PostMapping(value="/create")
-    public void createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
+    public ResponseEntity<String> createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
         groupService.saveGroups(groupService.createNewGroup(userGroupDTO, request));
+        String groupName = userGroupDTO.getName();
+        String groupDescription = userGroupDTO.getDescription();
+        List<String> emails = userGroupDTO.getEmails();
+        String subject = "You are invited to join " + groupName + " on Red, Green, VACAY!";
+        String body = "Hi, you are invited to join the group: " + groupName + "\nDescription: " + groupDescription;
+        emailService.sendEmailInvites(emails, subject, body);
+        return ResponseEntity.ok("Group created successfully!");
     }
 
     @GetMapping(value = "/{userID}/list")
