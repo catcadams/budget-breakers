@@ -7,7 +7,7 @@ export const useFetchChores = (userGroupId) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/chores/${userGroupId}/list`)
+        axios.get(`http://localhost:8080/chores/${userGroupId}/list`, { withCredentials: true })
             .then(response => {
                 setChores(response.data);
                 setError(null);
@@ -28,7 +28,7 @@ export const useFetchSingleChore = (userGroupId, choreId) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/chores/${userGroupId}/${choreId}`)
+        axios.get(`http://localhost:8080/chores/${userGroupId}/${choreId}`, { withCredentials: true })
             .then(response => {
                 setChore(response.data);
                 setError(null);
@@ -40,7 +40,7 @@ export const useFetchSingleChore = (userGroupId, choreId) => {
             .finally(() => setLoading(false));
     }, [userGroupId, choreId]);
 
-    return { chore, loading, error, status };
+    return { chore, loading, error, choreStatus };
 };
 
 
