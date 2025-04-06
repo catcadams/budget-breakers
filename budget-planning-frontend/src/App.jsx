@@ -13,6 +13,9 @@ import Home from "./components/Pages/Home";
 import Logout from "./components/Logout";
 import EditChorePage from "./components/EditChorePage";
 import CreateGroupForm from "./components/CreateGroupForm";
+import EventDetails from "./components/EventDetails";
+import ViewEvents from "./components/ViewEvents";
+import UpdateEventDetails from "./components/UpdateEventDetails";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Events" element={<Events />} />
+        <Route path="/events/:userGroupId/:eventId" element={<EventDetails />}/>
+        <Route path="/events/:userGroupId/list" element={<ViewEvents />}/>
+        <Route path="/events/edit/:userGroupId/:eventId" element={<UpdateEventDetails />} />
         <Route path="/Chores" element={<Chores />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
