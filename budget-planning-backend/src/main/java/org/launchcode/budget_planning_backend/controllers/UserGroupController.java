@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/groups")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserGroupController {
 
     private final Logger logger = LoggerFactory.getLogger(UserGroupController.class);

@@ -1,29 +1,36 @@
 package org.launchcode.budget_planning_backend.controllers;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
-//import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.AccountTypeUtil;
+import org.launchcode.budget_planning_backend.models.SessionKey;
+import org.launchcode.budget_planning_backend.models.User;
 import org.launchcode.budget_planning_backend.models.dto.LoginFormDTO;
 import org.launchcode.budget_planning_backend.models.dto.RegisterFormDTO;
+import org.launchcode.budget_planning_backend.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.launchcode.budget_planning_backend.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AuthenticationController {
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     List<User> users = new ArrayList<>();
     Map<String, String> response = new HashMap<>();
@@ -40,12 +47,9 @@ public class AuthenticationController {
 //    @Autowired
 //    UserRepository userRepository;
 
-    private static final String userSessionKey = "user";
-
-    User user;
 
     public User getUserFromSession(HttpSession session) {
-        return (User) session.getAttribute(userSessionKey);
+        return (User) session.getAttribute(SessionKey.USER.getValue());
     }
 
     //For persistence with database connection
@@ -66,7 +70,16 @@ public class AuthenticationController {
 //
     private static void setUserInSession(HttpSession session, User user) {
 //        session.setAttribute(userSessionKey, user.getId());
-        session.setAttribute(userSessionKey, user);
+        session.setAttribute(SessionKey.USER.getValue(), user);
+    }
+
+    @GetMapping()
+    public ResponseEntity<User> getCurrentUser(HttpServletRequest request){
+        User currentUser = authenticationService.getCurrentUser(request);
+        if(currentUser != null) {
+            return ResponseEntity.ok(currentUser);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @PostMapping("/register")
