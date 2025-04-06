@@ -16,6 +16,9 @@ import CreateGroupForm from "./components/CreateGroupForm";
 import EventDetails from "./components/EventDetails";
 import ViewEvents from "./components/ViewEvents";
 import UpdateEventDetails from "./components/UpdateEventDetails";
+import GroupsList from "./components/GroupsList";
+import Groups from "./components/Pages/Groups";
+import SingleGroupPage from "./components/SingleGroupPage";
 
 function App() {
   return (
@@ -31,6 +34,7 @@ function App() {
         <Route path="/events/edit/:userGroupId/:eventId" element={<UpdateEventDetails />} />
         <Route path="/Chores" element={<Chores />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/Groups" element={<Groups />} />
         <Route path="/chores/create" element={<ChoreCreationForm />} />
         <Route path="/chores/1/list" element={<ChoresList />} />
         <Route path="/chores/:choreId" element={<SingleChorePage />} />
@@ -38,6 +42,8 @@ function App() {
         <Route path="/chores/:userGroupId/:choreId" element={<SingleChorePage />} />
         <Route path="/chores/:choreId/edit" element={<EditChorePage />} />
         <Route path="/groups/create" element={<CreateGroupForm />} />
+        <Route path="/groups/:userID/list" element={<GroupsList />} />
+        <Route path="groups/:userID/:groupID" element={<SingleGroupPage />} />
       </Routes>
     </>
   );

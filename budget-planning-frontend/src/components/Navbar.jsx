@@ -25,7 +25,10 @@ function Navbar() {
               <NavLink to="/Events">Events</NavLink>
             </li>
             <li>
-              <NavLink to="/Chores"> Chores</NavLink>
+              <NavLink to="/Chores">Chores</NavLink>
+            </li>
+            <li>
+              <NavLink to="/Groups">Groups</NavLink>
             </li>
             <li>
               <NavLink to="/Logout"> Logout</NavLink>

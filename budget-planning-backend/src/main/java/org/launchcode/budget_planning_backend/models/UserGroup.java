@@ -1,5 +1,7 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.validation.constraints.Email;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class UserGroup extends AbstractEntity{
     private final List<Event> events = new ArrayList<>();
 
     private  final List<Chore> chores = new ArrayList<>();
+
+    private final List<Email> userEmails = new ArrayList<>();
 
     public UserGroup(String name, String description){
         setName(name);
@@ -51,15 +55,20 @@ public class UserGroup extends AbstractEntity{
         this.chores.add(chore);
     }
 
+    public void addEmails(Email email) {
+        this.userEmails.add(email);
+    }
+
     @Override
     public String toString() {
         return "UserGroup{" +
-                "id=" + getId() +
-                "name=" + getName() +
-                "description=" + getDescription() +
-                "users=" + users +
-                ", events=" + events +
-                ", chores=" + chores +
-                '}';
+                " id=" + getId() +
+                " name=" + getName() +
+                " description=" + getDescription() +
+                " users=" + users +
+                " events=" + events +
+                " chores=" + chores +
+                " emails=" + userEmails +
+                "}";
     }
 }
