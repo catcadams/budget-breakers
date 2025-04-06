@@ -6,7 +6,7 @@ import budgetLogo from "../img/logo-transparent-png.png";
 function Navbar() {
   return (
     <>
-      <div class="nav-bar">
+      <div className="nav-bar">
         <nav>
           <img src={budgetLogo} className="logo" alt="Budget Breaker logo" />
           <NavLink to="/" className="title">

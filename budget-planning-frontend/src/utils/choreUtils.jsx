@@ -21,6 +21,11 @@ export const getChoreImage = (status) => {
 
 export const isChoreEditableOrDeletable = (status) => status === "OPEN";
 
+export const isAdult = (user) => {
+  return user?.accountType === "ADULT";
+};
+
+
 export const getChoreStatusMessage = (chore) => {
     switch (chore.status) {
       case "OPEN":

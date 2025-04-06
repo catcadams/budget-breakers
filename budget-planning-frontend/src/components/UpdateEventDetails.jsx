@@ -105,7 +105,7 @@ export default function UpdateEventDetails() {
   return (
     <div className="pageBody">
       <h3> Edit Event</h3>
-      <div class="progressBar">
+      <div className="progressBar">
         <ProgressBar animated now={formData.eventEarnings} max={formData.eventBudget} />
       </div>
       <form>

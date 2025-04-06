@@ -91,7 +91,7 @@ export default function EventDetails() {
     <div className="tiles-container">
       <div className='title'><h3> View Event</h3></div>
       <div className="contribute-container">
-        <div class="progressBar">
+        <div className="progressBar">
           <ProgressBar animated now={event.eventEarnings} max={event.eventBudget} />        
         </div>
         <form>
