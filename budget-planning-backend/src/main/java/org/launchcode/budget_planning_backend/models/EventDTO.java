@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class EventDTO {
 
+    private int eventId;
     private String eventName;
     private double eventBudget;
     private String eventLocation;
     private String eventDescription;
     private String eventDate;
+    private double eventEarnings;
 
     public EventDTO(){}
 
@@ -50,5 +52,21 @@ public class EventDTO {
 
     public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public double getEventEarnings() {
+        return eventEarnings;
+    }
+
+    public void setEventEarnings(double eventEarnings) {
+        this.eventEarnings = eventEarnings;
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 }

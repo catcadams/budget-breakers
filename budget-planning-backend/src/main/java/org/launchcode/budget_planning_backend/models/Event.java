@@ -1,10 +1,14 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Event extends AbstractEntity{
 
@@ -19,11 +23,13 @@ public class Event extends AbstractEntity{
     @Size(min = 4, max = 50 , message = "Location must be  between 4 and 50 characters")
     private String location;
 
-    private Date date;
+    private LocalDate date;
 
     private Status status;
 
     private double earnings;
+
+    private final List<Contributions> contributions = new ArrayList<>();
 
     @NotNull(message = "Group is required")
     private UserGroup userGroup;
@@ -33,7 +39,8 @@ public class Event extends AbstractEntity{
         this.setDescription(description);
         this.budget = budget;
         this.location = location;
-        this.date = DateHandler.parseDate(date);
+        if(date.isBlank()) this.date = null; else this.date =LocalDate.now();
+
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
@@ -67,11 +74,11 @@ public class Event extends AbstractEntity{
         this.location = location;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -97,6 +104,18 @@ public class Event extends AbstractEntity{
 
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
+    }
+
+    public List<Contributions> getContributions() {
+        return contributions;
+    }
+
+    public void addContributions(Contributions contributions) {
+        if(this.contributions.isEmpty()){
+            this.contributions.add(0, contributions);
+        }else{
+        this.contributions.add(contributions);
+        }
     }
 
     @Override

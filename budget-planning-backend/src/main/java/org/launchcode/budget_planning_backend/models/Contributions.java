@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -18,6 +19,8 @@ public class Contributions extends BaseAbstractEntity{
 
     @NotNull
     private Event event;
+
+    private int eventID;
 
     @NotNull
     private Status status;
@@ -45,6 +48,14 @@ public class Contributions extends BaseAbstractEntity{
     public Status getStatus() {return status;}
 
     public void setStatus(Status status) {this.status = status;}
+
+    public int getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
+    }
 
     @Override
     public String toString() {

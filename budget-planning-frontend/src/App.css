@@ -1,6 +1,7 @@
-.createEventForm {
+.pageBody {
   align-items: center;
   text-align: center;
+  
 }
 
 .App{
@@ -11,4 +12,38 @@
 
 .error {
   color: red;
+}
+
+.progressBar {
+  padding: 10%;
+  position: relative;
+}
+
+.contribute-container{
+  float:right;
+  justify-content: space-between;
+  align-items: left;
+  padding-top: 2%;
+  width: 50%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.event-form-container {
+  float:inline-start;
+  justify-content: space-between;
+  align-items: left;
+  width:40% ;
+  padding-top: 0%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.title{
+  align-items: center;
+  justify-content: space-evenly;
 }
