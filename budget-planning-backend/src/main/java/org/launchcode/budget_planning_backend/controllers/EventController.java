@@ -33,10 +33,8 @@ public class EventController {
     public static boolean isGroupSet = false;
 
     @GetMapping("/{userGroupId}/list")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
+    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId){
         logger.info("Inside GetEvents");
-        user.hasAccessToGroup(userGroupId);
-
         if (user.hasAccessToGroup(userGroupId)) {
             //For persistence with database connection
 //            userGroup.setId(userGroupId);
