@@ -99,7 +99,7 @@ export default function UpdateEventDetails() {
     const handleModalClose = () =>{
       setShowModal(false);
       if (modalType === "success") {
-          navigate(`/events/1/list`);//need to be replaced with /chores/${userGroupId}/list
+          navigate(`/events/1/list`);//need to be replaced with /events/${userGroupId}/list
       }
     }
   return (
