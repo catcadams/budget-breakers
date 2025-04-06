@@ -116,6 +116,15 @@ public class User extends BaseAbstractEntity{
         return userGroups;
     }
 
+    public Boolean hasAccessToGroup (int userGroupID) {
+        for (UserGroup group : getUserGroups()) {
+            if (group.getId() == userGroupID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addUserGroup(UserGroup group) {
         this.userGroups.add(group);
     }

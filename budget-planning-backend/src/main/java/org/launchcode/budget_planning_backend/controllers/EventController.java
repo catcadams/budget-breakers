@@ -1,10 +1,15 @@
 package org.launchcode.budget_planning_backend.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,17 +19,31 @@ import java.util.List;
 @RequestMapping(value ="/events")
 public class EventController {
 
+    @Autowired
+    AuthenticationController authenticationController;
+
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
+    UserGroup userGroup;
+
     public static User user = new User("Cat", "Adams", LocalDate.now(), "cat@cat.com", "catadams", "password", "password");
+
 
     public static UserGroup group = new UserGroup(1,"Test");
     public static boolean isGroupSet = false;
 
     @GetMapping("/{userGroupId}/list")
-    public List<Event> getEvents(@PathVariable int userGroupId){
+    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
         logger.info("Inside GetEvents");
-        return group.getEvents();
+        user.hasAccessToGroup(userGroupId);
+
+        if (user.hasAccessToGroup(userGroupId)) {
+            //For persistence with database connection
+//            userGroup.setId(userGroupId);
+//            return ResponseEntity.ok(userGroup.getEvents());
+            return ResponseEntity.ok(group.getEvents());
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
     @PostMapping("/create")
