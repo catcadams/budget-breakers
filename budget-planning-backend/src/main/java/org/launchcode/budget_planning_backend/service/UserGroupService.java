@@ -45,13 +45,11 @@ public class UserGroupService {
     }
 
     public Boolean hasAccessToGroup (int userGroupID, int userID) {
-
         for (User user : getGroupByID(userGroupID).getUsers()) {
-            if(user.getId() == userID) {  // Use '==' to compare the values
-                return true;  // User found in the group
+            if(user.getId() == userID) {
+                return true;
             }
         }
-
         return false;
     }
 
