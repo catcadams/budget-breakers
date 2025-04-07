@@ -44,8 +44,8 @@ public class UserGroupService {
         return null;
     }
 
-    public Boolean hasAccessToGroup (int userGroupID, int userID) {
-        for (User user : getGroupByID(userGroupID).getUsers()) {
+    public Boolean hasAccessToGroup (int userGroupId, int userID) {
+        for (User user : getGroupByID(userGroupId).getUsers()) {
             if(user.getId() == userID) {
                 return true;
             }
