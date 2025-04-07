@@ -1,11 +1,15 @@
 package org.launchcode.budget_planning_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.Date;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Contributions extends BaseAbstractEntity{
 
     @NotNull
@@ -18,6 +22,7 @@ public class Contributions extends BaseAbstractEntity{
     private LocalDate date;
 
     @NotNull
+    @JsonBackReference
     private Event event;
 
     private int eventID;
@@ -25,7 +30,12 @@ public class Contributions extends BaseAbstractEntity{
     @NotNull
     private Status status;
 
-    public Contributions() {}
+    private static int nextId = 1;
+
+    public Contributions() {
+        this.setId(nextId);
+        nextId++;
+    }
 
     public User getUser() {return user;}
 

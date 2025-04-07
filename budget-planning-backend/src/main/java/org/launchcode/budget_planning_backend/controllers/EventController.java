@@ -4,13 +4,17 @@ import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping(value ="/events")
 public class EventController {
 
@@ -18,13 +22,17 @@ public class EventController {
 
     public static User user = new User("Cat", "Adams", LocalDate.now(), "cat@cat.com", "catadams", "password", "password");
 
-    public static UserGroup group = new UserGroup(1,"Test");
+    public static UserGroup group = new UserGroup("Group1", "Test");
     public static boolean isGroupSet = false;
 
     @GetMapping("/{userGroupId}/list")
-    public List<Event> getEvents(@PathVariable int userGroupId){
+    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId){
         logger.info("Inside GetEvents");
-        return group.getEvents();
+        List<Event> listOfEvents = group.getEvents();
+        if (listOfEvents.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        return ResponseEntity.ok(listOfEvents);
     }
 
     @PostMapping("/create")
@@ -35,8 +43,8 @@ public class EventController {
             isGroupSet = true;
         }
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
-                eventDto.getEventDate(), Status.OPEN, 0, group);
-        group.addEvents(event);
+                eventDto.getEventDate(), Status.OPEN, 0, user.getUserGroups().get(0));
+        user.getUserGroups().get(0).addEvents(event);
         logger.info("Event created successfully".concat(event.toString()));
     }
 
@@ -70,7 +78,7 @@ public class EventController {
                 event.setDescription(eventDto.getEventDescription());
                 event.setBudget(eventDto.getEventBudget());
                 event.setLocation(eventDto.getEventLocation());
-                event.setDate(LocalDate.parse(eventDto.getEventDate()));
+                if(event.getDate() == null)eventDto.setEventDate( ""); else eventDto.setEventDate(  event.getDate().toString());
                 event.setEarnings(eventDto.getEventEarnings());
                 return "Event updated Successfully";
             }
@@ -79,7 +87,7 @@ public class EventController {
     }
 
     @PostMapping("/contribute/{userGroupId}/{eventId}")
-    public void addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable int userGroupId, @PathVariable int eventId){
+    public String addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable int userGroupId, @PathVariable int eventId){
         logger.info("Inside Contribute");
         // Need to implement get group with groupID
         List<Event> events = group.getEvents();
@@ -115,10 +123,45 @@ public class EventController {
             contributions.setStatus(Status.COMPLETE);
             event.addContributions(contributions);
             contributions.setEventID(eventId);
-            //contributions.setEvent(event);
+            contributions.setEvent(event);
         }
-        logger.info("Event created successfully".concat(contributions.toString()));
+        logger.info("Contribution added successfully".concat(contributions.toString()));
+        return "Contribution added successfully";
     }
 
-
+        @GetMapping("/contributions/{userGroupId}/{eventId}")
+        public List<ContributionDTO> getContributions(@PathVariable int userGroupId, @PathVariable int eventId) {
+            List<ContributionDTO> list = getContributions(eventId);
+            return list;
+        }
+        public static List<ContributionDTO> getContributions(int eventId){
+        List<ContributionDTO> contributions = new ArrayList<>();
+        List<Event> events = group.getEvents();
+        List<Contributions> listOfContributions = null;
+        // get the contributions for an event
+        for(Event eventDetail: events){
+            if(eventDetail.getId() == eventId) {
+                listOfContributions = eventDetail.getContributions();
+                break;
+            }
+        }
+        // If there are no contributions so far, send an empty list
+        if(listOfContributions == null || listOfContributions.isEmpty()){
+            return  contributions;
+        }else {
+            //Set DTO with contribution Details to show in contribution table
+            ContributionDTO contributionDto = null;
+            for (Contributions contribution : listOfContributions) {
+                contributionDto = new ContributionDTO();
+                contributionDto.setId(contribution.getId());
+                contributionDto.setDate(contribution.getDate());
+                contributionDto.setStatus(contribution.getStatus());
+                contributionDto.setAmountOfContribution(contribution.getAmountOfContribution());
+                contributionDto.setUser(contribution.getUser());
+                contributionDto.setName(contribution.getUser().getFirstName()+ contribution.getUser().getLastName());
+                contributions.add(contributionDto);
+            }
+        }
+        return  contributions;
+    }
 }
