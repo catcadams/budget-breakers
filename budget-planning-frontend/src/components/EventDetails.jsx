@@ -16,6 +16,7 @@ export default function EventDetails() {
     const [newErrors, setErrors] = useState({});
     const navigate = useNavigate(); 
     const [event, setEvent] = useState(null);
+    const [contributions, setContributions] = useState([]);
     const [formData, setFormData] = useState({amountOfContribution: "",});
     const [message, setMessage] = useState("");
     const [modalType, setModalType] = useState("success");
@@ -24,6 +25,7 @@ export default function EventDetails() {
     const failedMessage =
         "Oops! Something went wrong while contributing to the event. Give it another try!";
     const successMessage = "Hooray! Your contribution to the event has been successfully made.";
+    const congratulationsMessage = "Congratulations!! You have achieved the budget need for the event!!! Enjoy the event!";
     
     useEffect(() => {
         const getEvent = () => {axios.get(`http://localhost:8080/events/${userGroupId}/${eventId}`)
@@ -34,9 +36,29 @@ export default function EventDetails() {
           .catch(error => {
             setErrors('Failed to load event details');
             console.error('Error fetching event details:', error);
-          });
+          })
+          .finally(() => setLoading(false));
         };
         getEvent();
+      }, [userGroupId, eventId]);
+
+      useEffect(() => {
+        const getContributionHistory = () => {
+          axios
+            .get(
+              `http://localhost:8080/events/contributions/${userGroupId}/${eventId}`
+            )
+            .then((response) => {
+              setContributions(response.data);
+              setErrors({});
+            })
+            .catch((err) => {
+              setErrors("Failed to load contibutions");
+              console.error(err);
+            });
+        };
+    
+        getContributionHistory();
       }, [userGroupId, eventId]);
 
       if (event === null) {
@@ -60,8 +82,10 @@ export default function EventDetails() {
       }
 
       function addContribution(event){
-        event.preventDefault();
-        if(!validateForm()) return;
+        if(!validateForm()) {
+          event.preventDefault();
+          return;
+        }
         const url = `http://localhost:8080/events/contribute/${userGroupId}/${eventId}`; 
         fetch(url, {
           method: "POST",
@@ -83,11 +107,25 @@ export default function EventDetails() {
             setMessage(failedMessage);
             setModalType("danger");
             setShowModal(true);
-          });
+          })
+          .finally(() => isBudgetReached());
+      }
 
-          setFormData({amountOfContribution: "",});
+      
+      const isBudgetReached = () =>{
+        if(event.eventEarnings == event.eventBudget || event.eventEarnings > event.eventBudget)
+        {
+          setMessage(congratulationsMessage);
+          setModalType("success");
+          setShowModal(true);
+        }
+      }
+
+      const handleModalClose = () =>{
+        setShowModal(false);
       }
   return (
+    <>
     <div className="tiles-container">
       <div className='title'><h3> View Event</h3></div>
       <div className="contribute-container">
@@ -113,7 +151,37 @@ export default function EventDetails() {
           <div style={{ display: isVisible ? 'block' : 'none' }}>
               <Button label="Update" onClick={() => navigate(`/events/edit/${userGroupId}/${eventId}`)}></Button>
           </div>
+          <ModalWindow
+          showState={showModal}
+          message={message}
+          type={modalType}
+          onClose={() => handleModalClose()} onConfirm={handleModalClose}
+        />
       </div>
+      
       </div>
+      <div className="contribution-history-container" >
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {contributions.map((item) => (
+            <tr key={item.id}>
+              <td>{item.date}</td>
+              <td>{item.name}</td>
+              <td>{item.amountOfContribution}</td>
+              <td>{item.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    </>
   )
 }
