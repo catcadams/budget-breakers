@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Positive;
 
 public class ChoreDto extends AbstractEntity {
 
-    //private User user;
-
-    //private Event event;
-
     private UserGroup group;
 
     private String userGroupName;//temp for dummy data

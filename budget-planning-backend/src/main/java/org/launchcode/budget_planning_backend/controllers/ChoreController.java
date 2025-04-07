@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/chores")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class ChoreController {
 
     @Autowired

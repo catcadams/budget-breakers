@@ -42,6 +42,15 @@ public class UserGroupService {
         return null;
     }
 
+    public UserGroup getGroupByName(String groupName) {
+        for (UserGroup group : groupsList) {
+            if(group.getName().equals(groupName)) {
+                return group;
+            }
+        }
+        return null;
+    }
+
     public List<UserGroup> getGroupsByUser (int userID) {
         for (UserGroup group : groupsList) {
             for (User user : group.getUsers()) {

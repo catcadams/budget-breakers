@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate , useLocation } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Button from './Button';
@@ -8,23 +8,29 @@ import "../styles/singleChoreStyle.css";
 import ModalWindow from "./ModalWindow";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
 import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage } from "../utils/choreUtils.jsx";
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const SingleChorePage = () => {
+  const location = useLocation();
+  const groupID = location.state?.groupID; 
   const { choreId } = useParams();
-  const [userGroupId, setUserGroupId] = useState(1);//for hardcoded user group. Will be replaced later
+  console.log("Group ID:", groupID);
+console.log("Chore ID:", choreId);
+  const { user, error: userError } = useCurrentUser();
   const [showModal, setShowModal] = useState(false);
-  const { chore, loading, error } = useFetchSingleChore(userGroupId, choreId);
+  const { chore, loading, error: choreError, status } = useFetchSingleChore(groupID, choreId);
 
   const navigate = useNavigate();
 
   if (loading) return <p>Loading chore details...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (userError) return <p>Error: {userError}</p>;
+  if (choreError) return <p>Error: {choreError}</p>;
 
   const handleDelete = () => {
     setShowModal(false);
-    axios.delete(`http://localhost:8080/chores/delete/${choreId}`)
+    axios.delete(`http://localhost:8080/chores/delete/${choreId}`, { withCredentials: true })
       .then(() => {
-        navigate(`/chores/${userGroupId}/list`);
+        navigate(`/chores/${groupID}/list`);
       })
       .catch((error) => {
         console.error("Error deleting chore:", error);
@@ -36,7 +42,7 @@ const SingleChorePage = () => {
   };
 
   const handleAssignToMe = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/assign`, { userGroupId })
+    axios.put(`http://localhost:8080/chores/${choreId}/assign`, { groupId }, { withCredentials: true })
       .then((response) => {
         window.location.reload();
       })
@@ -46,7 +52,7 @@ const SingleChorePage = () => {
   };
 
   const handleUnassign = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/unassign`, { userGroupId })
+    axios.put(`http://localhost:8080/chores/${choreId}/unassign`, { groupId }, { withCredentials: true })
       .then((response) => {
         window.location.reload();
       })
@@ -56,7 +62,7 @@ const SingleChorePage = () => {
   };
 
   const handleMarkAsCompleted = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/complete`)
+    axios.put(`http://localhost:8080/chores/${choreId}/complete`, { withCredentials: true })
       .then(() => {
         window.location.reload();
       })
@@ -66,7 +72,7 @@ const SingleChorePage = () => {
   };
 
   const handleConfirmContribution = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/contribute`)
+    axios.put(`http://localhost:8080/chores/${choreId}/contribute`, { withCredentials: true })
       .then(() => {
         window.location.reload();
       })
@@ -125,7 +131,7 @@ const SingleChorePage = () => {
             <Button
               className="action-button"
               label="Back to the List"
-              onClick={() => navigate(`/chores/${userGroupId}/list`)}
+              onClick={() => navigate(`/groups/${user.id}/${groupID}`)}
             />
             {chore.status !== "COMPLETE" && (
               <>

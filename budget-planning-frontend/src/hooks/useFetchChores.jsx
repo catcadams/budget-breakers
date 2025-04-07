@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const useFetchChores = (userGroupId) => {
+export const useFetchChores = (groupId) => {
     const [chores, setChores] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/chores/${userGroupId}/list`, { withCredentials: true })
+        axios.get(`http://localhost:8080/chores/${groupId}/list`, { withCredentials: true })
             .then(response => {
                 setChores(response.data);
                 setError(null);
@@ -17,18 +17,18 @@ export const useFetchChores = (userGroupId) => {
                 console.error(err);
             })
             .finally(() => setLoading(false));
-    }, [userGroupId]);
+    }, [groupId]);
 
     return { chores, loading, error };
 };
 
-export const useFetchSingleChore = (userGroupId, choreId) => {
+export const useFetchSingleChore = (groupId, choreId) => {
     const [chore, setChore] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/chores/${userGroupId}/${choreId}`, { withCredentials: true })
+        axios.get(`http://localhost:8080/chores/${groupId}/${choreId}`, { withCredentials: true })
             .then(response => {
                 setChore(response.data);
                 setError(null);
@@ -38,9 +38,26 @@ export const useFetchSingleChore = (userGroupId, choreId) => {
                 console.error(err);
             })
             .finally(() => setLoading(false));
-    }, [userGroupId, choreId]);
+    }, [groupId, choreId]);
 
-    return { chore, loading, error, choreStatus };
+    return { chore, loading, error };
+};
+
+export const useFetchGroupNumber = (groups, loading) => {
+    const [warningMessage, setWarningMessage] = useState("");
+    const [modalType, setModalType] = useState();
+    const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        if (!loading && groups.length === 0) {
+            setWarningMessage("You need to be part of at least one group to create a chore. Please join a group first!");
+            setModalType("warning");
+            setShowModal(true);
+        }
+    }, [groups, loading]);
+
+    return {warningMessage, modalType, showModal };
+
 };
 
 

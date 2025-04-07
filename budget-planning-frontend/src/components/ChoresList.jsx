@@ -20,7 +20,7 @@ const ChoresList = () => {
   if (userError) return <div>{userError}</div>;
 
   function handleClick(chore) {
-    navigate(`/chores/${groupID}/${chore.id}`);
+    navigate(`/chores/${groupID}/${chore.id}`, { state: { groupID } });
   }
 
   return (
