@@ -24,9 +24,9 @@ const ChoresList = () => {
   }
 
   return (
-    <div className="tiles-container">
+    <div>
       {chores.length === 0 ? (
-        <div className="no-chores-message">
+        <div>
           <p>
             {isAdult(user)
               ? "No chores available for this group. Click below to add one!"
@@ -39,20 +39,38 @@ const ChoresList = () => {
           )}
         </div>
       ) : (
-        <div className="tile-list">
-          {chores.map((chore) => (
-            <div
-              key={chore.id}
-              className="tile"
-              onClick={() => handleClick(chore)}>
-              <h3 className="chore-title">{chore.name}</h3>
-              <img src={getChoreImage(chore.status)} alt="Chore" className="chore-image-list" />
-              <p className="chore-earnings">${chore.amountOfEarnings}</p>
-            </div>
-          ))}
-        </div>
+        <>
+          <div>
+            <p>
+              {isAdult(user)
+                ? "Have ideas for new chores? Click below to add them!"
+                : "Great time to be a family hero! Complete the chore and make your contribution towards planned family events!"}
+            </p>
+            {isAdult(user) && (
+              <Button label="Create Chore" onClick={() => navigate("/chores/create")}>
+                Create Chore
+              </Button>
+            )}
+          </div>
+          <div className="tiles-container">
+          <div className="tile-list">
+            {chores.map((chore) => (
+              <div
+                key={chore.id}
+                className="tile"
+                onClick={() => handleClick(chore)}>
+                <h3 className="chore-title">{chore.name}</h3>
+                <img src={getChoreImage(chore.status)} alt="Chore" className="chore-image-list" />
+                <p className="chore-earnings">${chore.amountOfEarnings}</p>
+              </div>
+            ))}
+          </div>
+          </div>
+        </>
       )}
+
     </div>
+
   );
 };
 

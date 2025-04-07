@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate , useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Button from './Button';
 import "../styles/singleChoreStyle.css";
 import ModalWindow from "./ModalWindow";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
-import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage } from "../utils/choreUtils.jsx";
+import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage, isAdult } from "../utils/choreUtils.jsx";
 import useCurrentUser from '../hooks/useCurrentUser';
 
 const SingleChorePage = () => {
   const location = useLocation();
-  const groupID = location.state?.groupID; 
+  const groupID = location.state?.groupID;
   const { choreId } = useParams();
   console.log("Group ID:", groupID);
-console.log("Chore ID:", choreId);
+  console.log("Chore ID:", choreId);
   const { user, error: userError } = useCurrentUser();
   const [showModal, setShowModal] = useState(false);
   const { chore, loading, error: choreError, status } = useFetchSingleChore(groupID, choreId);
@@ -30,7 +30,7 @@ console.log("Chore ID:", choreId);
     setShowModal(false);
     axios.delete(`http://localhost:8080/chores/delete/${choreId}`, { withCredentials: true })
       .then(() => {
-        navigate(`/chores/${groupID}/list`);
+        navigate(`/groups/${user.id}/${groupID}`);
       })
       .catch((error) => {
         console.error("Error deleting chore:", error);
@@ -93,8 +93,8 @@ console.log("Chore ID:", choreId);
             )}
             {chore.status === "IN_PROGRESS" && (
               <>
-              <Button onClick={handleUnassign} label="Unassign" />
-              <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
+                <Button onClick={handleUnassign} label="Unassign" />
+                <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
               </>
             )}
             {chore.status === "PENDING" && (
@@ -116,12 +116,12 @@ console.log("Chore ID:", choreId);
           </p>
 
           <div className="chore-actions">
-            {chore.status !== "COMPLETE" && (
+            {isAdult(user) && chore.status !== "COMPLETE" && (
               <>
                 <div className="tooltip-container">
                   <Button
                     className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
-                    onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`)}
+                    onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`, { state: { choreId, groupID }})}
                     label={<CiEdit size={24} />}
                   />
                   {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, edit not allowed</span>}
@@ -133,9 +133,8 @@ console.log("Chore ID:", choreId);
               label="Back to the List"
               onClick={() => navigate(`/groups/${user.id}/${groupID}`)}
             />
-            {chore.status !== "COMPLETE" && (
+            {isAdult(user) && chore.status !== "COMPLETE" && (
               <>
-
                 <div className="tooltip-container">
                   <Button
                     className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}

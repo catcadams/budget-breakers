@@ -2,8 +2,12 @@ import React from "react";
 import { NavLink } from "react-router";
 import "./Navbar.css";
 import budgetLogo from "../img/logo-transparent-png.png";
+import useCurrentUser from '../hooks/useCurrentUser';
+import { isAdult } from "../utils/choreUtils.jsx";
 
 function Navbar() {
+
+  const { user } = useCurrentUser();  
   return (
     <>
       <div className="nav-bar">
@@ -25,7 +29,9 @@ function Navbar() {
               <NavLink to="/Events">Events</NavLink>
             </li>
             <li>
-              <NavLink to="/Chores">Chores</NavLink>
+            {isAdult(user) ? (
+                <NavLink to="/Chores">Chores</NavLink> 
+              ) : null}
             </li>
             <li>
               <NavLink to="/Groups">Groups</NavLink>
