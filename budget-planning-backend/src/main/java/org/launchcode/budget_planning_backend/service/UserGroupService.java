@@ -44,6 +44,18 @@ public class UserGroupService {
         return null;
     }
 
+    public Boolean hasAccessToGroup (int userGroupID, int userID) {
+
+        for (User user : getGroupByID(userGroupID).getUsers()) {
+            if(user.getId() == userID) {  // Use '==' to compare the values
+                return true;  // User found in the group
+            }
+        }
+
+        return false;
+    }
+
+
     public List<UserGroup> getGroupsByUser (int userID) {
         for (UserGroup group : groupsList) {
             for (User user : group.getUsers()) {
@@ -57,9 +69,10 @@ public class UserGroupService {
 
     public UserGroup createNewGroup (UserGroupDTO groupDTO, HttpServletRequest request) {
         UserGroup group = new UserGroup(groupDTO.getName(), groupDTO.getDescription());
-//        User user = authenticationController.getUserFromSession(request.getSession());
-        User user = DummyObjectsToBeDeleted.getUserByID(1);
-        if (user != null && user.getId() == 1) {
+        User user = authenticationController.getUserFromSession(request.getSession(false));
+        //User user = DummyObjectsToBeDeleted.getUserByID(1);
+        //if (user != null && user.getId() == 1) {
+        if (user!= null) {
             group.addUsers(user);
         }
         logger.info("New Group: ".concat(group.toString()));

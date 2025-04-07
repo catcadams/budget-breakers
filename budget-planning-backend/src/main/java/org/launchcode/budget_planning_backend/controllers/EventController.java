@@ -3,6 +3,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
+import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class EventController {
     @Autowired
     AuthenticationController authenticationController;
 
+    @Autowired
+    UserGroupService groupService;
+
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     UserGroup userGroup;
@@ -35,10 +39,11 @@ public class EventController {
     public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
         logger.info("Inside GetEvents");
         User user = authenticationController.getUserFromSession(request.getSession(false));
-//        user.addUserGroup(group);
-        if (user.hasAccessToGroup(userGroupId)) {
-            userGroup.setId(userGroupId);
-            return ResponseEntity.ok(userGroup.getEvents());
+        group = groupService.getGroupByID(userGroupId);
+        logger.info("User has access to group: " + groupService.hasAccessToGroup(userGroupId, user.getId()));
+        if (groupService.hasAccessToGroup(userGroupId, user.getId())) {
+            logger.info("Events for group: " + userGroupId + group.getEvents());
+            return ResponseEntity.ok(group.getEvents());
         }
         return ResponseEntity.badRequest().body(null);
     }
