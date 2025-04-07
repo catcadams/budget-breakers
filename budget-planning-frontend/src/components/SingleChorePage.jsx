@@ -42,7 +42,7 @@ console.log("Chore ID:", choreId);
   };
 
   const handleAssignToMe = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/assign`, { groupId }, { withCredentials: true })
+    axios.put(`http://localhost:8080/chores/${choreId}/assign`, { groupID }, { withCredentials: true })
       .then((response) => {
         window.location.reload();
       })
@@ -52,7 +52,7 @@ console.log("Chore ID:", choreId);
   };
 
   const handleUnassign = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/unassign`, { groupId }, { withCredentials: true })
+    axios.put(`http://localhost:8080/chores/${choreId}/unassign`, { groupID }, { withCredentials: true })
       .then((response) => {
         window.location.reload();
       })
