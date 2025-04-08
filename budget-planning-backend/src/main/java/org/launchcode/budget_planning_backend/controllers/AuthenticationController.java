@@ -86,9 +86,6 @@ public class AuthenticationController {
     public ResponseEntity<Map<String, String>> processRegistrationForm(@RequestBody @Valid RegisterFormDTO registerFormDTO,
                                                                        Errors errors, HttpServletRequest request) {
 
-        HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
-        logger.info("Session ID Register: " + session.getId());
-
         if (errors.hasErrors()) {
             logger.info("Errors:" + errors);
             response.put("message", "Registration errors occurred");
@@ -124,7 +121,7 @@ public class AuthenticationController {
 
         //userRepository.save(user);
         users.add(newUser);
-        setUserInSession(request.getSession(), newUser);
+        //setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
         logger.info("User acct type: " + newUser.getAccountType());
 
@@ -139,13 +136,15 @@ public class AuthenticationController {
         String username = loginFormDTO.getUsername().trim();
         logger.info("Session ID Login".concat(request.getSession().getId()));
 
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
+        logger.info("Session ID Register: " + session.getId());
 
         User user = findByUsername(username);
         if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
             if (session == null) {
                 session = request.getSession(true); // Create new session if invalid
             }
+
             setUserInSession(session, user);
             response.put("message", "Login successful");
             return ResponseEntity.ok(response);
