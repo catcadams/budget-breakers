@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/chores")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin
 public class ChoreController {
 
     @Autowired
@@ -53,7 +53,6 @@ public class ChoreController {
         choreService.updateChoreDetailsByChoreId(id, choreDto);
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/delete/{id}")
     public void deleteChoreById(@PathVariable Integer id) {
         choreService.deleteChoreById(id);

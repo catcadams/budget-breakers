@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import "./Navbar.css";
 import budgetLogo from "../img/logo-transparent-png.png";
 import useCurrentUser from '../hooks/useCurrentUser';
-import { isAdult } from "../utils/choreUtils.jsx";
+import { isAdult } from "../utils/userUtils.jsx";
 
 function Navbar() {
 

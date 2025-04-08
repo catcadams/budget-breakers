@@ -7,8 +7,9 @@ import Button from './Button';
 import "../styles/singleChoreStyle.css";
 import ModalWindow from "./ModalWindow";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
-import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage, isAdult } from "../utils/choreUtils.jsx";
+import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage } from "../utils/choreUtils.jsx";
 import useCurrentUser from '../hooks/useCurrentUser';
+import { isAdult } from "../utils/userUtils.jsx";
 
 const SingleChorePage = () => {
   const location = useLocation();

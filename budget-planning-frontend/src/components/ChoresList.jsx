@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/choreListStyle.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { getChoreImage, isAdult } from "../utils/choreUtils.jsx";
+import { getChoreImage } from "../utils/choreUtils.jsx";
+import { isAdult } from "../utils/userUtils.jsx";
 
 import Button from "./Button";
 import { useFetchChores } from "../hooks/useFetchChores";
