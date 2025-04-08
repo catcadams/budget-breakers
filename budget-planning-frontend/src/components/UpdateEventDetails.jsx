@@ -17,6 +17,7 @@ export default function UpdateEventDetails() {
     eventDescription: "",
     eventDate: "",
     eventEarnings: "",
+    userGroupName: "",
   });
 
   const { userGroupId, eventId } = useParams();
@@ -33,7 +34,7 @@ export default function UpdateEventDetails() {
   useEffect(() => {
     const getEvents = () => {
       axios
-        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`)
+        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
         .then((response) => {
           setFormData(response.data);
           setErrors({});
@@ -76,6 +77,7 @@ export default function UpdateEventDetails() {
     fetch(`http://localhost:8080/events/edit/${userGroupId}/${eventId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(formData),
     })
       .then((response) => {
@@ -105,7 +107,7 @@ export default function UpdateEventDetails() {
   return (
     <div className="pageBody">
       <h3> Edit Event</h3>
-      <div class="progressBar">
+      <div className="progressBar">
         <ProgressBar
           animated
           now={formData.eventEarnings}
@@ -119,7 +121,10 @@ export default function UpdateEventDetails() {
           value={formData.eventName}
           setFormData={setFormData}
         />
-
+        {newErrors.eventName && (
+          <p className="error">{newErrors.eventName}</p>
+        )}
+        <p>Group Name: {formData.userGroupName}</p>
         <TextAreaInputField
           label="Description"
           name="eventDescription"

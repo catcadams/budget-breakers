@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/singleChoreStyle.css";
 import Button from "./Button";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate , useLocation} from "react-router-dom";
 import NumericInputField from "./NumericInputField";
 import { ProgressBar } from "react-bootstrap";
 import ModalWindow from "./ModalWindow";
+import { isAdult } from "../utils/userUtils.jsx";
+import useCurrentUser from '../hooks/useCurrentUser';
 
 export default function EventDetails() {
-  sessionStorage.setItem("username", "Amy");
-  sessionStorage.setItem("accountType", "ADULT");
-  const [isVisible, setIsVisible] = useState(
-    sessionStorage.getItem("accountType") == "ADULT"
-  );
-
+  const location = useLocation();
+  const { user, error: userError } = useCurrentUser();
   const { userGroupId, eventId } = useParams();
   const [newErrors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -34,7 +32,7 @@ export default function EventDetails() {
   useEffect(() => {
     const getEvent = () => {
       axios
-        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`)
+        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
         .then((response) => {
           setEvent(response.data);
           setErrors({});
@@ -52,7 +50,7 @@ export default function EventDetails() {
     const getContributionHistory = () => {
       axios
         .get(
-          `http://localhost:8080/events/contributions/${userGroupId}/${eventId}`
+          `http://localhost:8080/events/contributions/${userGroupId}/${eventId}`, { withCredentials: true }
         )
         .then((response) => {
           setContributions(response.data);
@@ -97,6 +95,7 @@ export default function EventDetails() {
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(formData),
     })
       .then((response) => {
@@ -131,6 +130,7 @@ export default function EventDetails() {
 
   const handleModalClose = () => {
     setShowModal(false);
+    window.location.reload();
   };
   return (
     <>
@@ -170,7 +170,7 @@ export default function EventDetails() {
             label="Back to Event List"
             onClick={() => navigate(`/events/${userGroupId}/list`)}
           ></Button>
-          <div style={{ display: isVisible ? "block" : "none" }}>
+          <div style={{ display: isAdult(user) ? "block" : "none" }}>
             <Button
               label="Update"
               onClick={() => navigate(`/events/edit/${userGroupId}/${eventId}`)}
@@ -193,6 +193,7 @@ export default function EventDetails() {
               <th>User</th>
               <th>Amount</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -202,6 +203,7 @@ export default function EventDetails() {
                 <td>{item.name}</td>
                 <td>{item.amountOfContribution}</td>
                 <td>{item.status}</td>
+                <td>{item.status == "COMPLETE" ? "APPROVED" : "PENDING"}</td>
               </tr>
             ))}
           </tbody>
