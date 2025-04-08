@@ -13,7 +13,7 @@ export default function ViewEvents() {
     useEffect(() => {
         const getEvents = () => {
           axios
-            .get(`http://localhost:8080/events/${userGroupId}/list`)
+            .get(`http://localhost:8080/events/${userGroupId}/list`, { withCredentials: true })
             .then((response) => {
               setEvents(response.data);  
               setErrors(null);  
