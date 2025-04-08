@@ -69,7 +69,7 @@ public class Contributions extends BaseAbstractEntity{
     public String toString() {
         return "Contributions{" +
                 "id=" + getId() +
-                " user=" + user +
+                " user=" + user.getId()+user.getFirstName() +
                 ", amountOfContribution=" + amountOfContribution +
                 ", date=" + date +
                 ", event=" + event +

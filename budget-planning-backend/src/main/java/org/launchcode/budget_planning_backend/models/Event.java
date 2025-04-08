@@ -42,7 +42,6 @@ public class Event extends AbstractEntity{
         this.budget = budget;
         this.location = location;
         if(date.isBlank()) this.date = null; else this.date =LocalDate.now();
-
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
@@ -113,11 +112,7 @@ public class Event extends AbstractEntity{
     }
 
     public void addContributions(Contributions contributions) {
-        if(this.contributions.isEmpty()){
-            this.contributions.add(0, contributions);
-        }else{
         this.contributions.add(contributions);
-        }
     }
 
     @Override
@@ -131,7 +126,7 @@ public class Event extends AbstractEntity{
                 ", date= " + date +
                 ", status= " + status +
                 ", earnings= " + earnings +
-                ", group= " + userGroup +
+                ", group= " + userGroup.getId()+userGroup.getName() +
                 '}';
     }
 }

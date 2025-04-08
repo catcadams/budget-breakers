@@ -11,6 +11,7 @@ public class EventDTO {
     private String eventDescription;
     private String eventDate;
     private double eventEarnings;
+    private String userGroupName;
 
     public EventDTO(){}
 
@@ -68,5 +69,13 @@ public class EventDTO {
 
     public void setEventId(int eventId) {
         this.eventId = eventId;
+    }
+
+    public String getUserGroupName() {
+        return userGroupName;
+    }
+
+    public void setUserGroupName(String userGroupName) {
+        this.userGroupName = userGroupName;
     }
 }

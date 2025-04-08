@@ -59,9 +59,9 @@ public class UserGroup extends AbstractEntity{
     @Override
     public String toString() {
         return "UserGroup{" +
-                " id=" + getId() +
-                " name=" + getName() +
-                " description=" + getDescription() +
+                " id=" + this.getId() +
+                " name=" + this.getName() +
+                " description=" + this.getDescription() +
                 " users=" + users +
                 " events=" + events +
                 " chores=" + chores +
