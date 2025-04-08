@@ -4,14 +4,16 @@ import TextAreaInputField from "./TextAreaInputField";
 import Button from "./Button";
 import ModalWindow from "./ModalWindow";
 import { useNavigate } from "react-router-dom";
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const CreateGroupForm = () => {
+    const { user, error } = useCurrentUser();
     const [formData, setFormData] = useState({name: "", description: ""});
     const [errors, setErrors] = useState({})
     const [message, setMessage] = useState("");
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
-    const [userID, setUserID] = useState(1)
+    const userID = user?.id;
     let navigate = useNavigate();
 
     const failedMessage = "Oops! Something went wrong while creating your group. Please try again.";
@@ -35,6 +37,7 @@ const CreateGroupForm = () => {
         fetch("http://localhost:8080/groups/create", {
             method: "POST", 
             headers: {"Content-Type": "application/json"},
+            credentials: "include",
             body: JSON.stringify(formData),
         })
             .then((response) => {
