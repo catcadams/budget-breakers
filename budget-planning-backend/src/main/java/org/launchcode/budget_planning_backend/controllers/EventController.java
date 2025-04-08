@@ -37,15 +37,6 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
         return ResponseEntity.ok(listOfEvents);
-
-        /*
-        group = groupService.getGroupByID(userGroupId);
-        logger.info("User has access to group: " + groupService.hasAccessToGroup(userGroupId, user.getId()));
-        if (groupService.hasAccessToGroup(userGroupId, user.getId())) {
-            logger.info("Events for group: " + userGroupId + group.getEvents());
-            return ResponseEntity.ok(group.getEvents());
-        }
-        return ResponseEntity.badRequest().body(null);*/
     }
 
     @PostMapping("/create")

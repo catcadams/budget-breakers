@@ -28,13 +28,13 @@ public class EventService {
 
     public List<Event> getEvents(int userGroupId, User user){
         logger.info("User has access to group: " + userGroupService.hasAccessToGroup(userGroupId, user.getId()));
-        List<Event> eventsList = null;
+        List<Event> eventsList = new ArrayList<>();
         if (userGroupService.hasAccessToGroup(userGroupId, user.getId())) {
             eventsList =userGroupService.getEventsFromGroup(userGroupId);
             logger.info("Events for group: " + userGroupId + eventsList);
             return eventsList;
         }
-        return userGroupService.getEventsFromGroup(userGroupId);
+        return eventsList;
     }
 
     public Event getEventForGroup(User user, int userGroupId, int eventId){
