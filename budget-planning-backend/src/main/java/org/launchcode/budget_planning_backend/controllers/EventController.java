@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin
 @RequestMapping(value ="/events")
 public class EventController {
 
