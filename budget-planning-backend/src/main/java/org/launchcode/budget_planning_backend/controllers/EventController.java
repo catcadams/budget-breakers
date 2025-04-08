@@ -3,13 +3,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
+import org.launchcode.budget_planning_backend.service.AuthenticationService;
 import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 public class EventController {
 
     @Autowired
-    AuthenticationController authenticationController;
+    AuthenticationService authenticationService;
 
     @Autowired
     UserGroupService groupService;
@@ -38,7 +38,7 @@ public class EventController {
     @GetMapping("/{userGroupId}/list")
     public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
         logger.info("Inside GetEvents");
-        User user = authenticationController.getUserFromSession(request.getSession(false));
+        User user = authenticationService.getCurrentUser(request);
         group = groupService.getGroupByID(userGroupId);
         logger.info("User has access to group: " + groupService.hasAccessToGroup(userGroupId, user.getId()));
         if (groupService.hasAccessToGroup(userGroupId, user.getId())) {

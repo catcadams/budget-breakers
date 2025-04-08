@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 // import "../styles/choreListStyle.css";
 import { useNavigate } from "react-router-dom";
+import useCurrentUser from '../hooks/useCurrentUser';
 
 import Button from "./Button";
 import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
 
 const GroupsList = () => {
-  const [userID, setUserID] = useState(1);
-  const { groups, error, loading } = useFetchGroups(userID);
+  const { user, error: userError } = useCurrentUser();
+  const userID = user?.id;
+  const { groups, error: groupError, loading } = useFetchGroups(userID ?? -1);
 
   let navigate = useNavigate();
 
-  if (error) return <div>{error}</div>;
+  if (userError) return <div>{userError}</div>;
+  if (groupError) return <div>{groupError}</div>;
   if (loading) return <p>Loading groups...</p>;
 
   function handleClick(group) {

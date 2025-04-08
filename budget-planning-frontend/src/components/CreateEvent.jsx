@@ -85,8 +85,8 @@ export default function CreateEvent() {
   }
 
   return (
-    <div class="pageBody">
-      <form class="createEventForm">
+    <div className="pageBody">
+      <form className="createEventForm">
         <h3> Create Event</h3>
         <TextInputField
           label="Event Name"

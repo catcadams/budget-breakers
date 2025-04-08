@@ -7,7 +7,7 @@ export const useFetchGroups = (userID) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/groups/${userID}/list`)
+        axios.get(`http://localhost:8080/groups/${userID}/list`, { withCredentials: true })
             .then(response => {
                 setGroups(response.data);
                 setError(null);
@@ -28,7 +28,7 @@ export const useFetchSingleGroup = (userID, groupID) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/groups/${userID}/${groupID}`)
+        axios.get(`http://localhost:8080/groups/${userID}/${groupID}`, { withCredentials: true })
             .then(response => {
                 setGroup(response.data);
                 setError(null);

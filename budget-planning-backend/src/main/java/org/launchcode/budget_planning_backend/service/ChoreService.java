@@ -3,18 +3,19 @@ package org.launchcode.budget_planning_backend.service;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static org.launchcode.budget_planning_backend.models.DummyObjectsToBeDeleted.getGroupByName;
 
 @Service
 public class ChoreService {
+
+    @Autowired
+    UserGroupService userGroupService;
 
     private final Logger logger = LoggerFactory.getLogger(ChoreService.class);
 
@@ -41,8 +42,7 @@ public class ChoreService {
 
     public Chore createNewChore(ChoreDto choreDto) {
         Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
-        //temp userGroup handling, will be replaced after Groups controllers are implemented
-        UserGroup group = getGroupByName(choreDto.getUserGroupName());
+        UserGroup group = userGroupService.getGroupByName(choreDto.getUserGroupName());
         chore.setStatus(Status.OPEN);
         chore.setGroup(group);
         logger.info("New Chore created: ".concat(chore.toString()));

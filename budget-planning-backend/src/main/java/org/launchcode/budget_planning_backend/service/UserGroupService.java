@@ -1,29 +1,27 @@
 package org.launchcode.budget_planning_backend.service;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
-import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
-import org.launchcode.budget_planning_backend.models.*;
+import org.launchcode.budget_planning_backend.models.Chore;
+import org.launchcode.budget_planning_backend.models.Event;
+import org.launchcode.budget_planning_backend.models.User;
+import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.launchcode.budget_planning_backend.models.DummyObjectsToBeDeleted.getUserByID;
 
 @Service
 public class UserGroupService {
 
-    private final Logger logger = LoggerFactory.getLogger(UserGroupService.class);
-
     @Autowired
-    AuthenticationController authenticationController;
+    AuthenticationService authenticationService;
+
+    private final Logger logger = LoggerFactory.getLogger(UserGroupService.class);
 
     public final List<UserGroup> groupsList = new ArrayList<>();
 
@@ -38,6 +36,15 @@ public class UserGroupService {
     public UserGroup getGroupByID(int id) {
         for (UserGroup group : groupsList) {
             if(group.getId() == id) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    public UserGroup getGroupByName(String groupName) {
+        for (UserGroup group : groupsList) {
+            if(group.getName().equals(groupName)) {
                 return group;
             }
         }
@@ -67,11 +74,9 @@ public class UserGroupService {
 
     public UserGroup createNewGroup (UserGroupDTO groupDTO, HttpServletRequest request) {
         UserGroup group = new UserGroup(groupDTO.getName(), groupDTO.getDescription());
-        User user = authenticationController.getUserFromSession(request.getSession(false));
-        //User user = DummyObjectsToBeDeleted.getUserByID(1);
-        //if (user != null && user.getId() == 1) {
-        if (user!= null) {
-            group.addUsers(user);
+        User currentUser = authenticationService.getCurrentUser(request);
+        if (currentUser != null) {
+            group.addUsers(currentUser);
         }
         logger.info("New Group: ".concat(group.toString()));
         return group;

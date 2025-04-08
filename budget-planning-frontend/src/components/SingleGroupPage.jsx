@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFetchSingleGroup } from "../hooks/useFetchGroups";
 import Button from "./Button";
+import useCurrentUser from '../hooks/useCurrentUser';
+import ChoresList from "./ChoresList";
 
 const SingleGroupPage = () => {
   const { groupID } = useParams();
   const { choreID } = useParams();
   const { eventID } = useParams();
-  const [userID, setUserID] = useState(1);
-  const { group, error, loading } = useFetchSingleGroup(userID, groupID);
+  const { user, error: userError } = useCurrentUser();
+  const userID = user?.id;
+  const { group, error: groupError, loading } = useFetchSingleGroup(userID, groupID);
 
   const navigate = useNavigate();
 
   if (loading) return <p>Loading group details...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (userError) return <p>Error: {error}</p>;
+  if (groupError) return <p>Error: {error}</p>;
 
-  // Display chores related to group
+
   //  //Clicking on a chore should link to individual chore page
   //  //Need handle click function for chores to link to single chore page
   // Display events related to group
@@ -45,27 +49,7 @@ const SingleGroupPage = () => {
       </div>
       <div className="tiles-container">
         <h3>All Chores</h3>
-        {group.chores.length === 0 ? (
-          <p>No chores available for your group.</p>
-        ) : (
-          <div className="tile-list">
-            {group.chores.map((chore) => (
-              <div
-                key={chore.id}
-                className="tile"
-                onClick={() => handleChoreClick(chore)}
-              >
-                <h3 className="chore-title">{chore.name}</h3>
-                <img
-                  src={getChoreImage(chore.status)}
-                  alt="Chore"
-                  className="chore-image-list"
-                />
-                <p className="chore-earnings">${chore.amountOfEarnings}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        <ChoresList />
       </div>
       <div className="tiles-container">
         <h3>All Events</h3>
