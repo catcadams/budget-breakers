@@ -7,16 +7,23 @@ import TextAreaInputField from "./TextAreaInputField"
 import DropdownField from "./DropdownField";
 import { useNavigate } from "react-router-dom";
 import "../styles/choreCreationFormStyle.css";
+import useCurrentUser from '../hooks/useCurrentUser';
+import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
+import { useFetchGroupNumber } from '../hooks/useFetchChores.jsx';
 
 
 const ChoreCreationForm = () => {
-    const [formData, setFormData] = useState({ name: "", description: "", amountOfEarnings: "", userGroupId: "" });
+    const { user, error } = useCurrentUser();
+    const userID = user?.id;
+    const [formData, setFormData] = useState({ name: "", description: "", amountOfEarnings: "", userGroupName: "" });
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState({});
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
-    const [options, setOptions] = useState({});
     const navigate = useNavigate();
+    const { groups, loading, error: groupError } = useFetchGroups(userID ?? -1);
+    console.log("fetched groups size is : " + groups.length);
+    const { warningMessage, modalType: warningModalType, showModal: showWarningModal } = useFetchGroupNumber(groups, loading);
 
     const failedMessage = "Oops! Something went wrong while creating the chore. Looks like the universe is not ready for this one. Give it another try!";
     const successMessage = "Hooray! Your chore has been successfully created. Now get ready to watch the magic of hard work unfold!";
@@ -34,14 +41,13 @@ const ChoreCreationForm = () => {
         return Object.keys(errors).length === 0;
     }
 
-    const dummyGroups = ['Smiths', 'Adams family']
-
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!validateUserInputs()) return;
         fetch("http://localhost:8080/chores/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(formData),
         })
             .then((response) => {
@@ -66,8 +72,13 @@ const ChoreCreationForm = () => {
     const handleModalClose = () => {
         setShowModal(false);
         if (modalType === "success") {
-            navigate(`/chores/1/list`);//need to be replaced with /chores/${userGroupId}/list
+            navigate(`/groups`);// TODO implement navigation to the chore list , having issue with that for now.
         }
+    };
+
+    const handleWarningClose = () => {
+        setShowModal(false);
+        navigate(`/groups`);
     };
 
     return (
@@ -84,12 +95,19 @@ const ChoreCreationForm = () => {
                     <TextAreaInputField label="Chore Description" name="description" value={formData.description} setFormData={setFormData} />
                     <NumericInputField label="Earning Amount, $" name="amountOfEarnings" value={formData.amountOfEarnings} setFormData={setFormData} />
                     {errors.amountOfEarnings && <p className="error">{errors.amountOfEarnings}</p>}
-                    <DropdownField label="Group: " options={dummyGroups} name="userGroupName" placeholder="Select your group" setFormData={setFormData} />
+                    <DropdownField label="Group: " options={groups.map(group => group.name)} name="userGroupName" placeholder="Select your group" setFormData={setFormData} />
                     {errors.userGroupName && <p className="error">{errors.userGroupName}</p>}
                     <Button className="chore-btn" label="Create Chore" onClick={handleSubmit} disabled={showModal} />
                 </div>
             </form>
             <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleModalClose()} onConfirm={handleModalClose} />
+            <ModalWindow
+                showState={showWarningModal}
+                message={warningMessage}
+                type={warningModalType}
+                onClose={handleWarningClose}
+                onConfirm={handleWarningClose}
+            />
         </>
 
     );

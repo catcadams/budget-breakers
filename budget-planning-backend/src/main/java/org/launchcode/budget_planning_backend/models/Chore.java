@@ -84,6 +84,6 @@ public class Chore extends AbstractEntity {
                 ", user=" + user +
                 ", event=" + event +
                 ", contribution=" + contribution +
-                ", group=" + userGroup.getName() + '}';
+                ", group=" + userGroup + '}';
     }
 }
