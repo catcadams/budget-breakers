@@ -54,5 +54,14 @@ public class UserGroupController {
         groupService.addUsersToGroup(groupID, email);
     }
 
+    @PutMapping(value = "/{userID}/{groupID}/edit")
+    public void editGroupDetailsByID(@PathVariable Integer groupID, @RequestBody UserGroupDTO userGroupDTO) {
+        groupService.editGroupByID(groupID, userGroupDTO);
+    }
+
+    @DeleteMapping(value = "/{userID}/{groupID}/delete")
+    public void deleteGroupByID(@PathVariable Integer groupID) {
+        groupService.deleteGroupByID(groupID);
+    }
 
 }

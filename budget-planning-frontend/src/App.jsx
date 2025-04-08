@@ -19,6 +19,7 @@ import UpdateEventDetails from "./components/UpdateEventDetails";
 import GroupsList from "./components/GroupsList";
 import Groups from "./components/Pages/Groups";
 import SingleGroupPage from "./components/SingleGroupPage";
+import EditGroupForm from "./components/EditGroupForm";
 
 function App() {
   return (
@@ -43,7 +44,8 @@ function App() {
         <Route path="/chores/:choreId/edit" element={<EditChorePage />} />
         <Route path="/groups/create" element={<CreateGroupForm />} />
         <Route path="/groups/:userID/list" element={<GroupsList />} />
-        <Route path="groups/:userID/:groupID" element={<SingleGroupPage />} />
+        <Route path="/groups/:userID/:groupID" element={<SingleGroupPage />} />
+        <Route path="/groups/:userID/:groupID/edit" element={<EditGroupForm />} />
       </Routes>
     </>
   );
