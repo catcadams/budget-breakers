@@ -56,6 +56,7 @@ export default function CreateEvent() {
     fetch("http://localhost:8080/events/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(formData),
     })
       .then((response) => {

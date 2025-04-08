@@ -1,9 +1,14 @@
 package org.launchcode.budget_planning_backend.controllers;
-
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.budget_planning_backend.models.*;
+import org.launchcode.budget_planning_backend.service.AuthenticationService;
+import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +23,33 @@ import java.util.List;
 @RequestMapping(value ="/events")
 public class EventController {
 
+    @Autowired
+    AuthenticationService authenticationService;
+
+    @Autowired
+    UserGroupService groupService;
+
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
+
+    UserGroup userGroup;
 
     public static User user = new User("Cat", "Adams", LocalDate.now(), "cat@cat.com", "catadams", "password", "password");
 
-    public static UserGroup group = new UserGroup("Group1", "Test");
+
+    public static UserGroup group = new UserGroup(1,"Test");
     public static boolean isGroupSet = false;
 
     @GetMapping("/{userGroupId}/list")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId){
+    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
         logger.info("Inside GetEvents");
-        List<Event> listOfEvents = group.getEvents();
-        if (listOfEvents.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        User user = authenticationService.getCurrentUser(request);
+        group = groupService.getGroupByID(userGroupId);
+        logger.info("User has access to group: " + groupService.hasAccessToGroup(userGroupId, user.getId()));
+        if (groupService.hasAccessToGroup(userGroupId, user.getId())) {
+            logger.info("Events for group: " + userGroupId + group.getEvents());
+            return ResponseEntity.ok(group.getEvents());
         }
-        return ResponseEntity.ok(listOfEvents);
+        return ResponseEntity.badRequest().body(null);
     }
 
     @PostMapping("/create")
