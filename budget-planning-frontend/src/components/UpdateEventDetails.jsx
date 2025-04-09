@@ -17,6 +17,7 @@ export default function UpdateEventDetails() {
     eventDescription: "",
     eventDate: "",
     eventEarnings: "",
+    userGroupName: "",
   });
 
   const { userGroupId, eventId } = useParams();
@@ -26,13 +27,14 @@ export default function UpdateEventDetails() {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  const failedMessage = "Oops! Something went wrong while updating the event.Please try again.";
+  const failedMessage =
+    "Oops! Something went wrong while updating the event.Please try again.";
   const successMessage = "Event successfully updated!";
-  
+
   useEffect(() => {
     const getEvents = () => {
       axios
-        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`)
+        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
         .then((response) => {
           setFormData(response.data);
           setErrors({});
@@ -43,7 +45,6 @@ export default function UpdateEventDetails() {
         });
     };
     getEvents();
-    
   }, [userGroupId, eventId]);
 
   const validateForm = () => {
@@ -74,39 +75,44 @@ export default function UpdateEventDetails() {
     if (!validateForm()) return;
 
     fetch(`http://localhost:8080/events/edit/${userGroupId}/${eventId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(formData),
     })
-        .then((response) => {
-            if (response.ok) {
-                setMessage(successMessage);
-                setModalType("success");
-                setErrors({});
-            } else {
-                setMessage(failedMessage);
-                setModalType("danger");
-            }
-            setShowModal(true);
-        })
-        .catch((error) => {
-            setMessage(failedMessage);
-            setModalType("danger");
-            setShowModal(true);
-        });
-    };
+      .then((response) => {
+        if (response.ok) {
+          setMessage(successMessage);
+          setModalType("success");
+          setErrors({});
+        } else {
+          setMessage(failedMessage);
+          setModalType("danger");
+        }
+        setShowModal(true);
+      })
+      .catch((error) => {
+        setMessage(failedMessage);
+        setModalType("danger");
+        setShowModal(true);
+      });
+  };
 
-    const handleModalClose = () =>{
-      setShowModal(false);
-      if (modalType === "success") {
-          navigate(`/events/1/list`);//need to be replaced with /events/${userGroupId}/list
-      }
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (modalType === "success") {
+      navigate(`/events/1/list`); //need to be replaced with /events/${userGroupId}/list
     }
+  };
   return (
     <div className="pageBody">
       <h3> Edit Event</h3>
       <div className="progressBar">
-        <ProgressBar animated now={formData.eventEarnings} max={formData.eventBudget} />
+        <ProgressBar
+          animated
+          now={formData.eventEarnings}
+          max={formData.eventBudget}
+        />
       </div>
       <form>
         <TextInputField
@@ -115,20 +121,23 @@ export default function UpdateEventDetails() {
           value={formData.eventName}
           setFormData={setFormData}
         />
-        
+        {newErrors.eventName && (
+          <p className="error">{newErrors.eventName}</p>
+        )}
+        <p>Group Name: {formData.userGroupName}</p>
         <TextAreaInputField
           label="Description"
           name="eventDescription"
           value={formData.eventDescription}
           setFormData={setFormData}
         />
-       <NumericInputField
+        <NumericInputField
           label="Budget"
           name="eventBudget"
           value={formData.eventBudget}
           setFormData={setFormData}
         />
-       {newErrors.eventBudget && (
+        {newErrors.eventBudget && (
           <p className="error">{newErrors.eventBudget}</p>
         )}
         <TextInputField
@@ -152,7 +161,8 @@ export default function UpdateEventDetails() {
           showState={showModal}
           message={message}
           type={modalType}
-          onClose={() => handleModalClose()} onConfirm={handleModalClose}
+          onClose={() => handleModalClose()}
+          onConfirm={handleModalClose}
         />
       </form>
     </div>
