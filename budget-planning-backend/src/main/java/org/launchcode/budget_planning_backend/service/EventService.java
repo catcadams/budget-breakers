@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,11 @@ public class EventService {
     public List<Event> getEvents(int userGroupId, User user){
         logger.info("User has access to group: " + userGroupService.hasAccessToGroup(userGroupId, user.getId()));
         List<Event> eventsList = new ArrayList<>();
-        if (userGroupService.hasAccessToGroup(userGroupId, user.getId())) {
+       // if (userGroupService.hasAccessToGroup(userGroupId, user.getId())) {
             eventsList =userGroupService.getEventsFromGroup(userGroupId);
             logger.info("Events for group: " + userGroupId + eventsList);
-            return eventsList;
-        }
+       //     return eventsList;
+       // }
         return eventsList;
     }
 
@@ -48,6 +49,47 @@ public class EventService {
             }
         }
         return event;
+    }
+
+    public void setEventDtoForEvent(Event event, EventDTO eventDto){
+        eventDto.setEventId(event.getId());
+        eventDto.setEventName(event.getName());
+        eventDto.setEventEarnings(event.getEarnings());
+        eventDto.setEventBudget((event.getBudget()));
+        eventDto.setEventDescription(event.getDescription());
+        if(event.getDate() == null)eventDto.setEventDate( ""); else eventDto.setEventDate(  event.getDate().toString());
+        eventDto.setEventLocation(event.getLocation());
+        eventDto.setUserGroupName(event.getUserGroup().getName());
+    }
+
+    public void updateEvent(Event event, EventDTO eventDto){
+        event.setName(eventDto.getEventName());
+        event.setDescription(eventDto.getEventDescription());
+        event.setBudget(eventDto.getEventBudget());
+        event.setLocation(eventDto.getEventLocation());
+        if(!eventDto.getEventDate().isBlank()) {
+            event.setDate(LocalDate.parse(eventDto.getEventDate()));
+        }
+        event.setEarnings(eventDto.getEventEarnings());
+    }
+
+    public void setEventStatus(User user, Event event){
+        //Set Status
+        if (event.getStatus() == Status.OPEN) {
+            event.setStatus(Status.IN_PROGRESS);
+        }
+        // event completion
+        if (event.getEarnings() == event.getBudget()) {
+            event.setStatus(Status.COMPLETE);
+        }
+    }
+    public void setContributionStatus(User user, Contributions contributions){
+        // based on the user type - set the status to "PENDING" - child, "COMPLETED" - ADULT"
+        if(user.getAccountType().equals(AccountType.ADULT)) {
+            contributions.setStatus(Status.COMPLETE);
+        }else{
+            contributions.setStatus(Status.PENDING);
+        }
     }
 
     public List<ContributionDTO> getContributionsForEvent(User user,int userGroupId, int eventId){
@@ -79,5 +121,15 @@ public class EventService {
             }
         }
         return  contributions;
+    }
+
+    public Contributions getContribution(Event event, int contributionId){
+            List<Contributions> contributions = event.getContributions();
+            for(Contributions contribution: contributions){
+                if(contribution.getId() == contributionId){
+                    return contribution;
+                }
+            }
+            return null;
     }
 }

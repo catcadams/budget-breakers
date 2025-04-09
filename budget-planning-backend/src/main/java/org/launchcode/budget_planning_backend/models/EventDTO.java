@@ -78,4 +78,18 @@ public class EventDTO {
     public void setUserGroupName(String userGroupName) {
         this.userGroupName = userGroupName;
     }
+
+    @Override
+    public String toString() {
+        return "EventDTO{" +
+                "eventId=" + eventId +
+                ", eventName='" + eventName + '\'' +
+                ", eventBudget=" + eventBudget +
+                ", eventLocation='" + eventLocation + '\'' +
+                ", eventDescription='" + eventDescription + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", eventEarnings=" + eventEarnings +
+                ", userGroupName='" + userGroupName + '\'' +
+                '}';
+    }
 }
