@@ -27,9 +27,9 @@ public class EventService {
     }
 
     public List<Event> getEvents(int userGroupId, User user){
-        logger.info("User has access to group: " + userGroupService.hasAccessToGroup(userGroupId, user.getId()));
+        logger.info("User has access to group: " + userGroupService.hasAccessToGroups(userGroupId, user.getId()));
         List<Event> eventsList = new ArrayList<>();
-        if (userGroupService.hasAccessToGroup(userGroupId, user.getId())) {
+        if (userGroupService.hasAccessToGroups(userGroupId, user.getId())) {
             eventsList =userGroupService.getEventsFromGroup(userGroupId);
             logger.info("Events for group: " + userGroupId + eventsList);
             return eventsList;
