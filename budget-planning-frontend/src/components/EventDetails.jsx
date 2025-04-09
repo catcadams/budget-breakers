@@ -28,6 +28,8 @@ export default function EventDetails() {
     "Hooray! Your contribution to the event has been successfully made.";
   const congratulationsMessage =
     "Congratulations!! You have achieved the budget need for the event!!! Enjoy the event!";
+  const approvesuccessMessage = 
+    "Approved the contribution successfully!";
 
   useEffect(() => {
     const getEvent = () => {
@@ -117,6 +119,34 @@ export default function EventDetails() {
       .finally(() => isBudgetReached());
   }
 
+  function approveContribution(contribution) {
+    const url = `http://localhost:8080/events/approveContribution/${userGroupId}/${eventId}/${contribution.id}`;
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(contribution),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setMessage(approvesuccessMessage);
+          setModalType("success");
+          setErrors({});
+        } else {
+          setMessage(failedMessage);
+          setModalType("danger");
+        }
+        setShowModal(true);
+      })
+      .catch((error) => {
+        setMessage(failedMessage);
+        setModalType("danger");
+        setShowModal(true);
+      })
+      .finally(() => window.location.reload() );
+    
+  }
+  
   const isBudgetReached = () => {
     if (
       event.eventEarnings == event.eventBudget ||
@@ -156,7 +186,7 @@ export default function EventDetails() {
             {newErrors.amountOfContribution && (
               <p className="error">{newErrors.amountOfContribution}</p>
             )}
-            <Button label="Contribute" onClick={addContribution}></Button>
+            <Button label="Contribute" onClick={()=>(addContribution())}></Button>
           </form>
         </div>
         <div className="event-form-container">
@@ -184,7 +214,6 @@ export default function EventDetails() {
             onConfirm={handleModalClose}
           />
         </div>
-      </div>
       <div className="contribution-history-container">
         <table>
           <thead>
@@ -197,17 +226,21 @@ export default function EventDetails() {
             </tr>
           </thead>
           <tbody>
-            {contributions.map((item) => (
-              <tr key={item.id}>
-                <td>{item.date}</td>
-                <td>{item.name}</td>
-                <td>{item.amountOfContribution}</td>
-                <td>{item.status}</td>
-                <td>{item.status == "COMPLETE" ? "APPROVED" : "PENDING"}</td>
+            {contributions.map((contribution) => (
+              <tr key={contribution.id}>
+                <td>{contribution.date}</td>
+                <td>{contribution.name}</td>
+                <td>{contribution.amountOfContribution}</td>
+                <td>{contribution.status}</td>
+                <td>{contribution.status == "COMPLETE" ? "APPROVED" : 
+                  (isAdult(user) ? (<Button label="Approve" onClick={()=>approveContribution(contribution)}/>):("PENDING"))
+                }
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </>
   );
