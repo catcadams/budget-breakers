@@ -137,10 +137,14 @@ public class AuthenticationController {
         logger.info("Session ID Login".concat(request.getSession().getId()));
 
         HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
-        logger.info("Session ID Register: " + session.getId());
 
         User user = findByUsername(username);
         if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
+            if (session!= null) {
+                session.removeAttribute("user");
+            }
+            session.setAttribute("user", user);
+
             if (session == null) {
                 session = request.getSession(true); // Create new session if invalid
             }
