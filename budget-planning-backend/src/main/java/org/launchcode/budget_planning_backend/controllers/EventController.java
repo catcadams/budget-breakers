@@ -83,19 +83,7 @@ public class EventController {
 
         //Set Contribution details to event
         if(event !=null) {
-            if(!user.getAccountType().equals(AccountType.MINOR)){
-                event.setEarnings(event.getEarnings() + contributionDTO.getAmountOfContribution());
-            }
-            logger.info(event.toString());
-            eventService.setEventStatus(user, event);
-
-            contributions.setDate(LocalDate.now());
-            contributions.setAmountOfContribution(contributionDTO.getAmountOfContribution());
-            contributions.setUser(user);
-            eventService.setContributionStatus(user, contributions);
-            event.addContributions(contributions);
-            contributions.setEventID(eventId);
-            contributions.setEvent(event);
+            eventService.addContributionToEvent(user, event, contributions, contributionDTO.getAmountOfContribution());
         }
         logger.info("Contributed Successfully".concat(contributions.toString()));
         return "Contribution added successfully";
@@ -116,6 +104,14 @@ public class EventController {
         contribution.setStatus(Status.COMPLETE);
         event.setEarnings(event.getEarnings() + contribution.getAmountOfContribution());
         logger.info("Contribution approved successfully");
+    }
+
+    @DeleteMapping("/delete/{userGroupId}/{eventId}")
+    public void deleteEvent(@PathVariable int userGroupId, @PathVariable int eventId, HttpServletRequest request){
+        logger.info("Inside delete Event");
+        User user = authenticationService.getCurrentUser(request);
+        eventService.deleteEvent(user, userGroupId, eventId);
+        logger.info("Event deleted successfully! EventId: "+ eventId +"from the group Group ID: "+ userGroupId+" by the user Name: "+user.getFirstName());
     }
 
 }

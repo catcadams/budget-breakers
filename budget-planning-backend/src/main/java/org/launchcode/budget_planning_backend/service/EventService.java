@@ -28,13 +28,13 @@ public class EventService {
     }
 
     public List<Event> getEvents(int userGroupId, User user){
-        logger.info("User has access to group: " + userGroupService.hasAccessToGroup(userGroupId, user.getId()));
+        logger.info("User has access to group: " + userGroupService.hasAccessToGroups(userGroupId, user.getId()));
         List<Event> eventsList = new ArrayList<>();
-       // if (userGroupService.hasAccessToGroup(userGroupId, user.getId())) {
+       if (userGroupService.hasAccessToGroups(userGroupId, user.getId())) {
             eventsList =userGroupService.getEventsFromGroup(userGroupId);
             logger.info("Events for group: " + userGroupId + eventsList);
-       //     return eventsList;
-       // }
+           return eventsList;
+        }
         return eventsList;
     }
 
@@ -73,7 +73,7 @@ public class EventService {
         event.setEarnings(eventDto.getEventEarnings());
     }
 
-    public void setEventStatus(User user, Event event){
+    public void setEventStatus(Event event){
         //Set Status
         if (event.getStatus() == Status.OPEN) {
             event.setStatus(Status.IN_PROGRESS);
@@ -90,6 +90,23 @@ public class EventService {
         }else{
             contributions.setStatus(Status.PENDING);
         }
+    }
+
+    public void addContributionToEvent(User user, Event event, Contributions contributions, double amountOfContribution){
+        if(!user.getAccountType().equals(AccountType.MINOR)){
+            event.setEarnings(event.getEarnings() + amountOfContribution);
+        }
+        logger.info(event.toString());
+        // add Contribution to an Event
+        contributions.setDate(LocalDate.now());
+        contributions.setAmountOfContribution(amountOfContribution);
+        contributions.setUser(user);
+        setContributionStatus(user, contributions);
+        contributions.setEventID(event.getId());
+        contributions.setEvent(event);
+        // Set event status
+        event.addContributions(contributions);
+        setEventStatus(event);
     }
 
     public List<ContributionDTO> getContributionsForEvent(User user,int userGroupId, int eventId){
@@ -131,5 +148,10 @@ public class EventService {
                 }
             }
             return null;
+    }
+
+    public void deleteEvent(User user, int userGroupId, int eventId){
+        Event event = getEventForGroup(user, userGroupId, eventId);
+        userGroupService.getEventsFromGroup(userGroupId).remove(event);
     }
 }
