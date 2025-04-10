@@ -4,10 +4,17 @@ import DateInputField from "./DateInputField";
 import TextInputField from "./TextInputField";
 import NumericInputField from "./NumericInputField";
 import TextAreaInputField from "./TextAreaInputField";
+import DropdownField from "./DropdownField";
 import Button from "./Button";
 import ModalWindow from "./ModalWindow";
+import useCurrentUser from '../hooks/useCurrentUser';
+import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
 
 export default function CreateEvent() {
+
+  const { user, error } = useCurrentUser();
+  const userID = user?.id;
+  const { groups, loading, error: groupError } = useFetchGroups(userID ?? -1);
   const today = new Date().toISOString().split("T")[0];
   const [formData, setFormData] = useState({
     eventName: "",
@@ -15,6 +22,7 @@ export default function CreateEvent() {
     eventLocation: "",
     eventDescription: "",
     eventDate: "",
+    userGroupName:"",
   });
   const [newErrors, setErrors] = useState({});
   const [message, setMessage] = useState("");
@@ -45,6 +53,9 @@ export default function CreateEvent() {
       newErrors.eventBudget = "Budget is required and must be a postive number";
       isValid = false;
     }
+    if (!formData.userGroupName) {
+      newErrors.userGroupName = "Group is required.";
+    }
     setErrors(newErrors);
     return isValid;
   };
@@ -56,6 +67,7 @@ export default function CreateEvent() {
     fetch("http://localhost:8080/events/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(formData),
     })
       .then((response) => {
@@ -84,8 +96,8 @@ export default function CreateEvent() {
   }
 
   return (
-    <div class="pageBody">
-      <form class="createEventForm">
+    <div className="pageBody">
+      <form className="createEventForm">
         <h3> Create Event</h3>
         <TextInputField
           label="Event Name"
@@ -103,6 +115,8 @@ export default function CreateEvent() {
         {newErrors.eventBudget && (
           <p className="error">{newErrors.eventBudget}</p>
         )}
+        <DropdownField label="Group: " options={groups.map(group => group.name)} name="userGroupName" placeholder="Select your group" setFormData={setFormData} />
+        {newErrors.userGroupName && <p className="error">{newErrors.userGroupName}</p>}
         <TextInputField
           label="Location"
           name="eventLocation"

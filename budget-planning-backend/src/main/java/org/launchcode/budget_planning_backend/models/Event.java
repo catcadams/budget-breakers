@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +8,6 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Event extends AbstractEntity{
@@ -29,9 +29,11 @@ public class Event extends AbstractEntity{
 
     private double earnings;
 
+    @JsonManagedReference
     private final List<Contributions> contributions = new ArrayList<>();
 
     @NotNull(message = "Group is required")
+    @JsonBackReference
     private UserGroup userGroup;
 
     public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
@@ -40,7 +42,6 @@ public class Event extends AbstractEntity{
         this.budget = budget;
         this.location = location;
         if(date.isBlank()) this.date = null; else this.date =LocalDate.now();
-
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
@@ -111,11 +112,7 @@ public class Event extends AbstractEntity{
     }
 
     public void addContributions(Contributions contributions) {
-        if(this.contributions.isEmpty()){
-            this.contributions.add(0, contributions);
-        }else{
         this.contributions.add(contributions);
-        }
     }
 
     @Override
@@ -129,7 +126,7 @@ public class Event extends AbstractEntity{
                 ", date= " + date +
                 ", status= " + status +
                 ", earnings= " + earnings +
-                ", group= " + userGroup +
+                ", group= " + userGroup.getId()+userGroup.getName() +
                 '}';
     }
 }

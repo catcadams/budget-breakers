@@ -21,6 +21,7 @@ export const getChoreImage = (status) => {
 
 export const isChoreEditableOrDeletable = (status) => status === "OPEN";
 
+
 export const getChoreStatusMessage = (chore) => {
     switch (chore.status) {
       case "OPEN":

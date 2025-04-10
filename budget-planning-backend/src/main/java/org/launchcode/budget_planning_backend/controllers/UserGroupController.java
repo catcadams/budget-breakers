@@ -2,9 +2,14 @@ package org.launchcode.budget_planning_backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
+import org.launchcode.budget_planning_backend.models.User;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
+<<<<<<< HEAD
 import org.launchcode.budget_planning_backend.service.EmailService;
+=======
+import org.launchcode.budget_planning_backend.service.AuthenticationService;
+>>>>>>> origin
 import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/groups")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserGroupController {
 
     private final Logger logger = LoggerFactory.getLogger(UserGroupController.class);
@@ -28,7 +33,11 @@ public class UserGroupController {
     UserGroupService groupService;
 
     @Autowired
+<<<<<<< HEAD
     EmailService emailService;
+=======
+    AuthenticationService authenticationService;
+>>>>>>> origin
 
     @PostMapping(value="/create")
     public ResponseEntity<String> createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
@@ -43,15 +52,26 @@ public class UserGroupController {
     }
 
     @GetMapping(value = "/{userID}/list")
-    public ResponseEntity<List<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID) {
+    public ResponseEntity<List<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID, Integer groupID, HttpServletRequest request) {
+        User currentUser = authenticationService.getCurrentUser(request);  // Use authenticated user
+        if (groupID != null && !groupService.hasAccessToGroups(groupID, currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
+        }
+
         List<UserGroup> groupsByUser = groupService.getGroupsByUser(userID);
         if(groupsByUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
         return ResponseEntity.ok(groupsByUser);
     }
+
     @GetMapping(value = "/{userID}/{groupID}")
-    public ResponseEntity<UserGroup> displayGroupBySpecifiedID(@PathVariable Integer groupID) {
+    public ResponseEntity<UserGroup> displayGroupBySpecifiedID(@PathVariable Integer groupID, HttpServletRequest request) {
+        User currentUser = authenticationService.getCurrentUser(request);
+        if (!groupService.hasAccessToGroups(groupID, currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);  // If no access, return forbidden
+        }
+
         UserGroup group = groupService.getGroupByID(groupID);
         if(group == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

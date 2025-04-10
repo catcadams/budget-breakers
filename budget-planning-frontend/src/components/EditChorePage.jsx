@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import TextInputField from "./TextInputField";
 import NumericInputField from "./NumericInputField";
 import TextAreaInputField from "./TextAreaInputField";
@@ -12,20 +12,22 @@ import { GrClose } from "react-icons/gr";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
 
 const EditChorePage = () => {
-    const { choreId } = useParams();
+    const location = useLocation();
+    const groupID = location.state?.groupID;
+    const choreId = location.state?.choreId;
+    console.log("Group ID on edit:", groupID);
+    console.log("Chore ID on edit:", choreId);
     const [formData, setFormData] = useState({
         name: "",
         description: "",
         amountOfEarnings: "",
-        group: { id: "", name: "" },
     });
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState({});
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
-    const [userGroupId, setUserGroupId] = useState(1);//will be replaced, hardcoded for now
-    const { chore, loading, error } = useFetchSingleChore(userGroupId, choreId);
+    const { chore, loading, error } = useFetchSingleChore(groupID, choreId);
 
     useEffect(() => {
         if (chore) {
@@ -33,7 +35,6 @@ const EditChorePage = () => {
                 name: chore.name,
                 description: chore.description,
                 amountOfEarnings: chore.amountOfEarnings,
-                group: chore.group || { id: "", name: "" },
             });
         }
     }, [chore]);
@@ -60,6 +61,7 @@ const EditChorePage = () => {
         fetch(`http://localhost:8080/chores/${choreId}/edit`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(formData),
         })
             .then((response) => {
@@ -83,7 +85,7 @@ const EditChorePage = () => {
     const handleModalClose = () => {
         setShowModal(false);
         if (modalType === "success") {
-            navigate(`/chores/${userGroupId}/${choreId}`);
+            navigate(`/chores/${groupID}/${choreId}`, { state: { groupID, choreId } });
         }
     };
 
@@ -91,7 +93,7 @@ const EditChorePage = () => {
         <>
             <form className="chore-form-container">
                 <div className="close-btn-container">
-                    <Button label={<GrClose size={24} />} onClick={() => navigate(`/chores/${userGroupId}/${choreId}`)} className="close-btn" />
+                    <Button label={<GrClose size={24} />} onClick={() => navigate(`/chores/${groupID}/${choreId}`, { state: { groupID, choreId } })} className="close-btn" />
                 </div>
                 <p>Update the Details of the Chore</p>
                 <div>Ready to update your family chores? Edit the details of the chore, adjust earnings, and keep your home running smoothly!</div>
