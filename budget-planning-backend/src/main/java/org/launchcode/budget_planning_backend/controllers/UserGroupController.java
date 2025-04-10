@@ -33,13 +33,12 @@ public class UserGroupController {
 
     @PostMapping(value="/create")
     public void createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);
         groupService.saveGroups(groupService.createNewGroup(userGroupDTO, request));
     }
 
     @GetMapping(value = "/{userID}/list")
     public ResponseEntity<List<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID, Integer groupID, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);  // Get the authenticated user
+        User currentUser = authenticationService.getCurrentUser(request);  // Use authenticated user
         if (groupID != null && !groupService.hasAccessToGroups(groupID, currentUser.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
         }
