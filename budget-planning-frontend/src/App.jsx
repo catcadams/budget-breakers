@@ -20,6 +20,7 @@ import GroupsList from "./components/GroupsList";
 import Groups from "./components/Pages/Groups";
 import SingleGroupPage from "./components/SingleGroupPage";
 import EditGroupForm from "./components/EditGroupForm";
+import CreateEvent from "./components/CreateEvent";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Events" element={<Events />} />
+        <Route path="/event/create" element={<CreateEvent />} />
         <Route path="/events/:userGroupId/:eventId" element={<EventDetails />}/>
         <Route path="/events/:userGroupId/list" element={<ViewEvents />}/>
         <Route path="/events/edit/:userGroupId/:eventId" element={<UpdateEventDetails />} />

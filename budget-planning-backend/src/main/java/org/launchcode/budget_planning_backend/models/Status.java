@@ -5,7 +5,8 @@ public enum Status {
     IN_PROGRESS("inProgress"),
     COMPLETE("complete"),
     PENDING("pending"),
-    CANCELLED("cancelled");
+    CANCELLED("cancelled"),
+    APPROVED("approved");
 
     private final String value;
 

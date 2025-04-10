@@ -51,17 +51,8 @@ public class UserGroupService {
         return null;
     }
 
-    public Boolean hasAccessToGroup (int userGroupId, int userID) {
-        for (User user : getGroupByID(userGroupId).getUsers()) {
-            if(user.getId() == userID) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public List<UserGroup> getGroupsByUser (int userID) {
+        List<UserGroup> groupsByUser = new ArrayList<>();
         for (UserGroup group : groupsList) {
             for (User user : group.getUsers()) {
                 if(user.getId() == userID && !groupsByUser.contains(group)) {
@@ -138,5 +129,18 @@ public class UserGroupService {
         } else {
             logger.info("Group with ID={} does not exist. Unable to delete group.", groupID);
         }
+    }
+
+    public boolean hasAccessToGroups(int groupID, int userID) {
+        UserGroup group = getGroupByID(groupID);
+        if (group == null) {
+            return false;
+        }
+        for (User user : getGroupByID(groupID).getUsers()) {
+            if(user.getId() == userID) {
+                return true;
+            }
+        }
+        return false;
     }
 }
