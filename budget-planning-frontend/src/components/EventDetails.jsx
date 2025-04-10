@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/singleChoreStyle.css";
+import "../styles/eventDetailsStyle.css";
 import Button from "./Button";
 import { useParams, useNavigate , useLocation} from "react-router-dom";
 import NumericInputField from "./NumericInputField";
 import { ProgressBar } from "react-bootstrap";
 import ModalWindow from "./ModalWindow";
-import { isAdult } from "../utils/userUtils.jsx";
-import useCurrentUser from '../hooks/useCurrentUser';
 
 export default function EventDetails() {
-  const location = useLocation();
-  const { user, error: userError } = useCurrentUser();
   const { userGroupId, eventId } = useParams();
   const [newErrors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -21,6 +17,8 @@ export default function EventDetails() {
   const [message, setMessage] = useState("");
   const [modalType, setModalType] = useState("success");
   const [showModal, setShowModal] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const isAdultUser = sessionStorage.getItem("isAdult");
 
   const failedMessage =
     "Oops! Something went wrong while contributing to the event. Give it another try!";
@@ -102,6 +100,7 @@ export default function EventDetails() {
     })
       .then((response) => {
         if (response.ok) {
+          isBudgetReached();
           setMessage(successMessage);
           setModalType("success");
           setErrors({});
@@ -143,7 +142,7 @@ export default function EventDetails() {
         setModalType("danger");
         setShowModal(true);
       })
-      .finally(() => window.location.reload() );
+       .finally(() => isBudgetReached());
     
   }
   
@@ -158,10 +157,26 @@ export default function EventDetails() {
     }
   };
 
+  const handleDeleteModalClose = () => {
+    setShowModalDelete(false);
+  };
+
   const handleModalClose = () => {
     setShowModal(false);
     window.location.reload();
   };
+
+  function deleteEvent() {
+    setShowModalDelete(false);
+    axios.delete(`http://localhost:8080/events/delete/${userGroupId}/${eventId}`, { withCredentials: true })
+      .then(() => {
+        navigate(`/events/${userGroupId}/list`);
+      })
+      .catch((error) => {
+        console.error("Error deleting event:", error);
+      });
+   
+  }
   return (
     <>
       <div className="tiles-container">
@@ -196,14 +211,22 @@ export default function EventDetails() {
           <p>Budget: {event.eventBudget}</p>
           <p>Location: {event.eventLocation}</p>
           <p>Event Date: {event.eventDate}</p>
+          <div className="customButton">
           <Button
             label="Back to Event List"
             onClick={() => navigate(`/events/${userGroupId}/list`)}
           ></Button>
-          <div style={{ display: isAdult(user) ? "block" : "none" }}>
+          </div>
+          <div className="customButton" style={{ display: isAdultUser ? "block" : "none" }}>
             <Button
               label="Update"
               onClick={() => navigate(`/events/edit/${userGroupId}/${eventId}`)}
+            ></Button>
+          </div>
+          <div className="customButton" style={{ display:isAdultUser ? "block" : "none" }}>
+            <Button
+              label="Delete"
+              onClick={() => setShowModalDelete(true)}
             ></Button>
           </div>
           <ModalWindow
@@ -233,7 +256,7 @@ export default function EventDetails() {
                 <td>{contribution.amountOfContribution}</td>
                 <td>{contribution.status}</td>
                 <td>{contribution.status == "COMPLETE" ? "APPROVED" : 
-                  (isAdult(user) ? (<Button label="Approve" onClick={()=>approveContribution(contribution)}/>):("PENDING"))
+                  (isAdultUser ? (<Button label="Approve" onClick={()=>approveContribution(contribution)}/>):("PENDING"))
                 }
                 </td>
               </tr>
@@ -241,6 +264,15 @@ export default function EventDetails() {
           </tbody>
         </table>
       </div>
+      {showModalDelete && (
+        <ModalWindow
+          showState={showModalDelete}
+          type="warning"
+          message="You are about to delete the event. Click OK to confirm or close the window to return."
+          onClose={handleDeleteModalClose}
+          onConfirm={deleteEvent}
+        />
+      )}
       </div>
     </>
   );

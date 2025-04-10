@@ -34,8 +34,8 @@ const SingleGroupPage = () => {
     navigate(`/chores/${groupID}/${choreID}`);
   };
 
-  const handleEventClick = () => {
-    navigate(`/events/${groupID}/${eventID}`);
+  const handleEventClick = (event) => {
+    navigate(`/events/${groupID}/${event.id}`);
   }
 
 
@@ -64,7 +64,7 @@ const SingleGroupPage = () => {
                 onClick={() => handleEventClick(event)}
               >
                 <h3 className="chore-title">{event.name}</h3>
-                <p className="chore-earnings">${event.eventBudget}</p>
+                <p className="chore-earnings">${event.budget}</p>
               </div>
             ))}
           </div>

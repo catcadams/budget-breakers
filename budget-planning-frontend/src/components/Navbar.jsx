@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router";
 import "./Navbar.css";
-import budgetLogo from "../img/logo-transparent-png.png";
+import budgetLogo from "../styles/images/logo-transparent-png.png";
 import useCurrentUser from '../hooks/useCurrentUser';
 import { isAdult } from "../utils/userUtils.jsx";
 
@@ -26,7 +26,9 @@ function Navbar() {
               <NavLink to="/Home">Home </NavLink>
             </li>
             <li>
+            {isAdult(user) ? (
               <NavLink to="/Events">Events</NavLink>
+            ) : null}
             </li>
             <li>
             {isAdult(user) ? (
