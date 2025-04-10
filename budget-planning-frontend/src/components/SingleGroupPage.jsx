@@ -26,10 +26,6 @@ const SingleGroupPage = () => {
   if (userError) return <p>Error: {error}</p>;
   if (groupError) return <p>Error: {error}</p>;
 
-  // Have add member button that has a pop up window for adding members
-  //  //Need handle click for add member button
-  //  //Need handle submit for adding members
-
 
   return (
     <div>

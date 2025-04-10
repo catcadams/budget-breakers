@@ -125,6 +125,7 @@ public class UserGroupService {
         }
         if (groupToDelete != null) {
             groupsList.remove(groupToDelete);
+            groupsByUser.remove(groupToDelete);
             logger.info("Deleted group with ID={}", groupID);
         } else {
             logger.info("Group with ID={} does not exist. Unable to delete group.", groupID);

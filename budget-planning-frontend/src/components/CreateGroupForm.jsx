@@ -64,7 +64,7 @@ const CreateGroupForm = () => {
     }
 
     return (
-        <form>
+        <form className="group-form-container">
             <h1>Create a New Group</h1>
             <div>
                 <TextInputField label="Group Name" name="name" value={formData.name} setFormData={setFormData} />

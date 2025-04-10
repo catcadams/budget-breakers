@@ -7,6 +7,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useCurrentUser from '../hooks/useCurrentUser';
 import { useFetchSingleGroup } from "../hooks/useFetchGroups";
 import axios from "axios";
+import { RiDeleteBin5Line } from "react-icons/ri";
+
 
 const EditGroupForm = () => {
     const { user, error } = useCurrentUser();
@@ -16,6 +18,7 @@ const EditGroupForm = () => {
     const [message, setMessage] = useState("");
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const userID = user?.id;
     console.log(groupID);
     const { group, error: groupError, loading } = useFetchSingleGroup(userID, groupID);
@@ -27,8 +30,8 @@ const EditGroupForm = () => {
         }
     }, [group]);
 
-    const failedMessage = "Oops! Something went wrong while creating your group. Please try again.";
-    const successMessage = "Hooray! Your group has been successfully created.";
+    const failedMessage = "Oops! Something went wrong while updating your group. Please try again.";
+    const successMessage = "Hooray! Your group has been successfully updated.";
 
     const validateUserInputs = () => {
         let errors = {};
@@ -74,6 +77,22 @@ const EditGroupForm = () => {
         navigate(`/groups/${userID}/${groupID}`, {state: {userID, groupID}});
     }
 
+    const handleModalClose = () => {
+        setShowDeleteModal(false);
+        navigate(`/groups/${userID}/${groupID}`, {state: {userID, groupID}});
+    }
+
+    const handleDelete = () => {
+        setShowDeleteModal(false);
+        axios.delete(`http://localhost:8080/groups/${userID}/${groupID}/delete`, { withCredentials: true })
+      .then(() => {
+        navigate(`/groups/${userID}/list`);
+      })
+      .catch((error) => {
+        console.error("Error deleting group:", error);
+      });
+    }
+
    
     return (
         <form>
@@ -84,7 +103,13 @@ const EditGroupForm = () => {
                 <TextAreaInputField label="Group Description" name="description" value={formData.description} setFormData={setFormData} />
                 <Button label="Update Group" onClick={handleSubmit} />
             </div>
+            <div className="tooltip-container">
+                <Button label={<RiDeleteBin5Line size={24} />} onClick={() => setShowDeleteModal(true)} />
+            </div>
             <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
+            <ModalWindow showState={showDeleteModal} message= "You are about to delete the group. Click OK to confirm or close the window to return"
+                onClose={handleModalClose} onConfirm={handleDelete} />
+
         </form>
     );
 };
