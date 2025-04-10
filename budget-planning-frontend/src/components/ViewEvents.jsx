@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 export default function ViewEvents() {
     const [events, setEvents ] = useState([]);
     const [newErrors, setErrors] = useState(null);
-    const [userGroupId, setUserGroupId] = useState(1); 
-    let navigate = useNavigate(); 
+    const [userGroupId, setUserGroupId] = useState();
+    let navigate = useNavigate();
 
     useEffect(() => {
         const getEvents = () => {
