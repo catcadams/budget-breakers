@@ -50,7 +50,7 @@ public class EventController {
         logger.info("Inside viewEventDetails ");
         User user = authenticationService.getCurrentUser(request);
         List<Event> events = eventService.getEvents(userGroupId, user);
-        EventDTO eventDto = new EventDTO();;
+        EventDTO eventDto = new EventDTO();
         for(Event event: events){
             if(event.getId() == eventId){
                 eventService.setEventDtoForEvent(event, eventDto);
