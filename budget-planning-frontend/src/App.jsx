@@ -33,7 +33,7 @@ function App() {
         <Route path="/Events" element={<Events />} />
         <Route path="/event/create" element={<CreateEvent />} />
         <Route path="/events/:userGroupId/:eventId" element={<EventDetails />}/>
-        <Route path="/events/:userGroupId/list" element={<ViewEvents />}/>
+        <Route path="/events/:groupID/list" element={<ViewEvents />}/>
         <Route path="/events/edit/:userGroupId/:eventId" element={<UpdateEventDetails />} />
         <Route path="/Chores" element={<Chores />} />
         <Route path="/logout" element={<Logout />} />
