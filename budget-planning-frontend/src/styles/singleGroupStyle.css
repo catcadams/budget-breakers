@@ -1,0 +1,44 @@
+.single-group-container {
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.group-heading {
+    font-size: 45px;
+    color: rgb(228, 127, 3);
+    font-weight: bold;
+}
+
+.group-p {
+    font-size: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    margin-right: 45%;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 01%;
+}
+
+.group-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items:center;
+}
+
+.edit-btn {
+    padding: 3px 7px;
+    display: inline;
+    background-color: #ffff;
+}
+
+.add-member-btn {
+    margin-left: 65%;
+}
