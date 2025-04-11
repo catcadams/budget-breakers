@@ -7,6 +7,7 @@ export const useFetchGroups = (userID) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if(userID === -1) return;
         axios.get(`http://localhost:8080/groups/${userID}/list`, { withCredentials: true })
             .then(response => {
                 setGroups(response.data);
@@ -41,5 +42,5 @@ export const useFetchSingleGroup = (userID, groupID) => {
     }, [userID, groupID]);
 
     return { group, loading, error };
-};
+};  
 

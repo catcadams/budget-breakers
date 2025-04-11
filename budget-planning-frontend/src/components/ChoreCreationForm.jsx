@@ -1,15 +1,15 @@
-import TextInputField from "./TextInputField";
 import { useState } from "react";
-import NumericInputField from "./NumericInputField";
-import Button from "./Button";
-import ModalWindow from "./ModalWindow";
-import TextAreaInputField from "./TextAreaInputField"
-import DropdownField from "./DropdownField";
 import { useNavigate } from "react-router-dom";
-import "../styles/choreCreationFormStyle.css";
 import useCurrentUser from '../hooks/useCurrentUser';
-import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
 import { useFetchGroupNumber } from '../hooks/useFetchChores.jsx';
+import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
+import "../styles/choreCreationFormStyle.css";
+import Button from "./Button";
+import DropdownField from "./DropdownField";
+import ModalWindow from "./ModalWindow";
+import NumericInputField from "./NumericInputField";
+import TextAreaInputField from "./TextAreaInputField";
+import TextInputField from "./TextInputField";
 
 
 const ChoreCreationForm = () => {
@@ -72,7 +72,12 @@ const ChoreCreationForm = () => {
     const handleModalClose = () => {
         setShowModal(false);
         if (modalType === "success") {
-            navigate(`/groups`);// TODO implement navigation to the chore list , having issue with that for now.
+            const selectedGroup = groups.find(group => group.name === formData.userGroupName);
+            if (selectedGroup) {
+                navigate(`/groups/${user.id}/${selectedGroup.id}`);
+            } else {
+                navigate(`/groups`);
+            }
         }
     };
 

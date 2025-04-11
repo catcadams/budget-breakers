@@ -133,6 +133,7 @@ public class User extends BaseAbstractEntity{
     @Override
     public String toString() {
         return "User{" +
+                "id='" + getId() + '\'' +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
