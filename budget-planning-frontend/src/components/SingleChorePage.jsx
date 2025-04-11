@@ -9,7 +9,7 @@ import ModalWindow from "./ModalWindow";
 import { useFetchSingleChore } from "../hooks/useFetchChores";
 import { isChoreEditableOrDeletable, getChoreImage, getChoreStatusMessage } from "../utils/choreUtils.jsx";
 import useCurrentUser from '../hooks/useCurrentUser';
-import { isAdult } from "../utils/userUtils.jsx";
+import { isAdult, isCurrentUserEqualsAssignedUser } from "../utils/userUtils.jsx";
 
 const SingleChorePage = () => {
   const location = useLocation();
@@ -89,16 +89,16 @@ const SingleChorePage = () => {
           <p style={{ color: "chocolate" }}>{getChoreStatusMessage(chore)}</p>
           <img src={getChoreImage(chore.status)} alt="Chore" className="chore-image" />
           <div>
-            {chore.status === "OPEN" && (
+            {chore.status === "OPEN" && !isAdult(user) && (
               <Button onClick={handleAssignToMe} label="Assign to Me" />
             )}
-            {chore.status === "IN_PROGRESS" && (
+            {chore.status === "IN_PROGRESS" && isCurrentUserEqualsAssignedUser(chore, user) && (
               <>
                 <Button onClick={handleUnassign} label="Unassign" />
                 <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
               </>
             )}
-            {chore.status === "PENDING" && (
+            {chore.status === "PENDING" && isAdult(user)(
               <Button onClick={handleConfirmContribution} label="Confirm to Contribute" />
             )}
           </div>
