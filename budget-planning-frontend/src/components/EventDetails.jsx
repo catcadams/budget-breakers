@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
 import axios from "axios";
 import "../styles/eventDetailsStyle.css";
 import Button from "./Button";
@@ -6,6 +6,7 @@ import { useParams, useNavigate , useLocation} from "react-router-dom";
 import NumericInputField from "./NumericInputField";
 import { ProgressBar } from "react-bootstrap";
 import ModalWindow from "./ModalWindow";
+import Confetti from 'react-confetti';
 
 export default function EventDetails() {
   const { userGroupId, eventId } = useParams();
@@ -19,13 +20,15 @@ export default function EventDetails() {
   const [showModal, setShowModal] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const isAdultUser = sessionStorage.getItem("isAdult");
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isBudget, setIsBudget] = useState(false);
 
   const failedMessage =
     "Oops! Something went wrong while contributing to the event. Give it another try!";
   const successMessage =
     "Hooray! Your contribution to the event has been successfully made.";
   const congratulationsMessage =
-    "Congratulations!! You have achieved the budget need for the event!!! Enjoy the event!";
+    "Congratulations!! You have achieved the budget needed for the event!!! Enjoy the event!";
   const approvesuccessMessage = 
     "Approved the contribution successfully!";
 
@@ -35,6 +38,8 @@ export default function EventDetails() {
         .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
         .then((response) => {
           setEvent(response.data);
+          setIsBudget(response.data.budgetAchieved);
+          if(isBudget) handleCelebrate();
           setErrors({});
         })
         .catch((error) => {
@@ -100,7 +105,6 @@ export default function EventDetails() {
     })
       .then((response) => {
         if (response.ok) {
-          isBudgetReached();
           setMessage(successMessage);
           setModalType("success");
           setErrors({});
@@ -108,6 +112,7 @@ export default function EventDetails() {
           setMessage(failedMessage);
           setModalType("danger");
         }
+        if(isBudget) handleCelebrate();
         setShowModal(true);
       })
       .catch((error) => {
@@ -135,6 +140,7 @@ export default function EventDetails() {
           setMessage(failedMessage);
           setModalType("danger");
         }
+        if(isBudget) handleCelebrate();
         setShowModal(true);
       })
       .catch((error) => {
@@ -142,21 +148,20 @@ export default function EventDetails() {
         setModalType("danger");
         setShowModal(true);
       })
-       .finally(() => isBudgetReached());
+      .finally(() => isBudgetReached());
     
   }
   
-  const isBudgetReached = () => {
-    if (
-      event.eventEarnings == event.eventBudget ||
-      event.eventEarnings > event.eventBudget
-    ) {
-      setMessage(congratulationsMessage);
-      setModalType("success");
-      setShowModal(true);
-    }
-  };
+  const handleCelebrate = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 10000); 
+  };  
 
+  function isBudgetReached(){
+    if(event.budgetAchieved){
+      handleCelebrate();
+    }
+  }
   const handleDeleteModalClose = () => {
     setShowModalDelete(false);
   };
@@ -191,6 +196,7 @@ export default function EventDetails() {
               max={event.eventBudget}
             />
           </div>
+          <div style={{ display: event.budgetAchieved ? "none" : "block" }}>
           <form>
             <NumericInputField
               label="Amount to Contribute"
@@ -203,6 +209,9 @@ export default function EventDetails() {
             )}
             <Button label="Contribute" onClick={()=>(addContribution())}></Button>
           </form>
+          </div>
+          <div style={{ display: event.budgetAchieved ? "block" : "none" }}> Congratulations!! You have achieved the budget needed for the event!!! Enjoy the event!</div>
+          {showConfetti && <Confetti />}
         </div>
         <div className="event-form-container">
           <p>Event Name: {event.eventName}</p>

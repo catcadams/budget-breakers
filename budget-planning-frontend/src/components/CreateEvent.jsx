@@ -55,6 +55,7 @@ export default function CreateEvent() {
     }
     if (!formData.userGroupName) {
       newErrors.userGroupName = "Group is required.";
+      isValid = false;
     }
     setErrors(newErrors);
     return isValid;

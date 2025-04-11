@@ -26,9 +26,7 @@ function Navbar() {
               <NavLink to="/Home">Home </NavLink>
             </li>
             <li>
-            {isAdult(user) ? (
               <NavLink to="/Events">Events</NavLink>
-            ) : null}
             </li>
             <li>
             {isAdult(user) ? (
