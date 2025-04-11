@@ -7,12 +7,8 @@ import { useNavigate } from "react-router-dom";
 import useCurrentUser from '../hooks/useCurrentUser';
 
 const CreateGroupForm = () => {
-<<<<<<< HEAD
+    const { user } = useCurrentUser();
     const [formData, setFormData] = useState({name: "", description: "", emails: [] });
-=======
-    const { user, error } = useCurrentUser();
-    const [formData, setFormData] = useState({name: "", description: ""});
->>>>>>> origin
     const [errors, setErrors] = useState({})
     const [message, setMessage] = useState("");
     const [modalType, setModalType] = useState("success");
@@ -53,11 +49,7 @@ const CreateGroupForm = () => {
             method: "POST", 
             headers: {"Content-Type": "application/json"},
             credentials: "include",
-<<<<<<< HEAD
             body: JSON.stringify(dataToSubmit),
-=======
-            body: JSON.stringify(formData),
->>>>>>> origin
         })
             .then((response) => {
                 if (response.ok) {

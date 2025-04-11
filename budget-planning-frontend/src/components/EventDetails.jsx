@@ -31,6 +31,9 @@ export default function EventDetails() {
 
   useEffect(() => {
     const getEvent = () => {
+        console.log("Params - userGroupId:", userGroupId, "eventId:", eventId);
+        if (userGroupId && eventId) {
+
       axios
         .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
         .then((response) => {
@@ -42,6 +45,7 @@ export default function EventDetails() {
           console.error("Error fetching event details:", error);
         })
         .finally(() => setLoading(false));
+    }
     };
     getEvent();
   }, [userGroupId, eventId]);

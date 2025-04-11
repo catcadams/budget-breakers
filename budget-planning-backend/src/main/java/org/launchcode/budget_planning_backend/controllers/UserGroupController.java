@@ -1,15 +1,12 @@
 package org.launchcode.budget_planning_backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Email;
+import org.launchcode.budget_planning_backend.models.Invitation;
 import org.launchcode.budget_planning_backend.models.User;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
-<<<<<<< HEAD
 import org.launchcode.budget_planning_backend.service.EmailService;
-=======
 import org.launchcode.budget_planning_backend.service.AuthenticationService;
->>>>>>> origin
 import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -33,21 +31,37 @@ public class UserGroupController {
     UserGroupService groupService;
 
     @Autowired
-<<<<<<< HEAD
     EmailService emailService;
-=======
+
+    @Autowired
     AuthenticationService authenticationService;
->>>>>>> origin
 
     @PostMapping(value="/create")
     public ResponseEntity<String> createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
-        groupService.saveGroups(groupService.createNewGroup(userGroupDTO, request));
+
+        UserGroup group = groupService.createNewGroup(userGroupDTO, request);
+        groupService.saveGroups(group);
         String groupName = userGroupDTO.getName();
         String groupDescription = userGroupDTO.getDescription();
         List<String> emails = userGroupDTO.getEmails();
+
+        System.out.println("Emails received: " + emails);
+
         String subject = "You are invited to join " + groupName + " on Red, Green, VACAY!";
-        String body = "Hi, you are invited to join the group: " + groupName + "\nDescription: " + groupDescription;
-        emailService.sendEmailInvites(emails, subject, body);
+
+        for (String email : emails) {
+//            String token = UUID.randomUUID().toString();
+//            String inviteLink = "http://localhost:5173/invite/accept?token=" + token;
+//            String body = "Hi, you are invited to join the group: " + groupName
+//                    + "\nDescription: " + groupDescription
+//                    + "\nPlease click the link below to join using the same email this invitation was sent to."
+//                    + "\n" + inviteLink;
+//            Invitation invitation = new Invitation();
+//            invitation.setEmail(email);
+//            invitation.setGroup(group);
+//            emailService.saveInvitation(token, invitation);
+            emailService.sendEmailInvites(email, subject, groupName, groupDescription, group);
+        }
         return ResponseEntity.ok("Group created successfully!");
     }
 
@@ -80,9 +94,7 @@ public class UserGroupController {
     }
 
     @PostMapping(value = "/{userID}/{groupID}/add-member")
-    public void addMembersToGroup( @PathVariable Integer groupID, @RequestBody Email email) {
-        groupService.addUsersToGroup(groupID, email);
+    public void addMembersToGroup( @PathVariable Integer groupID, User user) {
+        groupService.addUsersToGroup(groupID, user);
     }
-
-
 }

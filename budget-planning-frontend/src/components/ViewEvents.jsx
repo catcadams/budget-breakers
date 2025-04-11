@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "../styles/choreListStyle.css";
 import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from "./Button";
 
 export default function ViewEvents() {
@@ -11,7 +11,13 @@ export default function ViewEvents() {
     const [userGroupId, setUserGroupId] = useState();
     let navigate = useNavigate();
 
+    const { groupId } = useParams();
+
     useEffect(() => {
+        if(groupId) {
+            setUserGroupId(groupId);
+           }
+
         const getEvents = () => {
           axios
             .get(`http://localhost:8080/events/${userGroupId}/list`, { withCredentials: true })
@@ -31,6 +37,10 @@ export default function ViewEvents() {
       if (newErrors) return <div>{newErrors}</div>;
 
       function handleClick(event) {
+          if (!userGroupId) {
+              setErrors("user group Id is undefined")
+              return;
+              }
         console.log(`Event clicked: ${event.name}`);
         navigate(`/events/${userGroupId}/${event.id}`);
       }
