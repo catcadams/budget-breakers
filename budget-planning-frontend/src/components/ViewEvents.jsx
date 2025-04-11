@@ -5,8 +5,8 @@ import { useFetchEvents } from '../hooks/useFetchEvents';
 
 export default function ViewEvents() {
     
-    const {userGroupId} = useParams(); 
-    const { events, error, loading: eventLoading } = useFetchEvents(userGroupId);
+    const {groupID} = useParams(); 
+    const { events, error, loading: eventLoading } = useFetchEvents(groupID);
     let navigate = useNavigate(); 
       
     if (error) return <div>{error}</div>;
@@ -14,7 +14,7 @@ export default function ViewEvents() {
 
     function handleClick(event) {
       console.log(`Event clicked: ${event.name}`);
-      navigate(`/events/${userGroupId}/${event.id}`);
+      navigate(`/events/${groupID}/${event.id}`);
     }
   return (
     <div className="tiles-container">
