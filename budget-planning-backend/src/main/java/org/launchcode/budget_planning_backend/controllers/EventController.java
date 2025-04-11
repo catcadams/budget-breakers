@@ -103,6 +103,7 @@ public class EventController {
         Contributions contribution = eventService.getContribution(event, contributionId);
         contribution.setStatus(Status.COMPLETE);
         event.setEarnings(event.getEarnings() + contribution.getAmountOfContribution());
+        eventService.isBudgetReachedForEvent(event);
         logger.info("Contribution approved successfully");
     }
 

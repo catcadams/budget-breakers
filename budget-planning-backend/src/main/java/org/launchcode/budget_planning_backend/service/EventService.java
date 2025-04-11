@@ -23,6 +23,7 @@ public class EventService {
         Event event = new Event(eventDto.getEventName(), eventDto.getEventBudget(), eventDto.getEventLocation(), eventDto.getEventDescription(),
                 eventDto.getEventDate(), Status.OPEN, 0,group);
         event.setUserGroup(group);
+        event.setBudgetReached(false);
         group.addEvents(event);
         logger.info("Event Created Successfully".concat(event.toString()));
     }
@@ -60,6 +61,7 @@ public class EventService {
         if(event.getDate() == null)eventDto.setEventDate( ""); else eventDto.setEventDate(  event.getDate().toString());
         eventDto.setEventLocation(event.getLocation());
         eventDto.setUserGroupName(event.getUserGroup().getName());
+        eventDto.setBudgetAchieved(event.isBudgetReached());
     }
 
     public void updateEvent(Event event, EventDTO eventDto){
@@ -71,6 +73,7 @@ public class EventService {
             event.setDate(LocalDate.parse(eventDto.getEventDate()));
         }
         event.setEarnings(eventDto.getEventEarnings());
+        isBudgetReachedForEvent(event);
     }
 
     public void setEventStatus(Event event){
@@ -105,6 +108,7 @@ public class EventService {
         contributions.setEventID(event.getId());
         contributions.setEvent(event);
         // Set event status
+        isBudgetReachedForEvent(event);
         event.addContributions(contributions);
         setEventStatus(event);
     }
@@ -153,5 +157,9 @@ public class EventService {
     public void deleteEvent(User user, int userGroupId, int eventId){
         Event event = getEventForGroup(user, userGroupId, eventId);
         userGroupService.getEventsFromGroup(userGroupId).remove(event);
+    }
+
+    public void isBudgetReachedForEvent(Event event){
+        event.setBudgetReached(event.getEarnings() == event.getBudget() || event.getEarnings() > event.getBudget());
     }
 }

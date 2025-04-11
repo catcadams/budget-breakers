@@ -12,6 +12,7 @@ public class EventDTO {
     private String eventDate;
     private double eventEarnings;
     private String userGroupName;
+    private boolean isBudgetAchieved;
 
     public EventDTO(){}
 
@@ -79,6 +80,14 @@ public class EventDTO {
         this.userGroupName = userGroupName;
     }
 
+    public boolean isBudgetAchieved() {
+        return isBudgetAchieved;
+    }
+
+    public void setBudgetAchieved(boolean budgetAchieved) {
+        isBudgetAchieved = budgetAchieved;
+    }
+
     @Override
     public String toString() {
         return "EventDTO{" +
@@ -90,6 +99,7 @@ public class EventDTO {
                 ", eventDate='" + eventDate + '\'' +
                 ", eventEarnings=" + eventEarnings +
                 ", userGroupName='" + userGroupName + '\'' +
+                ", isBudgetAchieved='" + isBudgetAchieved + '\'' +
                 '}';
     }
 }
