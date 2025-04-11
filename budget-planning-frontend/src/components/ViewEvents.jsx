@@ -3,6 +3,7 @@ import "../styles/choreListStyle.css";
 import axios from 'axios';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
+import Button from "./Button";
 
 export default function ViewEvents() {
     const [events, setEvents ] = useState([]);
@@ -49,6 +50,11 @@ export default function ViewEvents() {
             </div>
           ))}
         </div>
+        <div>
+          <Button label="Create New Event" onClick={() => navigate("/event/create")}>
+            Create New Event
+          </Button>
+          </div>
         </div>
   )
 }

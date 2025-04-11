@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.Email;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class UserGroup extends AbstractEntity{
 
     private final List<User> users = new ArrayList<>();
 
+    @JsonManagedReference
     private final List<Event> events = new ArrayList<>();
 
     private  final List<Chore> chores = new ArrayList<>();
@@ -25,11 +27,6 @@ public class UserGroup extends AbstractEntity{
     }
 
     public UserGroup(){}
-
-    public UserGroup(int id, String name){
-        this.setId(id);
-        this.setName(name);
-    }
 
     public List<User> getUsers() {
         return users;
@@ -62,9 +59,9 @@ public class UserGroup extends AbstractEntity{
     @Override
     public String toString() {
         return "UserGroup{" +
-                " id=" + getId() +
-                " name=" + getName() +
-                " description=" + getDescription() +
+                " id=" + this.getId() +
+                " name=" + this.getName() +
+                " description=" + this.getDescription() +
                 " users=" + users +
                 " events=" + events +
                 " chores=" + chores +
