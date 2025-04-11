@@ -69,8 +69,8 @@ export default function LoginForm () {
 
       return (
         <form onSubmit={handleSubmit}>
+            <div className="pageBody">
             <h1>Login</h1>
-            <div>
                 <TextInputField label="Username" name="username" value={formData.username} setFormData={setFormData} />
                 <p>{formErrors.username}</p>
 
