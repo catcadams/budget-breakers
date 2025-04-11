@@ -7,12 +7,12 @@ import NumericInputField from "./NumericInputField";
 import { ProgressBar } from "react-bootstrap";
 import ModalWindow from "./ModalWindow";
 import Confetti from 'react-confetti';
+import { useFetchEventDetails } from '../hooks/useFetchEvents';
 
 export default function EventDetails() {
   const { userGroupId, eventId } = useParams();
   const [newErrors, setErrors] = useState({});
   const navigate = useNavigate();
-  const [event, setEvent] = useState(null);
   const [contributions, setContributions] = useState([]);
   const [formData, setFormData] = useState({ amountOfContribution: "" });
   const [message, setMessage] = useState("");
@@ -21,7 +21,7 @@ export default function EventDetails() {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const isAdultUser = sessionStorage.getItem("isAdult");
   const [showConfetti, setShowConfetti] = useState(false);
-  const [isBudget, setIsBudget] = useState(false);
+  const { event, loading, error: eventError, isBudget} = useFetchEventDetails(userGroupId, eventId);
 
   const failedMessage =
     "Oops! Something went wrong while contributing to the event. Give it another try!";
@@ -32,23 +32,13 @@ export default function EventDetails() {
   const approvesuccessMessage = 
     "Approved the contribution successfully!";
 
-  useEffect(() => {
-    const getEvent = () => {
-      axios
-        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
-        .then((response) => {
-          setEvent(response.data);
-          setIsBudget(response.data.budgetAchieved);
-          if(isBudget) handleCelebrate();
-          setErrors({});
-        })
-        .catch((error) => {
-          setErrors("Failed to load event details");
-          console.error("Error fetching event details:", error);
-        });
-    };
-    getEvent();
-  }, [userGroupId, eventId]);
+  useEffect(() =>{
+      if(isBudget)
+      {
+        handleCelebrate();
+      }
+  },[isBudget]);
+
 
   useEffect(() => {
     const getContributionHistory = () => {
@@ -72,6 +62,9 @@ export default function EventDetails() {
   if (event === null) {
     return <p>Loading event details...</p>;
   }
+  if (loading) return <p>Loading Event details...</p>;
+  if (eventError) return <p>Error: {eventError}</p>;
+
 
   const validateForm = () => {
     let isValid = true;
@@ -209,7 +202,7 @@ export default function EventDetails() {
             <Button label="Contribute" onClick={()=>(addContribution())}></Button>
           </form>
           </div>
-          <div style={{ display: event.budgetAchieved ? "block" : "none" }}> Congratulations!! You have achieved the budget needed for the event!!! Enjoy the event!</div>
+          <div style={{ display: event.budgetAchieved ? "block" : "none" }}>{congratulationsMessage}</div>
           {showConfetti && <Confetti />}
         </div>
         <div className="event-form-container">
