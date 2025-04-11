@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class EventController {
 
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    @GetMapping("/{userGroupId}/list")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable int userGroupId, HttpServletRequest request){
+    @GetMapping("/{groupID}/list")
+    public ResponseEntity<List<Event>> getEvents(@PathVariable Integer groupID, HttpServletRequest request){
         logger.info("Inside GetEvents");
         User user = authenticationService.getCurrentUser(request);
-        List<Event> listOfEvents = eventService.getEvents(userGroupId, user);
+        List<Event> listOfEvents = eventService.getEvents(groupID, user);
         if (listOfEvents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
@@ -46,7 +45,7 @@ public class EventController {
     }
 
     @GetMapping("/{userGroupId}/{eventId}")
-    public EventDTO viewEventDetails(@PathVariable int userGroupId, @PathVariable Integer eventId, HttpServletRequest request) {
+    public EventDTO viewEventDetails(@PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request) {
         logger.info("Inside viewEventDetails ");
         User user = authenticationService.getCurrentUser(request);
         List<Event> events = eventService.getEvents(userGroupId, user);
@@ -60,7 +59,7 @@ public class EventController {
         return eventDto;
     }
     @PutMapping("/edit/{userGroupId}/{eventId}")
-    public String editEventDetails(@Valid @RequestBody EventDTO eventDto, @PathVariable int userGroupId, @PathVariable Integer eventId, HttpServletRequest request) {
+    public String editEventDetails(@Valid @RequestBody EventDTO eventDto, @PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request) {
         logger.info("Inside editEventDetails ");
         User user = authenticationService.getCurrentUser(request);
         List<Event> events = eventService.getEvents(userGroupId, user);
@@ -74,7 +73,7 @@ public class EventController {
     }
 
     @PostMapping("/contribute/{userGroupId}/{eventId}")
-    public String addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable int userGroupId, @PathVariable int eventId, HttpServletRequest request){
+    public String addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request){
         logger.info("Inside Contribute");
         // Need to implement get group with groupID
         User user = authenticationService.getCurrentUser(request);
@@ -90,13 +89,13 @@ public class EventController {
     }
 
     @GetMapping("/contributions/{userGroupId}/{eventId}")
-    public List<ContributionDTO> getContributions(@PathVariable int userGroupId, @PathVariable int eventId, HttpServletRequest request) {
+    public List<ContributionDTO> getContributions(@PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request) {
         User user = authenticationService.getCurrentUser(request);
         return eventService.getContributionsForEvent(user, userGroupId, eventId);
     }
 
     @PostMapping("/approveContribution/{userGroupId}/{eventId}/{contributionId}")
-    public void approveContribution(@PathVariable int userGroupId, @PathVariable int eventId, @PathVariable int contributionId, HttpServletRequest request){
+    public void approveContribution(@PathVariable Integer userGroupId, @PathVariable Integer eventId, @PathVariable Integer contributionId, HttpServletRequest request){
        logger.info("Inside approveContribution");
         User user = authenticationService.getCurrentUser(request);
         Event event = eventService.getEventForGroup(user, userGroupId, eventId);
@@ -108,7 +107,7 @@ public class EventController {
     }
 
     @DeleteMapping("/delete/{userGroupId}/{eventId}")
-    public void deleteEvent(@PathVariable int userGroupId, @PathVariable int eventId, HttpServletRequest request){
+    public void deleteEvent(@PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request){
         logger.info("Inside delete Event");
         User user = authenticationService.getCurrentUser(request);
         eventService.deleteEvent(user, userGroupId, eventId);
