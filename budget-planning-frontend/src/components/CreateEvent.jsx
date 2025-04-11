@@ -92,7 +92,12 @@ export default function CreateEvent() {
   const handleModalClose = () =>{
     setShowModal(false);
     if (modalType === "success") {
-        navigate(`/events/1/list`);//need to be replaced with /chores/${userGroupId}/list
+      const selectedGroup = groups.find(group => group.name === formData.userGroupName);
+      if (selectedGroup) {
+      navigate(`/groups/${user.id}/${selectedGroup.id}`);
+      } else {
+      navigate(`/groups`);
+      }
     }
   }
 

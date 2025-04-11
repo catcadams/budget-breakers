@@ -45,8 +45,7 @@ export default function EventDetails() {
         .catch((error) => {
           setErrors("Failed to load event details");
           console.error("Error fetching event details:", error);
-        })
-        .finally(() => setLoading(false));
+        });
     };
     getEvent();
   }, [userGroupId, eventId]);
