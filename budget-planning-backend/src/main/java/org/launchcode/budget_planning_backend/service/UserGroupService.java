@@ -102,16 +102,7 @@ public class UserGroupService {
 
     public void addUsersToGroup(int groupID, User user) {
         UserGroup group = getGroupByID(groupID);
-
         group.addUsers(user);
-        logger.info("New member emails were added: ".concat(group.toString()));
-//
-//        for (UserGroup group : groupsList) {
-//            if (group.getId() == groupID) {
-//                group.addEmails(email);
-//                logger.info("New member emails were added: ".concat(group.toString()));
-//            }
-//        }
     }
 
     public boolean hasAccessToGroups(int groupID, int userID) {

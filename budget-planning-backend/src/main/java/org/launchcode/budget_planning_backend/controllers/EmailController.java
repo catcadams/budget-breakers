@@ -3,7 +3,6 @@ package org.launchcode.budget_planning_backend.controllers;
 import jakarta.servlet.http.HttpSession;
 import org.launchcode.budget_planning_backend.models.Invitation;
 import org.launchcode.budget_planning_backend.models.User;
-import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.service.EmailService;
 import org.launchcode.budget_planning_backend.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;

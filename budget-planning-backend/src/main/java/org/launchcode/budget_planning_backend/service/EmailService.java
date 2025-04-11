@@ -66,24 +66,3 @@ public class EmailService {
         }
     }
 }
-//        for (String email : emails) {
-//            try {
-//                Invitation invitation = new Invitation();
-//                invitation.setEmail(email);
-//                invitation.setToken(token);
-//                invitation.setGroup(group);
-//                invitation.setExpiryDate(LocalDateTime.now().plusDays(7));
-//                saveInvitation(token, invitation);
-//
-//                SimpleMailMessage message = new SimpleMailMessage();
-//                message.setTo(email);
-//                message.setSubject(subject);
-//                message.setText(body);
-//                javaMailSender.send(message);
-//                System.out.println("Invitation email sent to: " + email); // Log each email sent
-//            } catch (Exception e) {
-//                System.out.println("Error sending email to " + email); // Log any errors
-//            }
-//        }
-//    }
-//}
