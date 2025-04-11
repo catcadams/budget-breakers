@@ -3,3 +3,8 @@ export const isAdult = (user) => {
       sessionStorage.setItem("isAdult", true);
     return user?.accountType === "ADULT";
   };
+
+  export const isCurrentUserEqualsAssignedUser = (chore, user) => {
+    if (!chore.user || !user) return false;
+    return chore.user.id === user.id;
+  };

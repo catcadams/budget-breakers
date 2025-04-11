@@ -49,7 +49,8 @@ export const useFetchGroupNumber = (groups, loading) => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (!loading && groups.length === 0) {
+        if (loading || !groups) return;
+        if (groups.length === 0) {
             setWarningMessage("You need to be part of at least one group to create a chore. Please join a group first!");
             setModalType("warning");
             setShowModal(true);
