@@ -5,6 +5,7 @@ import Button from "./Button";
 import ModalWindow from "./ModalWindow";
 import { useNavigate } from "react-router-dom";
 import useCurrentUser from '../hooks/useCurrentUser';
+import "../styles/groupCreationFormStyle.css";
 
 const CreateGroupForm = () => {
     const { user, error } = useCurrentUser();
@@ -65,14 +66,14 @@ const CreateGroupForm = () => {
 
     return (
         <form className="group-form-container">
-            <h1>Create a New Group</h1>
-            <div>
+            <h1 className="group-form-heading">Create a New Group</h1>
+            <div className="group-form-div">
                 <TextInputField label="Group Name" name="name" value={formData.name} setFormData={setFormData} />
                 {errors.name && <p className="error">{errors.name}</p>}
                 <TextAreaInputField label="Group Description" name="description" value={formData.description} setFormData={setFormData} />
-                <Button label="Create Group" onClick={handleSubmit} />
+                <Button className="group-form-btn" label="Create Group" onClick={handleSubmit} />
             </div>
-            <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
+            <ModalWindow className="group-form-modal-window" showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
         </form>
     );
 };

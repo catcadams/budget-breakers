@@ -6,8 +6,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import ChoresList from "./ChoresList";
 import ViewEvents from "./ViewEvents";
 import { CiEdit } from "react-icons/ci";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import ModalWindow from "./ModalWindow";
+import "../styles/singleGroupStyle.css";
 
 const SingleGroupPage = () => {
   const location = useLocation();
@@ -26,20 +25,23 @@ const SingleGroupPage = () => {
   if (userError) return <p>Error: {error}</p>;
   if (groupError) return <p>Error: {error}</p>;
 
-
   return (
-    <div>
-      <h2>{group.name}</h2>
-      <p>{group.description}</p>
-      <div className="tooltip-container">
-        <Button
-          label={<CiEdit size={24} />}
-          onClick={() => navigate(`/groups/${userID}/${groupID}/edit`)}
-        />
+    <div className="single-group-container">
+      <div className="group-header">
+        <h2 className="group-heading">{group.name}</h2>
+        <div className="tooltip-container">
+          <Button className={"edit-btn"}
+            label={<CiEdit size={24} />}
+            onClick={() => navigate(`/groups/${userID}/${groupID}/edit`)}
+          />
+        </div>
+        <div className="add-member-btn">
+          {/* This button is a work in progress */}
+          <Button label="Add New Member"></Button>
+        </div>
       </div>
       <div>
-        {/* This button is a work in progress */}
-        <Button label="Add New Member"></Button>
+      <p className="group-p">{group.description}</p>
       </div>
       <div className="tiles-container">
         <h3>All Chores</h3>
