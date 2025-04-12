@@ -51,7 +51,7 @@ const AddNewMember = () => {
 
                 const handleClose = () => {
                     setShowModal(false);
-                    navigate(`/groups/${userID}`);
+                    navigate(`/groups/${userID}/list`);
                 }
 
               const handleAddEmail = () => {

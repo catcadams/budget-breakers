@@ -84,8 +84,8 @@ public class UserGroupController {
     public ResponseEntity<String> addMembersToGroup( @PathVariable Integer groupID, User user, @RequestBody UserGroupDTO userGroupDTO) {
         groupService.addUsersToGroup(groupID, user);
         UserGroup group = groupService.getGroupByID(groupID);
-        String groupName = userGroupDTO.getName();
-        String groupDescription = userGroupDTO.getDescription();
+        String groupName = group.getName();
+        String groupDescription = group.getDescription();
         List<String> emails = userGroupDTO.getEmails();
 
         if (emails == null || emails.isEmpty()) {
