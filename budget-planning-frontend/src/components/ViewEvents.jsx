@@ -4,11 +4,11 @@ import Button from "./Button";
 import { useFetchEvents } from '../hooks/useFetchEvents';
 
 export default function ViewEvents() {
-    
-    const {groupID} = useParams(); 
+
+    const {groupID} = useParams();
     const { events, error, loading: eventLoading } = useFetchEvents(groupID);
-    let navigate = useNavigate(); 
-      
+    let navigate = useNavigate();
+
     if (error) return <div>{error}</div>;
     if (eventLoading) return <p>Loading Events...</p>;
 
