@@ -1,56 +1,74 @@
 import { useState, useEffect } from "react";
-import ReactDOM from 'react-dom/client';
-import '../index.css'
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
+import TextInputField from "./TextInputField";
+import DateInputField from "./DateInputField";
+import EmailInputField from "./EmailInputField";
+import PasswordInputField from "./PasswordInputField";
+import ModalWindow from "./ModalWindow";
 
 export default function RegisterForm () {
 
-    const initialValues = { firstName: "", lastName: "", dateOfBirth: "", email: "", username: "", password: "", confirmPassword: "" };
-    const [formValues, setFormValues] = useState(initialValues);
+    const initialValues = { firstName: "", lastName: "", dateOfBirth: "", email: "", username: "", password: "", verifyPassword: "" };
+    const [formData, setFormData] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
+    const [message, setMessage] = useState("");
+    const [modalType, setModalType] = useState("success");
+    const [showModal, setShowModal] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
 
-    const handleChange = (event) => {
-      const { name, value } = event.target;
-      setFormValues({ ...formValues, [name]: value });
-    };
+    const failedMessage =
+        "Oops! Something went wrong while registering. Give it another try!";
+      const successMessage = "Hooray! You have successfully registered.";
 
        const handleSubmit = (event) => {
           event.preventDefault();
-          setFormErrors(validate(formValues));
+          setFormErrors(validate(formData));
           setIsSubmit(true);
           };
 
 useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log(formValues);
+      console.log(formData);
 
       const newUser = {
-        ...formValues,
+        ...formData,
       };
 
       fetch("http://localhost:8080/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formValues),
+        credentials: "include",
+        body: JSON.stringify(newUser),
       })
         .then((response) => {
           if (response.ok) {
-            console.log("User successfully registered");
             console.log(newUser);
-            setFormValues(initialValues); // Reset form values after successful submit
-            setIsSubmit(false); // Reset submit flag
+            setMessage(successMessage);
+            setModalType("success");
+            setFormData(initialValues);
+            setIsSubmit(false);
           } else {
-            console.error("Registration failed");
+            setMessage(failedMessage);
+            setModalType("danger");
           }
+            setShowModal(true);
         })
-        .catch((error) => console.error("Error:", error));
-    }
-  }, [formErrors, formValues, isSubmit]);
+        .catch((error) => {
+            setMessage(failedMessage);
+            setModalType("danger");
+            setShowModal(true);
+        });
+  }
+  }, [formErrors, formData, isSubmit]);
+
+        const handleClose = () => {
+                setShowModal(false);
+                navigate(`/login`);
+        }
 
           let navigate = useNavigate();
-            const routeChange = () =>{
+            const routeChange = () => {
               let path = `/login`;
               navigate(path);
               };
@@ -86,95 +104,47 @@ useEffect(() => {
           } else if (values.password.length > 15) {
             errors.password = "Password cannot exceed more than 15 characters";
           }
-          if (!values.confirmPassword) {
-            errors.confirmPassword = "Password confirmation is required";
-          } else if (values.confirmPassword.length < 4) {
-            errors.confirmPassword = "Password confirmation must be more than 4 characters";
-          } else if (values.confirmPassword.length > 15) {
-            errors.confirmPassword = "Password confirmation exceeds more than 15 characters";
-          }
+          if (!values.verifyPassword) {
+            errors.verifyPassword = "Password confirmation is required";
+          } else if (values.verifyPassword.length < 4) {
+            errors.verifyPassword = "Password confirmation must be more than 4 characters";
+          } else if (values.verifyPassword.length > 15) {
+            errors.verifyPassword = "Password confirmation exceeds more than 15 characters";
+          } else if (values.verifyPassword !== values.password) {
+             errors.verifyPassword = "Password confirmation does not match password entered."
+             }
           return errors;
         };
 
       return (
-        <div className="container">
         <form onSubmit={handleSubmit}>
+            <div className="pageBody">
             <h1>Registration</h1>
-          <label>First name:
-            <input
-              type="text"
-              name="firstName"
-              value={formValues.firstName}
-              onChange={handleChange}
-            />
-          </label>
-          <p>{formErrors.firstName}</p>
+            <TextInputField label="First name" name="firstName" value={formData.firstName} setFormData={setFormData} />
+            <p>{formErrors.firstName}</p>
 
-          <label>Last name:
-                   <input
-                   type="text"
-                   name="lastName"
-                   value={formValues.lastName}
-                   onChange={handleChange}
-                   />
-               </label>
-               <p>{formErrors.lastName}</p>
+            <TextInputField label="Last name" name="lastName" value={formData.lastName} setFormData={setFormData} />
+            <p>{formErrors.lastName}</p>
 
-          <label>Date of birth:
-                          <input
-                          type="date"
-                          name="dateOfBirth"
-                          value={formValues.dateOfBirth}
-                          onChange={handleChange}
-                          />
-                      </label>
-                      <p>{formErrors.dateOfBirth}</p>
+            <DateInputField label="Date of birth" name="dateOfBirth" value={formData.dateOfBirth} setFormData={setFormData} />
+            <p>{formErrors.dateOfBirth}</p>
 
-                       <label>Email:
-                           <input
-                           type="email"
-                           name="email"
-                           value={formValues.email}
-                           onChange={handleChange}
-                           />
-                       </label>
-                       <p>{formErrors.email}</p>
+            <EmailInputField label="Email" name="email" value={formData.email} setFormData={setFormData} />
+            <p>{formErrors.email}</p>
 
-                       <label>Username:
-                           <input
-                           type="text"
-                           name="username"
-                           value={formValues.username}
-                           onChange={handleChange}
-                           />
-                       </label>
-                       <p>{formErrors.username}</p>
+            <TextInputField label="Username" name="username" value={formData.username} setFormData={setFormData} />
+            <p>{formErrors.username}</p>
 
-                       <label>Password:
-                           <input
-                           type="password"
-                           name="password"
-                           value={formValues.password}
-                           onChange={handleChange}
-                           />
-                       </label>
-                       <p>{formErrors.password}</p>
+            <PasswordInputField label="Password" name="password" value={formData.password} setFormData={setFormData} />
+            <p>{formErrors.password}</p>
 
-                       <label>Confirm password:
-                           <input
-                           type="password"
-                           name="confirmPassword"
-                           value={formValues.confirmPassword}
-                           onChange={handleChange}
-                           />
-                       </label>
-                       <p>{formErrors.confirmPassword}</p>
-                         <Button label="Register" onClick={handleSubmit} />
-                         <Button label="Login" onClick={handleSubmit, routeChange} />
-                   </form>
-                   </div>
-                   )
+            <PasswordInputField label="Confirm password" name="verifyPassword" value={formData.verifyPassword} setFormData={setFormData} />
+            <p>{formErrors.verifyPassword}</p>
+
+            <Button label="Register" onClick={handleSubmit} />
+            <Button label="Login" onClick={routeChange} />
+            </div>
+            <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
+        </form>
+      )
 };
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<RegisterForm />);

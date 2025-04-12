@@ -3,41 +3,51 @@ package org.launchcode.budget_planning_backend.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Event extends AbstractEntity{
 
+    @NotNull
     @NotBlank(message = "Budget amount is required")
     private double budget;
 
+    @NotNull
     @NotBlank(message = "Location is required")
     @Size(min = 4, max = 50 , message = "Location must be  between 4 and 50 characters")
     private String location;
 
-    private Date date;
+    private LocalDate date;
 
     private Status status;
 
     private double earnings;
 
-    @ManyToOne
-    @NotNull(message = "Group is required")
-    private UserGroup userGroup;
+    private boolean isBudgetReached;
 
     @OneToMany
+    @JsonManagedReference
     private final List<Contributions> contributions = new ArrayList<>();
 
-    public Event(double budget, String location, Date date, Status status, double earnings, UserGroup userGroup) {
+    @ManyToOne
+    @NotNull(message = "Group is required")
+    @JsonBackReference
+    private UserGroup userGroup;
+
+    public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
+        this.setName(name);
+        this.setDescription(description);
         this.budget = budget;
         this.location = location;
-        this.date = date;
+        if(date.isBlank()) this.date = null; else this.date =LocalDate.now();
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
@@ -69,11 +79,11 @@ public class Event extends AbstractEntity{
         this.location = location;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -105,7 +115,31 @@ public class Event extends AbstractEntity{
         return contributions;
     }
 
-    public void addContribution(Contributions contribution) {
-        this.contributions.add(contribution);
+    public void addContributions(Contributions contributions) {
+        this.contributions.add(contributions);
+    }
+
+    public boolean isBudgetReached() {
+        return isBudgetReached;
+    }
+
+    public void setBudgetReached(boolean budgetReached) {
+        isBudgetReached = budgetReached;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "Event ID= "+ this.getId()+
+                ", Name= "+ this.getName()+
+                ", budget= " + budget +
+                ", location= '" + location + '\'' +
+                ", Description= "+this.getDescription()+
+                ", date= " + date +
+                ", status= " + status +
+                ", earnings= " + earnings +
+                ", isBudgetReached= " + isBudgetReached +
+                ", group= " + userGroup.getId()+userGroup.getName() +
+                '}';
     }
 }

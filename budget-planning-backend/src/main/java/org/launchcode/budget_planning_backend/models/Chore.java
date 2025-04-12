@@ -31,10 +31,6 @@ public class Chore extends AbstractEntity{
         this.amountOfEarnings = amountOfEarnings;
     }
 
-    public static Chore createChore(String name, String description, Double amountOfEarnings) {
-        return new Chore(name, description, amountOfEarnings);
-    }
-
     public Double getAmountOfEarnings() {
         return amountOfEarnings;
     }
@@ -49,6 +45,40 @@ public class Chore extends AbstractEntity{
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public UserGroup getGroup() {
+        return userGroup;
+    }
+
+    public void setGroup(UserGroup group) {
+        this.userGroup = group;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Contributions getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(Contributions contribution) {
+        this.contribution = contribution;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @Override

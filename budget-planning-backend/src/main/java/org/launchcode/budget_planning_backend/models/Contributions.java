@@ -4,10 +4,14 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+import java.time.LocalDate;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Contributions extends BaseAbstractEntity{
 
@@ -19,23 +23,20 @@ public class Contributions extends BaseAbstractEntity{
     private Double amountOfContribution;
 
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne
     @NotNull
+    @JsonBackReference
     private Event event;
 
+    private int eventID;
+
     @NotNull
-    private String status;
+    private Status status;
 
-    public Contributions(User user, Double amountOfContribution, Date date, Event event) {
-        this.user = user;
-        this.amountOfContribution = amountOfContribution;
-        this.date = date;
-        this.event = event;
+    public Contributions() {
     }
-
-    public Contributions() {}
 
     public User getUser() {return user;}
 
@@ -47,16 +48,35 @@ public class Contributions extends BaseAbstractEntity{
         this.amountOfContribution = amountOfContribution;
     }
 
-    public Date getDate() {return date;}
+    public LocalDate getDate() {return date;}
 
-    public void setDate(Date date) {this.date = date;}
+    public void setDate(LocalDate date) {this.date = date;}
 
     public Event getEvent() {return event;}
 
     public void setEvent(Event event) {this.event = event;}
 
-    public String getStatus() {return status;}
+    public Status getStatus() {return status;}
 
-    public void setStatus(String status) {this.status = status;}
+    public void setStatus(Status status) {this.status = status;}
 
+    public int getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
+    }
+
+    @Override
+    public String toString() {
+        return "Contributions{" +
+                "id=" + getId() +
+                " user=" + user.getId()+user.getFirstName() +
+                ", amountOfContribution=" + amountOfContribution +
+                ", date=" + date +
+                ", event=" + event +
+                ", status=" + status +
+                '}';
+    }
 }

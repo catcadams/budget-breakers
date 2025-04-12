@@ -5,11 +5,9 @@ import jakarta.validation.constraints.Positive;
 
 public class ChoreDto extends AbstractEntity {
 
-    //private User user;
+    private UserGroup group;
 
-    //private Event event;
-
-    //private Group group;
+    private String userGroupName;//temp for dummy data
 
     @Positive(message = "Amount must be a positive number.")
     @NotNull(message = "Amount is required.")
@@ -25,13 +23,25 @@ public class ChoreDto extends AbstractEntity {
 
     //public void setEvent(Event event) {this.event = event;}
 
-    //public Group getGroup() {return group;}
+    public UserGroup getUserGroup() {
+        return group;
+    }
 
-    //public void setGroup(Group group) {this.group = group;}
+    public void setUserGroup(UserGroup group) {
+        this.group = group;
+    }
 
     public Double getAmountOfEarnings() {return amountOfEarnings;}
 
     public void setAmountOfEarnings(Double amountOfEarnings) {
         this.amountOfEarnings = amountOfEarnings;
+    }
+
+    public String getUserGroupName() {
+        return userGroupName;
+    }
+
+    public void setUserGroupName(String userGroupName) {
+        this.userGroupName = userGroupName;
     }
 }
