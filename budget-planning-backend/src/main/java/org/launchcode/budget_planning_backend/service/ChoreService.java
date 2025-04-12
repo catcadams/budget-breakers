@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +16,9 @@ public class ChoreService {
 
     @Autowired
     UserGroupService userGroupService;
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     private final Logger logger = LoggerFactory.getLogger(ChoreService.class);
 
@@ -58,8 +61,6 @@ public class ChoreService {
         } return choresByGroup;
     }
 
-// TODO : add ability to change user group once user groups are live in app and groups have user members defined. No
-//  group update as of now.
     public void updateChoreDetailsByChoreId(int choreId, ChoreDto choreDto) {
         Chore chore = getChoreById(choreId);
         chore.setName(choreDto.getName());
@@ -67,24 +68,23 @@ public class ChoreService {
         chore.setAmountOfEarnings(choreDto.getAmountOfEarnings());
     }
 
-    public Chore assignChoreToTheUser(int choreId) {
-        //setting dummy user for now to test the functionality
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        LocalDate localDate = LocalDate.of(2016, 8, 19);
-        User dummyUser = new User("John", "Smith", localDate, "test@gmail.com", "test", "1234", "1234");
-        dummyUser.setAccountType(AccountType.MINOR);
+    public Chore assignChoreToTheUser(int choreId, HttpServletRequest request) {
+        User user = authenticationService.getCurrentUser(request);
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.IN_PROGRESS);
-        chore.setUser(dummyUser);
+        chore.setUser(user);
         logger.info("The chore was assigned to the user:" + chore.toString());
         return chore;
     }
 
-    public Chore unassignChore(int choreId) {
+    public Chore unassignChore(int choreId, HttpServletRequest request) {
+        User currentUser = authenticationService.getCurrentUser(request);
         Chore chore = getChoreById(choreId);
-        chore.setStatus(Status.OPEN);
-        chore.setUser(null);
-        logger.info("The chore was unassigned:" + chore.toString());
+        if(chore.getUser().getId() == currentUser.getId()){
+            chore.setStatus(Status.OPEN);
+            chore.setUser(null);
+            logger.info("The chore was unassigned:" + chore.toString());
+        }
         return chore;
     }
 

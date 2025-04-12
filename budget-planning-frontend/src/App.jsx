@@ -19,6 +19,7 @@ import UpdateEventDetails from "./components/UpdateEventDetails";
 import GroupsList from "./components/GroupsList";
 import Groups from "./components/Pages/Groups";
 import SingleGroupPage from "./components/SingleGroupPage";
+import EditGroupForm from "./components/EditGroupForm";
 import CreateEvent from "./components/CreateEvent";
 import AcceptInvitation from "./components/AcceptInvitation";
 
@@ -33,7 +34,7 @@ function App() {
         <Route path="/Events" element={<Events />} />
         <Route path="/event/create" element={<CreateEvent />} />
         <Route path="/events/:userGroupId/:eventId" element={<EventDetails />}/>
-        <Route path="/events/:userGroupId/list" element={<ViewEvents />}/>
+        <Route path="/events/:groupID/list" element={<ViewEvents />}/>
         <Route path="/events/edit/:userGroupId/:eventId" element={<UpdateEventDetails />} />
         <Route path="/Chores" element={<Chores />} />
         <Route path="/logout" element={<Logout />} />
@@ -47,7 +48,8 @@ function App() {
         <Route path="/groups/create" element={<CreateGroupForm />} />
         <Route path="/invite/accept" element={<AcceptInvitation />} />
         <Route path="/groups/:userID/list" element={<GroupsList />} />
-        <Route path="groups/:userID/:groupID" element={<SingleGroupPage />} />
+        <Route path="/groups/:userID/:groupID" element={<SingleGroupPage />} />
+        <Route path="/groups/:userID/:groupID/edit" element={<EditGroupForm />} />
       </Routes>
     </>
   );

@@ -105,6 +105,29 @@ public class UserGroupService {
         group.addUsers(user);
     }
 
+    public void editGroupByID(int groupID, UserGroupDTO userGroupDTO) {
+        UserGroup group = getGroupByID(groupID);
+        group.setName(userGroupDTO.getName());
+        group.setDescription(userGroupDTO.getDescription());
+    }
+
+    public void deleteGroupByID(int groupID) {
+        UserGroup groupToDelete = null;
+        for (UserGroup group : groupsList) {
+            if (group.getId() == groupID) {
+                groupToDelete = group;
+                logger.info("Deleted group with ID={}", groupID);
+            }
+        }
+        if (groupToDelete != null) {
+            groupsList.remove(groupToDelete);
+            groupsByUser.remove(groupToDelete);
+            logger.info("Deleted group with ID={}", groupID);
+        } else {
+            logger.info("Group with ID={} does not exist. Unable to delete group.", groupID);
+        }
+    }
+
     public boolean hasAccessToGroups(int groupID, int userID) {
         UserGroup group = getGroupByID(groupID);
         if (group == null) {
