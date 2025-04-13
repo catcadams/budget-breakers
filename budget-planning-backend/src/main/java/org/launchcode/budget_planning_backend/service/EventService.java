@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.service;
 
+import org.launchcode.budget_planning_backend.data.EventRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,9 @@ public class EventService {
     @Autowired
     UserGroupService userGroupService;
 
+    @Autowired
+    EventRepository eventRepository;
+
     private final Logger logger = LoggerFactory.getLogger(EventService.class);
 
     public void createEvent(EventDTO eventDto) {
@@ -25,6 +29,7 @@ public class EventService {
         event.setUserGroup(group);
         event.setBudgetReached(false);
         group.addEvents(event);
+        eventRepository.save(event);
         logger.info("Event Created Successfully".concat(event.toString()));
     }
 

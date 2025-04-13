@@ -17,11 +17,11 @@ import java.util.List;
 public class Event extends AbstractEntity{
 
     @NotNull
-    @NotBlank(message = "Budget amount is required")
+//    @NotBlank(message = "Budget amount is required")
     private double budget;
 
     @NotNull
-    @NotBlank(message = "Location is required")
+//    @NotBlank(message = "Location is required")
     @Size(min = 4, max = 50 , message = "Location must be  between 4 and 50 characters")
     private String location;
 

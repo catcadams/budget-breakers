@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
+import org.launchcode.budget_planning_backend.data.UserGroupRepository;
 import org.launchcode.budget_planning_backend.models.Chore;
 import org.launchcode.budget_planning_backend.models.Event;
 import org.launchcode.budget_planning_backend.models.User;
@@ -21,6 +22,9 @@ public class UserGroupService {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    UserGroupRepository userGroupRepository;
+
     private final Logger logger = LoggerFactory.getLogger(UserGroupService.class);
 
     public final List<UserGroup> groupsList = new ArrayList<>();
@@ -28,6 +32,7 @@ public class UserGroupService {
     private final List<UserGroup> groupsByUser = new ArrayList<>();
 
     public void saveGroups(UserGroup group) {
+        userGroupRepository.save(group);
         groupsList.add(group);
     }
 

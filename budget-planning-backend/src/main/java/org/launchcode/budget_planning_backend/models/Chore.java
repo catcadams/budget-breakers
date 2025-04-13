@@ -17,12 +17,12 @@ public class Chore extends AbstractEntity{
     private Contributions contribution;
 
     @ManyToOne
-    @NotBlank(message = "A group selection is required.")
+//    @NotBlank(message = "A group selection is required.")
     private UserGroup userGroup;
 
     private Status status;
 
-    @NotBlank(message = "Amount of earnings for this chore is required.")
+//    @NotBlank(message = "Amount of earnings for this chore is required.")
     private Double amountOfEarnings;
 
     public Chore(String name, String description, Double amountOfEarnings) {
@@ -30,6 +30,8 @@ public class Chore extends AbstractEntity{
         setDescription(description);
         this.amountOfEarnings = amountOfEarnings;
     }
+
+    public Chore () {}
 
     public Double getAmountOfEarnings() {
         return amountOfEarnings;

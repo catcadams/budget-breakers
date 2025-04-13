@@ -1,6 +1,7 @@
 package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.launchcode.budget_planning_backend.data.ChoreRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,9 @@ public class ChoreService {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    ChoreRepository choreRepository;
+
     private final Logger logger = LoggerFactory.getLogger(ChoreService.class);
 
 
@@ -27,6 +31,7 @@ public class ChoreService {
     private final List<Chore> choresByGroup = new ArrayList<>();
 
     public void saveChore(Chore chore) {
+        choreRepository.save(chore);
         allChores.add(chore);
     }
 

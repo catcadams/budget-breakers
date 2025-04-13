@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.AccountTypeUtil;
 import org.launchcode.budget_planning_backend.models.SessionKey;
 import org.launchcode.budget_planning_backend.models.User;
@@ -44,8 +45,8 @@ public class AuthenticationController {
         }
         return null;
     }
-//    @Autowired
-//    UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
 
     public User getUserFromSession(HttpSession session) {
@@ -119,7 +120,7 @@ public class AuthenticationController {
 
         AccountTypeUtil.determineAccountType(newUser);
 
-        //userRepository.save(user);
+        userRepository.save(newUser);
         users.add(newUser);
         //setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
