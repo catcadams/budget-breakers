@@ -165,7 +165,7 @@ public class EventService {
 
     public void addContributionAfterChoreCompletion(Contributions contributions){
         Event event = contributions.getEvent();
-        event.setEarnings(contributions.getAmountOfContribution());
+        event.setEarnings(event.getEarnings() + contributions.getAmountOfContribution());
         isBudgetReachedForEvent(event);
         event.addContributions(contributions);
         setEventStatus(contributions.getEvent());
