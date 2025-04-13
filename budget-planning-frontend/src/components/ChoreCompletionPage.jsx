@@ -77,9 +77,7 @@ const ChoreCompletionPage = () => {
       <div className="overlay">
         {hasEvents ? (
           <>
-            {/* <h1>Well Done!</h1> */}
-            <img src={congrats} alt="Conggrats" className="congrats-header-img" />
-
+            <img src={congrats} alt="Congrats" className="congrats-header-img" />
             <p>You’ve completed your chore. Time to make it count!</p>
             <div className="event-selection">
               <h2>Select an event to contribute to:</h2>
