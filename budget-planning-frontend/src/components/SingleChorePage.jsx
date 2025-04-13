@@ -63,13 +63,7 @@ const SingleChorePage = () => {
   };
 
   const handleMarkAsCompleted = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/complete`, { withCredentials: true })
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Error marking chore as completed:", error);
-      });
+    navigate(`/chores/${choreId}/congrats`, { state: { groupID } });
   };
 
   const handleConfirmContribution = () => {
@@ -98,7 +92,7 @@ const SingleChorePage = () => {
                 <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
               </>
             )}
-            {chore.status === "PENDING" && isAdult(user)(
+            {chore.status === "PENDING" && isAdult(user) && (
               <Button onClick={handleConfirmContribution} label="Confirm to Contribute" />
             )}
           </div>

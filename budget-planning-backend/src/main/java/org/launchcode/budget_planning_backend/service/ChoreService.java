@@ -20,6 +20,9 @@ public class ChoreService {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    EventService eventService;
+
     private final Logger logger = LoggerFactory.getLogger(ChoreService.class);
 
 
@@ -37,10 +40,6 @@ public class ChoreService {
             }
         }
         return null;
-    }
-
-    public List<Chore> getAllChores() {
-        return allChores;
     }
 
     public Chore createNewChore(ChoreDto choreDto) {
@@ -88,13 +87,12 @@ public class ChoreService {
         return chore;
     }
 
-    public Chore completeChoreByMinor(int choreId) {
+    public Chore completeChoreByMinor(int choreId, int eventId, int groupId, HttpServletRequest request) {
         Chore chore = getChoreById(choreId);
-        Event dummyEvent = new Event(); //to be replaced with real Event as user selection on UI
-        dummyEvent.setName("Movie Frozen 2");
-        dummyEvent.setLocation("St. Louis");
+        Event selectedEvent = eventService.getEventForGroup(authenticationService.getCurrentUser(request), groupId,
+                eventId);
         chore.setStatus(Status.PENDING);
-        chore.setEvent(dummyEvent);
+        chore.setEvent(selectedEvent);
         logger.info("Updating chore details after marking the chore as Pending: "+ chore.toString());
         return chore;
     }
@@ -108,6 +106,7 @@ public class ChoreService {
         contributions.setUser(chore.getUser());
         contributions.setStatus(Status.COMPLETE);
         contributions.setEvent(chore.getEvent());
+        eventService.addContributionAfterChoreCompletion(contributions);
         logger.info("New contribution generated due the chore completion: "+ contributions.toString());
         return chore;
     }

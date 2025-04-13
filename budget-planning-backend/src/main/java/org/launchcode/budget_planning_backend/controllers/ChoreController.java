@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/chores")
@@ -119,8 +120,9 @@ public class ChoreController {
      *          or a 404 Not Found response if the chore does not exist
      */
     @PutMapping("/{id}/complete")
-    public ResponseEntity<Chore> completeChore(@PathVariable Integer id) {
-        Chore chore = choreService.completeChoreByMinor(id);
+    public ResponseEntity<Chore> completeChore(@PathVariable Integer id, @RequestBody Map<String, Integer> payload,
+                                               HttpServletRequest request) {
+        Chore chore = choreService.completeChoreByMinor(id, payload.get("eventId"), payload.get("groupId"), request);
         if (chore != null) {
             return ResponseEntity.ok(chore);
         }
