@@ -1,3 +1,37 @@
+.weather-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.weather-tile {
+  background: linear-gradient(135deg, #0077b6, #00b4d8);
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  margin-top: 20px;
+  min-width: 250px;
+  font-size: 18px;
+}
+
+.weather-tile p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.weather-tile h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.weather-icon {
+  width: 50px;
+  height: 50px;
+}
+
 
 body {
   font-family: 'Poppins', sans-serif;
@@ -20,7 +54,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(220px, 260px));
     gap: 20px;
     align-items: stretch;
-    justify-content: center; 
+    justify-content: center;
     box-sizing: border-box;
     width: 100%;
   }
@@ -28,7 +62,7 @@ body {
   .tile {
     display: grid;
     grid-template-rows: 30% 50% 20%; /* divided into 3 parts: header, middle, footer */
-    background: linear-gradient(135deg, #0077b6, #00b4d8); 
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
     color: white;
     font-weight: bold;
     padding: 15px;
@@ -42,9 +76,9 @@ body {
 
 
 .tile:hover {
-    transform: translateY(-5px); 
+    transform: translateY(-5px);
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #0096c7, #48cae4); 
+    background: linear-gradient(135deg, #0096c7, #48cae4);
   }
 
 button {
