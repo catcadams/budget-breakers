@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
-import '../index.css'
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import TextInputField from "./TextInputField";
 import DateInputField from "./DateInputField";
 import EmailInputField from "./EmailInputField";
 import PasswordInputField from "./PasswordInputField";
+import ModalWindow from "./ModalWindow";
 
 export default function RegisterForm () {
 
     const initialValues = { firstName: "", lastName: "", dateOfBirth: "", email: "", username: "", password: "", verifyPassword: "" };
     const [formData, setFormData] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
+    const [message, setMessage] = useState("");
+    const [modalType, setModalType] = useState("success");
+    const [showModal, setShowModal] = useState(false);
     const [isSubmit, setIsSubmit] = useState(false);
+
+    const failedMessage =
+        "Oops! Something went wrong while registering. Give it another try!";
+      const successMessage = "Hooray! You have successfully registered.";
 
        const handleSubmit = (event) => {
           event.preventDefault();
@@ -36,17 +43,29 @@ useEffect(() => {
       })
         .then((response) => {
           if (response.ok) {
-            console.log("User successfully registered");
             console.log(newUser);
+            setMessage(successMessage);
+            setModalType("success");
             setFormData(initialValues);
             setIsSubmit(false);
           } else {
-            console.error("Registration failed");
+            setMessage(failedMessage);
+            setModalType("danger");
           }
+            setShowModal(true);
         })
-        .catch((error) => console.error("Error:", error));
-    }
+        .catch((error) => {
+            setMessage(failedMessage);
+            setModalType("danger");
+            setShowModal(true);
+        });
+  }
   }, [formErrors, formData, isSubmit]);
+
+        const handleClose = () => {
+                setShowModal(false);
+                navigate(`/login`);
+        }
 
           let navigate = useNavigate();
             const routeChange = () => {
@@ -91,14 +110,16 @@ useEffect(() => {
             errors.verifyPassword = "Password confirmation must be more than 4 characters";
           } else if (values.verifyPassword.length > 15) {
             errors.verifyPassword = "Password confirmation exceeds more than 15 characters";
-          }
+          } else if (values.verifyPassword !== values.password) {
+             errors.verifyPassword = "Password confirmation does not match password entered."
+             }
           return errors;
         };
 
       return (
         <form onSubmit={handleSubmit}>
+            <div className="pageBody">
             <h1>Registration</h1>
-            <div>
             <TextInputField label="First name" name="firstName" value={formData.firstName} setFormData={setFormData} />
             <p>{formErrors.firstName}</p>
 
@@ -123,6 +144,7 @@ useEffect(() => {
             <Button label="Register" onClick={handleSubmit} />
             <Button label="Login" onClick={routeChange} />
             </div>
+            <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
         </form>
       )
 };
