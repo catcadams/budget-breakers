@@ -124,5 +124,13 @@ public class ChoreService {
             logger.info("Deleted the chore with Id={}", choreId);
         } else logger.info("There is no chore with given Id. Unable to delete");
     }
+
+    public Chore rejectChoreByAdult(int choreId) {
+        Chore chore = getChoreById(choreId);
+        chore.setStatus(Status.OPEN);
+        chore.setEvent(null);
+        chore.setUser(null);
+        return chore;
+    }
 }
 
