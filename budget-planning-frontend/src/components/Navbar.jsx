@@ -37,6 +37,9 @@ function Navbar() {
               <NavLink to="/Groups">Groups</NavLink>
             </li>
             <li>
+                <NavLink to="/Login"> Login</NavLink>
+            </li>
+            <li>
               <NavLink to="/Logout"> Logout</NavLink>
             </li>
           </ul>
