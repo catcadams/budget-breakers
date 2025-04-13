@@ -57,7 +57,7 @@ const WeatherTile = () => {
           <div className="weather-tile">
             <h2>
             <img src={image} alt="Weather icon" className="weather-icon" />
-                Weather now: </h2>
+            Weather at your location: </h2>
             <p><strong>Temperature:</strong> {weather.temperature_2m}°F</p>
             <p><strong>Rain:</strong> {weather.rain} inches</p>
             <p><strong>Wind:</strong> {weather.wind_speed_10m} mph</p>
