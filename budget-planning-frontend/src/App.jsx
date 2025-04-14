@@ -23,6 +23,7 @@ import EditGroupForm from "./components/EditGroupForm";
 import CreateEvent from "./components/CreateEvent";
 import AcceptInvitation from "./components/AcceptInvitation";
 import ChoreCompletionPage from "./components/ChoreCompletionPage";
+import AddNewMember from "./components/AddNewMember";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
         <Route path="/groups/:userID/list" element={<GroupsList />} />
         <Route path="/groups/:userID/:groupID" element={<SingleGroupPage />} />
         <Route path="/groups/:userID/:groupID/edit" element={<EditGroupForm />} />
+        <Route path="/groups/:userID/:groupID/add-member" element={<AddNewMember />} />
         <Route path="/chores/:choreId/congrats" element={<ChoreCompletionPage />} />
       </Routes>
     </>
