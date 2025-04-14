@@ -49,13 +49,7 @@ const SingleGroupPage = () => {
       </div>
       <div className="tiles-container">
         <h3>All Events</h3>
-        {group.events.length === 0 ? (
-          <p>No events available for your group.</p>
-        ) : (
-          <div>
-            <ViewEvents />
-          </div>
-        )}
+        <ViewEvents />
       </div>
       <div className="tiles-container">
         <h3>Group Members</h3>
