@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
+import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 import org.launchcode.budget_planning_backend.data.UserGroupRepository;
 import org.launchcode.budget_planning_backend.models.Chore;
 import org.launchcode.budget_planning_backend.models.Event;
@@ -21,6 +22,9 @@ public class UserGroupService {
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    AuthenticationController authenticationController;
 
     @Autowired
     UserGroupRepository userGroupRepository;
@@ -70,7 +74,8 @@ public class UserGroupService {
 
     public UserGroup createNewGroup (UserGroupDTO groupDTO, HttpServletRequest request) {
         UserGroup group = new UserGroup(groupDTO.getName(), groupDTO.getDescription());
-        User currentUser = authenticationService.getCurrentUser(request);
+//        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (currentUser != null) {
             group.addUsers(currentUser);
         }

@@ -22,12 +22,16 @@ public class HomeController {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    AuthenticationController authenticationController;
+
 //    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @GetMapping
     public ResponseEntity<String> home(HttpServletRequest request) {
 
-        User user = authenticationService.getCurrentUser(request);
+//        User user = authenticationService.getCurrentUser(request);
+        User user = authenticationController.getUserFromSession(request.getSession());
 
 //        if (session != null) {
 //            logger.info("Session ID: " + session.getId());

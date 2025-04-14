@@ -20,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -48,35 +45,33 @@ public class AuthenticationController {
     @Autowired
     UserRepository userRepository;
 
+    private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
-        return (User) session.getAttribute(SessionKey.USER.getValue());
-    }
+//        return (User) session.getAttribute(SessionKey.USER.getValue());
+//    }
 
     //For persistence with database connection
-//        Integer userId = (Integer) session.getAttribute(userSessionKey);
-//        if (userId == null) {
-//            return null;
-//        }
-//
-////        Optional<User> user = userRepository.findById(userId);
-////
-////        if (user.isEmpty()) {
-////            return null;
-////        }
-////
-////        return user.get();
-//
-//    }
+        Integer userId = (Integer) session.getAttribute(userSessionKey);
+        if (userId == null) {
+            return null;
+        }
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return null;
+        }
+        return user.get();
+    }
 //
     private static void setUserInSession(HttpSession session, User user) {
-//        session.setAttribute(userSessionKey, user.getId());
-        session.setAttribute(SessionKey.USER.getValue(), user);
+        session.setAttribute(userSessionKey, user.getId());
+//        session.setAttribute(SessionKey.USER.getValue(), user);
     }
 
     @GetMapping()
     public ResponseEntity<User> getCurrentUser(HttpServletRequest request){
-        User currentUser = authenticationService.getCurrentUser(request);
+//        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = getUserFromSession(request.getSession());
         if(currentUser != null) {
             return ResponseEntity.ok(currentUser);
         }
@@ -94,13 +89,15 @@ public class AuthenticationController {
         }
 
         //For persistence with database connection
-//        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
+        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
 //
-//        if (existingUser != null) {
+        if (existingUser != null) {
+            logger.info("Username already exists:" + existingUser.getUsername());
+            response.put("message", "A user with that username already exists");
 //            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
 //            model.addAttribute("title", "Register");
-//            return "register";
-//        }
+            return ResponseEntity.badRequest().body(response);
+        }
 
         String password = registerFormDTO.getPassword();
         String verifyPassword = registerFormDTO.getVerifyPassword();
@@ -121,7 +118,7 @@ public class AuthenticationController {
         AccountTypeUtil.determineAccountType(newUser);
 
         userRepository.save(newUser);
-        users.add(newUser);
+//        users.add(newUser);
         //setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
         logger.info("User acct type: " + newUser.getAccountType());
@@ -139,7 +136,13 @@ public class AuthenticationController {
 
         HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
 
-        User user = findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        System.out.println(user);
+        if(user == null) {
+            logger.info("Username does not exist: " + user);
+            response.put("message", "Username does not exist. Please try again");
+            return ResponseEntity.badRequest().body(response);
+        }
         if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
             if (session!= null) {
                 session.removeAttribute("user");

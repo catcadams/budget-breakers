@@ -1,6 +1,7 @@
 package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 import org.launchcode.budget_planning_backend.data.ChoreRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
@@ -20,6 +21,9 @@ public class ChoreService {
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    AuthenticationController authenticationController;
 
     @Autowired
     ChoreRepository choreRepository;
@@ -74,7 +78,8 @@ public class ChoreService {
     }
 
     public Chore assignChoreToTheUser(int choreId, HttpServletRequest request) {
-        User user = authenticationService.getCurrentUser(request);
+//        User user = authenticationService.getCurrentUser(request);
+        User user = authenticationController.getUserFromSession(request.getSession());
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.IN_PROGRESS);
         chore.setUser(user);
@@ -83,7 +88,8 @@ public class ChoreService {
     }
 
     public Chore unassignChore(int choreId, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);
+//        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
         Chore chore = getChoreById(choreId);
         if(chore.getUser().getId() == currentUser.getId()){
             chore.setStatus(Status.OPEN);

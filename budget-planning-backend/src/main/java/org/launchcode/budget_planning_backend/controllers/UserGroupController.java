@@ -33,6 +33,9 @@ public class UserGroupController {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    AuthenticationController authenticationController;
+
     @PostMapping(value="/create")
     public ResponseEntity<String> createNewGroup(@RequestBody UserGroupDTO userGroupDTO, HttpServletRequest request) {
 
@@ -54,7 +57,8 @@ public class UserGroupController {
 
     @GetMapping(value = "/{userID}/list")
     public ResponseEntity<List<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID, Integer groupID, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);  // Use authenticated user
+//        User currentUser = authenticationService.getCurrentUser(request);  // Use authenticated user
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (groupID != null && !groupService.hasAccessToGroups(groupID, currentUser.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
         }
@@ -68,7 +72,8 @@ public class UserGroupController {
 
     @GetMapping(value = "/{userID}/{groupID}")
     public ResponseEntity<UserGroup> displayGroupBySpecifiedID(@PathVariable Integer groupID, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);
+//        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (!groupService.hasAccessToGroups(groupID, currentUser.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);  // If no access, return forbidden
         }
