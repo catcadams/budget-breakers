@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useCurrentUser from '../hooks/useCurrentUser';
 import { useFetchGroupNumber } from '../hooks/useFetchChores.jsx';
@@ -10,23 +10,31 @@ import ModalWindow from "./ModalWindow";
 import NumericInputField from "./NumericInputField";
 import TextAreaInputField from "./TextAreaInputField";
 import TextInputField from "./TextInputField";
+import { isAdult } from "../utils/userUtils.jsx";
 
 
 const ChoreCreationForm = () => {
-    const { user, error } = useCurrentUser();
+    const { user } = useCurrentUser();
     const userID = user?.id;
     const [formData, setFormData] = useState({ name: "", description: "", amountOfEarnings: "", userGroupName: "" });
     const [message, setMessage] = useState("");
     const [errors, setErrors] = useState({});
     const [modalType, setModalType] = useState("success");
     const [showModal, setShowModal] = useState(false);
+    const [showAdultWarningModal, setShowAdultWarningModal] = useState(false);
     const navigate = useNavigate();
     const { groups, loading, error: groupError } = useFetchGroups(userID ?? -1);
     console.log("fetched groups size is : " + groups.length);
-    const { warningMessage, modalType: warningModalType, showModal: showWarningModal } = useFetchGroupNumber(groups, loading);
+    const { warningMessage, modalType: warningModalType, showModal: showWarningModal } = useFetchGroupNumber(groups, loading, user);
 
     const failedMessage = "Oops! Something went wrong while creating the chore. Looks like the universe is not ready for this one. Give it another try!";
     const successMessage = "Hooray! Your chore has been successfully created. Now get ready to watch the magic of hard work unfold!";
+
+    useEffect(() => {
+        if (user && !isAdult(user)) {
+            setShowAdultWarningModal(true);
+        }
+    }, [user]);
 
     let validateUserInputs = () => {
         let errors = {};
@@ -81,6 +89,11 @@ const ChoreCreationForm = () => {
         }
     };
 
+    const handleAdultModalClose = () => {
+        setShowAdultWarningModal(false);
+        navigate("/Home");
+    };
+
     const handleWarningClose = () => {
         setShowModal(false);
         navigate(`/groups`);
@@ -112,6 +125,13 @@ const ChoreCreationForm = () => {
                 type={warningModalType}
                 onClose={handleWarningClose}
                 onConfirm={handleWarningClose}
+            />
+            <ModalWindow
+                showState={showAdultWarningModal}
+                message="Only adult users can create chores."
+                type="warning"
+                onClose={handleAdultModalClose}
+                onConfirm={handleAdultModalClose}
             />
         </>
 

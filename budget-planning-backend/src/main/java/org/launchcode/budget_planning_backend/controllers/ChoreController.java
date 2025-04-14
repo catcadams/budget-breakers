@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/chores")
@@ -119,8 +120,9 @@ public class ChoreController {
      *          or a 404 Not Found response if the chore does not exist
      */
     @PutMapping("/{id}/complete")
-    public ResponseEntity<Chore> completeChore(@PathVariable Integer id) {
-        Chore chore = choreService.completeChoreByMinor(id);
+    public ResponseEntity<Chore> completeChore(@PathVariable Integer id, @RequestBody Map<String, Integer> payload,
+                                               HttpServletRequest request) {
+        Chore chore = choreService.completeChoreByMinor(id, payload.get("eventId"), payload.get("groupId"), request);
         if (chore != null) {
             return ResponseEntity.ok(chore);
         }
@@ -136,6 +138,21 @@ public class ChoreController {
     @PutMapping("/{id}/contribute")
     public ResponseEntity<Chore> confirmChore(@PathVariable Integer id) {
         Chore chore = choreService.confirmChoreByAdult(id);
+        if (chore != null) {
+            return ResponseEntity.ok(chore);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    /**
+     * Rejects the completion of a chore by an adult.Rejected chore becomes Open again.
+     * @param id - the ID of the chore to reject
+     * @return  {@link ResponseEntity} containing the updated {@link Chore} if found,
+     *        or a 404 Not Found response if the chore does not exist
+     */
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<Chore> rejectChore(@PathVariable Integer id) {
+        Chore chore = choreService.rejectChoreByAdult(id);
         if (chore != null) {
             return ResponseEntity.ok(chore);
         }
