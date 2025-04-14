@@ -36,3 +36,5 @@ export const getChoreStatusMessage = (chore) => {
         return null;
     }
   };
+
+  export const isEventBudgetReached = (event) => event.budgetReached === false;

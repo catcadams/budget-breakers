@@ -86,8 +86,24 @@ public class UserGroupController {
     }
 
     @PostMapping(value = "/{userID}/{groupID}/add-member")
-    public void addMembersToGroup( @PathVariable Integer groupID, User user) {
+    public ResponseEntity<String> addMembersToGroup( @PathVariable Integer groupID, User user, @RequestBody UserGroupDTO userGroupDTO) {
         groupService.addUsersToGroup(groupID, user);
+        UserGroup group = groupService.getGroupByID(groupID);
+        String groupName = group.getName();
+        String groupDescription = group.getDescription();
+        List<String> emails = userGroupDTO.getEmails();
+
+        if (emails == null || emails.isEmpty()) {
+            return ResponseEntity.badRequest().body("No emails provided.");
+        }
+
+        String subject = "You are invited to join " + groupName + " on Red, Green, VACAY!";
+
+        for (String email : emails) {
+            emailService.sendEmailInvites(email, subject, groupName, groupDescription, group);
+        }
+        return ResponseEntity.ok("Member invitation sent successfully!");
+
     }
 
     @PutMapping(value = "/{userID}/{groupID}/edit")

@@ -167,4 +167,13 @@ public class EventService {
     public void isBudgetReachedForEvent(Event event){
         event.setBudgetReached(event.getEarnings() == event.getBudget() || event.getEarnings() > event.getBudget());
     }
+
+    public void addContributionAfterChoreCompletion(Contributions contributions){
+        Event event = contributions.getEvent();
+        event.setEarnings(event.getEarnings() + contributions.getAmountOfContribution());
+        isBudgetReachedForEvent(event);
+        event.addContributions(contributions);
+        setEventStatus(contributions.getEvent());
+        logger.info("Added contribution to the event:" + contributions.getEvent().toString());
+    }
 }

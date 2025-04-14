@@ -19,6 +19,7 @@ const SingleChorePage = () => {
   console.log("Chore ID:", choreId);
   const { user, error: userError } = useCurrentUser();
   const [showModal, setShowModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const { chore, loading, error: choreError, status } = useFetchSingleChore(groupID, choreId);
 
   const navigate = useNavigate();
@@ -63,13 +64,7 @@ const SingleChorePage = () => {
   };
 
   const handleMarkAsCompleted = () => {
-    axios.put(`http://localhost:8080/chores/${choreId}/complete`, { withCredentials: true })
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Error marking chore as completed:", error);
-      });
+    navigate(`/chores/${choreId}/congrats`, { state: { groupID } });
   };
 
   const handleConfirmContribution = () => {
@@ -79,6 +74,17 @@ const SingleChorePage = () => {
       })
       .catch((error) => {
         console.error("Error marking chore as confirmed:", error);
+      });
+  };
+
+  const handleRejectContribution = () => {
+    setShowRejectModal(false);
+    axios.put(`http://localhost:8080/chores/${choreId}/reject`, { withCredentials: true })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error marking chore as open:", error);
       });
   };
 
@@ -98,8 +104,11 @@ const SingleChorePage = () => {
                 <Button onClick={handleMarkAsCompleted} label="Mark as Completed" />
               </>
             )}
-            {chore.status === "PENDING" && isAdult(user)(
-              <Button onClick={handleConfirmContribution} label="Confirm to Contribute" />
+            {chore.status === "PENDING" && isAdult(user) && (
+              <>
+                <Button onClick={handleConfirmContribution} label="Confirm to Contribute" />
+                <Button onClick={() => setShowRejectModal(true)} label="Reject Contribution" />
+              </>
             )}
           </div>
         </div>
@@ -122,7 +131,7 @@ const SingleChorePage = () => {
                 <div className="tooltip-container">
                   <Button
                     className={`action-button${!isChoreEditableOrDeletable(chore.status) ? '-disabled' : ''}`}
-                    onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`, { state: { choreId, groupID }})}
+                    onClick={() => isChoreEditableOrDeletable(chore.status) && navigate(`/chores/${choreId}/edit`, { state: { choreId, groupID } })}
                     label={<CiEdit size={24} />}
                   />
                   {!isChoreEditableOrDeletable(chore.status) && <span className="tooltip">Chore is in-progress, edit not allowed</span>}
@@ -157,6 +166,16 @@ const SingleChorePage = () => {
           message="You are about to delete the chore. Click OK to confirm or close the window to return."
           onClose={handleModalClose}
           onConfirm={handleDelete}
+        />
+
+      )}
+      {showRejectModal && (
+        <ModalWindow
+          showState={showRejectModal}
+          type="warning"
+          message="Are you sure you want to reject this contribution? Click OK to continue or close to cancel."
+          onClose={() => setShowRejectModal(false)}
+          onConfirm={handleRejectContribution}
         />
       )}
     </div >

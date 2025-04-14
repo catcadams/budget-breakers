@@ -1,0 +1,72 @@
+.congrats-container {
+  background-image: url("./images/backg_36.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  background-color: lightcyan;
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+}
+
+.event-selection {
+  margin: 20px 0;
+}
+
+.event-radio {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button, style is taken from from w3school */
+.event-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+  border: 3px solid #FFF;
+  outline: 1px solid #999;
+}
+
+.event-radio:hover input~.checkmark {
+  background-color: #ccc;
+}
+
+.event-radio input:checked~.checkmark {
+  background-color: #2196F3;
+}
+
+.congrats-header-img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 15px;
+}

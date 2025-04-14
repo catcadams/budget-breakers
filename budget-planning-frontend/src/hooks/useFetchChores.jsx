@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { isAdult } from "../utils/userUtils";
 
 export const useFetchChores = (groupId) => {
     const [chores, setChores] = useState([]);
@@ -43,19 +44,22 @@ export const useFetchSingleChore = (groupId, choreId) => {
     return { chore, loading, error };
 };
 
-export const useFetchGroupNumber = (groups, loading) => {
+export const useFetchGroupNumber = (groups, loading, user) => {
     const [warningMessage, setWarningMessage] = useState("");
     const [modalType, setModalType] = useState();
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (loading || !groups) return;
+        if (loading || !groups || !user) return;
+
+        if(!isAdult(user)) return;
+
         if (groups.length === 0) {
             setWarningMessage("You need to be part of at least one group to create a chore. Please join a group first!");
             setModalType("warning");
             setShowModal(true);
         }
-    }, [groups, loading]);
+    }, [groups, loading, user]);
 
     return {warningMessage, modalType, showModal };
 
