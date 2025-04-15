@@ -1,25 +1,27 @@
 package org.launchcode.budget_planning_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class UserGroup extends AbstractEntity{
 
     @ManyToMany(cascade = CascadeType.ALL)
     private final List<User> users = new ArrayList<>();
 
-    @JsonManagedReference
+    // @JsonManagedReference
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private final List<Event> events = new ArrayList<>();
 
-    @JsonManagedReference
+    // @JsonManagedReference
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private  final List<Chore> chores = new ArrayList<>();
 

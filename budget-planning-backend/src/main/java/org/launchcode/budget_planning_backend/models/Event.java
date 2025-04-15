@@ -1,11 +1,10 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -13,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Event extends AbstractEntity{
 
@@ -34,12 +34,12 @@ public class Event extends AbstractEntity{
     private boolean isBudgetReached;
 
     @OneToMany
-    @JsonManagedReference
+    //@JsonManagedReference
     private final List<Contributions> contributions = new ArrayList<>();
 
     @ManyToOne
     @NotNull(message = "Group is required")
-    @JsonBackReference
+    // @JsonBackReference
     private UserGroup userGroup;
 
     public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
@@ -139,7 +139,7 @@ public class Event extends AbstractEntity{
                 ", status= " + status +
                 ", earnings= " + earnings +
                 ", isBudgetReached= " + isBudgetReached +
-                ", group= " + userGroup.getId()+userGroup.getName() +
+//                ", group= " + userGroup.getId()+userGroup.getName() +
                 '}';
     }
 }

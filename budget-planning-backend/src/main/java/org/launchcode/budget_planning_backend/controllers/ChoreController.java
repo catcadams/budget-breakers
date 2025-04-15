@@ -32,7 +32,7 @@ public class ChoreController {
      */
     @PostMapping(value = "/create")
     public void postChore(@Valid @RequestBody ChoreDto choreDto) {
-        choreService.saveChore(choreService.createNewChore(choreDto));
+        choreService.createNewChore(choreDto);
     }
 
     /**
@@ -42,12 +42,12 @@ public class ChoreController {
      *         an empty list is returned if no chores exist for the specified group
      */
     @GetMapping("/{userGroupId}/list")
-    public ResponseEntity<List<Chore>> listAllChoresForGivenUserGroup(@PathVariable int userGroupId) {
-        List<Chore> choresByGroup = choreService.getChoresByGroup(userGroupId);
-        if (choresByGroup.isEmpty()) {
+    public ResponseEntity<List<ChoreDto>> listAllChoresForGivenUserGroup(@PathVariable int userGroupId) {
+        List<ChoreDto> choreDtos = choreService.getChoresByGroup(userGroupId);
+        if (choreDtos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
-        return ResponseEntity.ok(choresByGroup);
+        return ResponseEntity.ok(choreDtos);
     }
 
     /**

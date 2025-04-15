@@ -1,12 +1,11 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ public class Contributions extends BaseAbstractEntity{
 
     @ManyToOne
     @NotNull
-    @JsonBackReference
+    //@JsonBackReference
     private Event event;
 
     private int eventID;

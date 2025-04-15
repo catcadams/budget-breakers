@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -11,10 +12,15 @@ public abstract class BaseAbstractEntity {
 
     @Id
     @GeneratedValue
+    @JsonProperty("id")
     private int id;
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
