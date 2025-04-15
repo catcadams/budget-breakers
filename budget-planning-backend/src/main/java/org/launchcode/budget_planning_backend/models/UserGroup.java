@@ -2,25 +2,25 @@ package org.launchcode.budget_planning_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class UserGroup extends AbstractEntity{
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private final List<User> users = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany
+    @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private final List<Event> events = new ArrayList<>();
 
-    @OneToMany
+    @JsonManagedReference
+    @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private  final List<Chore> chores = new ArrayList<>();
 
     private final List<String> userEmails = new ArrayList<String>();
@@ -68,7 +68,7 @@ public class UserGroup extends AbstractEntity{
                 " description=" + this.getDescription() +
                 " users=" + users +
                 " events=" + events +
-                " chores=" + chores +
+//                " chores=" + chores +
                 " emails=" + userEmails +
                 "}";
     }

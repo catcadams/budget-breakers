@@ -36,7 +36,6 @@ const SingleGroupPage = () => {
           />
         </div>
         <div className="add-member-btn">
-          {/* This button is a work in progress */}
           <Button label="Add New Member" onClick={() => navigate(`/groups/${userID}/${groupID}/add-member`)}></Button>
         </div>
       </div>

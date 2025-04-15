@@ -34,6 +34,8 @@ const GroupsList = () => {
             <h2>All Groups</h2>
           </div>
           <div className="tile-list">
+            {console.log("Check is array:" + Array.isArray(groups))}
+            {console.log("Check groups: " + groups)}
           {groups.map((group) => (
             <div
             key={group.id}

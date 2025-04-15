@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -9,8 +10,8 @@ public class ChoreDto extends AbstractEntity {
 
     private String userGroupName;//temp for dummy data
 
-    @Positive(message = "Amount must be a positive number.")
-    @NotNull(message = "Amount is required.")
+//    @Positive(message = "Amount must be a positive number.")
+//    @NotBlank(message = "Amount is required.")
     private Double amountOfEarnings;
 
     public ChoreDto() {}

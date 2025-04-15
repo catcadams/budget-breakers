@@ -1,6 +1,7 @@
 package org.launchcode.budget_planning_backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.launchcode.budget_planning_backend.data.UserGroupRepository;
 import org.launchcode.budget_planning_backend.models.User;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.launchcode.budget_planning_backend.models.dto.UserGroupDTO;
@@ -56,15 +57,15 @@ public class UserGroupController {
     }
 
     @GetMapping(value = "/{userID}/list")
-    public ResponseEntity<List<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID, Integer groupID, HttpServletRequest request) {
+    public ResponseEntity<Iterable<UserGroup>> displayGroupsBySpecifiedUser(@PathVariable Integer userID, Integer groupID, HttpServletRequest request) {
 //        User currentUser = authenticationService.getCurrentUser(request);  // Use authenticated user
         User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (groupID != null && !groupService.hasAccessToGroups(groupID, currentUser.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
         }
 
-        List<UserGroup> groupsByUser = groupService.getGroupsByUser(userID);
-        if(groupsByUser.isEmpty()) {
+        Iterable<UserGroup> groupsByUser = groupService.getGroupsByUser(userID);
+        if(groupsByUser == null) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
         }
         return ResponseEntity.ok(groupsByUser);

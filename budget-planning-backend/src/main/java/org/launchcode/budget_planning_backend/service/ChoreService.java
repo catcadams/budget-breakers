@@ -52,8 +52,8 @@ public class ChoreService {
     }
 
     public Chore createNewChore(ChoreDto choreDto) {
-        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
         UserGroup group = userGroupService.getGroupByName(choreDto.getUserGroupName());
+        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
         chore.setStatus(Status.OPEN);
         chore.setGroup(group);
         logger.info("New Chore created: ".concat(chore.toString()));

@@ -1,5 +1,7 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,10 +15,12 @@ public class Chore extends AbstractEntity{
     @ManyToOne
     private Event event;
 
+//    @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     private Contributions contribution;
 
     @ManyToOne
+    @JsonBackReference
 //    @NotBlank(message = "A group selection is required.")
     private UserGroup userGroup;
 
@@ -90,9 +94,10 @@ public class Chore extends AbstractEntity{
                 ", description=" + getDescription() +
                 ", amountOfEarnings=" + getAmountOfEarnings() +
                 ", status=" + getStatus() +
-                ", user=" + user +
-                ", event=" + event +
-                ", contribution=" + contribution +
-                ", group=" + userGroup + '}';
+//                ", user=" + user.getId() +
+//                ", event=" + event.getId() +
+//                ", contribution=" + contribution.getId() +
+//                ", group=" + userGroup.getId() +
+                '}';
     }
 }
