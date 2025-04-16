@@ -9,8 +9,9 @@ import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
+/**
+ * The UserGroup class represents an object that can hold users, events, and chores in one place.
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class UserGroup extends AbstractEntity{
@@ -18,11 +19,9 @@ public class UserGroup extends AbstractEntity{
     @ManyToMany
     private final List<User> users = new ArrayList<>();
 
-    // @JsonManagedReference
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private final List<Event> events = new ArrayList<>();
 
-    // @JsonManagedReference
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private  final List<Chore> chores = new ArrayList<>();
 
@@ -47,9 +46,6 @@ public class UserGroup extends AbstractEntity{
         return chores;
     }
 
-//    public void setUsers(List<User> users) {
-//        this.users = users;
-//    }
 
     public void addUsers(User user){
         this.users.add(user);

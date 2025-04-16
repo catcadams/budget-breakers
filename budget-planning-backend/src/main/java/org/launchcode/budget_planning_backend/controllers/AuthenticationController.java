@@ -27,30 +27,15 @@ import java.util.*;
 @CrossOrigin
 public class AuthenticationController {
 
-    @Autowired
-    AuthenticationService authenticationService;
-
-    List<User> users = new ArrayList<>();
     Map<String, String> response = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    private User findByUsername(String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
-    }
     @Autowired
     UserRepository userRepository;
 
     private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
-//        return (User) session.getAttribute(SessionKey.USER.getValue());
-//    }
-
     //For persistence with database connection
         Integer userId = (Integer) session.getAttribute(userSessionKey);
         if (userId == null) {
@@ -62,15 +47,13 @@ public class AuthenticationController {
         }
         return user.get();
     }
-//
+
     private static void setUserInSession(HttpSession session, User user) {
         session.setAttribute(userSessionKey, user.getId());
-//        session.setAttribute(SessionKey.USER.getValue(), user);
     }
 
     @GetMapping()
     public ResponseEntity<User> getCurrentUser(HttpServletRequest request){
-//        User currentUser = authenticationService.getCurrentUser(request);
         User currentUser = getUserFromSession(request.getSession());
         if(currentUser != null) {
             return ResponseEntity.ok(currentUser);
@@ -90,12 +73,10 @@ public class AuthenticationController {
 
         //For persistence with database connection
         User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
-//
+
         if (existingUser != null) {
             logger.info("Username already exists:" + existingUser.getUsername());
             response.put("message", "A user with that username already exists");
-//            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
-//            model.addAttribute("title", "Register");
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -118,8 +99,6 @@ public class AuthenticationController {
         AccountTypeUtil.determineAccountType(newUser);
 
         userRepository.save(newUser);
-//        users.add(newUser);
-        //setUserInSession(request.getSession(), newUser);
         logger.info("User stored in session: " + newUser.getUsername());
         logger.info("User acct type: " + newUser.getAccountType());
 
@@ -161,27 +140,6 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    //For persistence with database connection
-//        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
-//
-//        if (theUser == null) {
-//            errors.rejectValue("username", "user.invalid", "The given username does not exist");
-//            model.addAttribute("title", "Log In");
-//            return "login";
-//        }
-
-//        String password = loginFormDTO.getPassword();
-//
-//        if (!theUser.isMatchingPassword(password)) {
-//            errors.rejectValue("password", "password.invalid", "Invalid password");
-//            model.addAttribute("title", "Log In");
-//            return "login";
-//
-//        setUserInSession(request.getSession(), theUser);
-
-    //return "redirect:";
-//    }
-
 //logout functionality
     @GetMapping("/logout")
     public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse respond){
@@ -201,4 +159,3 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 }
-//}

@@ -3,7 +3,6 @@ package org.launchcode.budget_planning_backend.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 import org.launchcode.budget_planning_backend.data.UserGroupRepository;
-import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.Chore;
 import org.launchcode.budget_planning_backend.models.Event;
 import org.launchcode.budget_planning_backend.models.User;
@@ -16,20 +15,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * This class contains all the service methods/functions used to create and manage UserGroups.
+ */
 @Service
 public class UserGroupService {
 
     @Autowired
     UserGroupRepository userGroupRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    AuthenticationService authenticationService;
 
     @Autowired
     AuthenticationController authenticationController;
@@ -56,11 +51,6 @@ public class UserGroupService {
     }
 
     public List<UserGroup> getGroupsByUser(int userID) {
-//        Optional<User> user = userRepository.findById(userID);
-//        if (user.isEmpty()) {
-//            return null;
-//        } return user.get().getUserGroups();
-
         List<UserGroup> groupsByUser = new ArrayList<>();
         for (UserGroup group : userGroupRepository.findAll()) {
             for (User user : group.getUsers()) {

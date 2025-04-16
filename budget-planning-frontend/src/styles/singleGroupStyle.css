@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-items:center;
+    justify-content: left;
 }
 
 .edit-btn {
@@ -40,5 +40,5 @@
 }
 
 .add-member-btn {
-    margin-left: 65%;
+   margin-left: auto;
 }
