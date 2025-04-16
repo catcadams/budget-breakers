@@ -88,7 +88,7 @@ public class UserGroupController {
 
     @PostMapping(value = "/{userID}/{groupID}/add-member")
     public ResponseEntity<String> addMembersToGroup( @PathVariable Integer groupID, User user, @RequestBody UserGroupDTO userGroupDTO) {
-        groupService.addUsersToGroup(groupID, user);
+        groupService.addUsersToGroup(groupID, user);//Should work with email, not User here
         UserGroup group = groupService.getGroupByID(groupID);
         String groupName = group.getName();
         String groupDescription = group.getDescription();
