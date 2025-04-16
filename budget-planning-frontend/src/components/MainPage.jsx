@@ -25,7 +25,7 @@ const MainPage = () => {
                 <p>Glad to see you! Your group adventures are just getting started.</p>
                 {nextHoliday && (
                     <p>
-                        Did you know that on <strong>{new Date(nextHoliday.date).toLocaleDateString()}</strong> we’ve 
+                        Did you know that on <strong><strong>{nextHoliday.date}</strong></strong> we’ve 
                         got <strong>{nextHoliday.localName}</strong>?
                         Sounds like the perfect excuse for some fun activities. Let’s plan something awesome!
                     </p>
