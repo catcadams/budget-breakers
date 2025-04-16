@@ -2,6 +2,7 @@ package org.launchcode.budget_planning_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -33,7 +34,7 @@ public class Event extends AbstractEntity{
 
     private boolean isBudgetReached;
 
-    @OneToMany
+    @OneToMany( cascade = CascadeType.ALL)
     //@JsonManagedReference
     private final List<Contributions> contributions = new ArrayList<>();
 

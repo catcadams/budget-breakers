@@ -29,8 +29,6 @@ public class Contributions extends BaseAbstractEntity{
     //@JsonBackReference
     private Event event;
 
-    private int eventID;
-
     @NotNull
     private Status status;
 
@@ -58,14 +56,6 @@ public class Contributions extends BaseAbstractEntity{
     public Status getStatus() {return status;}
 
     public void setStatus(Status status) {this.status = status;}
-
-    public int getEventID() {
-        return eventID;
-    }
-
-    public void setEventID(int eventID) {
-        this.eventID = eventID;
-    }
 
     @Override
     public String toString() {

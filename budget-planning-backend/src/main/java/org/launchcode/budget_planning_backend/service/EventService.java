@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.service;
 
+import org.launchcode.budget_planning_backend.data.ContributionsRepository;
 import org.launchcode.budget_planning_backend.data.EventRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
@@ -19,6 +20,9 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    ContributionsRepository contributionsRepository;
 
     private final Logger logger = LoggerFactory.getLogger(EventService.class);
 
@@ -79,6 +83,7 @@ public class EventService {
         }
         event.setEarnings(eventDto.getEventEarnings());
         isBudgetReachedForEvent(event);
+        eventRepository.save(event);
     }
 
     public void setEventStatus(Event event){
@@ -100,22 +105,25 @@ public class EventService {
         }
     }
 
-    public void addContributionToEvent(User user, Event event, Contributions contributions, double amountOfContribution){
+    public Contributions addContributionToEvent(User user, Event event, double amountOfContribution){
         if(!user.getAccountType().equals(AccountType.MINOR)){
             event.setEarnings(event.getEarnings() + amountOfContribution);
         }
         logger.info(event.toString());
+        Contributions contributions = new Contributions();
         // add Contribution to an Event
         contributions.setDate(LocalDate.now());
         contributions.setAmountOfContribution(amountOfContribution);
         contributions.setUser(user);
         setContributionStatus(user, contributions);
-        contributions.setEventID(event.getId());
         contributions.setEvent(event);
         // Set event status
         isBudgetReachedForEvent(event);
         event.addContributions(contributions);
         setEventStatus(event);
+        contributionsRepository.save(contributions);
+        eventRepository.save(event);
+        return contributions;
     }
 
     public List<ContributionDTO> getContributionsForEvent(User user,int userGroupId, int eventId){
@@ -162,6 +170,7 @@ public class EventService {
     public void deleteEvent(User user, int userGroupId, int eventId){
         Event event = getEventForGroup(user, userGroupId, eventId);
         userGroupService.getEventsFromGroup(userGroupId).remove(event);
+        eventRepository.delete(event);
     }
 
     public void isBudgetReachedForEvent(Event event){
@@ -175,5 +184,13 @@ public class EventService {
         event.addContributions(contributions);
         setEventStatus(contributions.getEvent());
         logger.info("Added contribution to the event:" + contributions.getEvent().toString());
+    }
+
+    public void setEventDtoList(List<Event> events, List<EventDTO> eventDtos){
+        for(Event event: events){
+            EventDTO eventDTO = new EventDTO();
+            setEventDtoForEvent(event, eventDTO);
+            eventDtos.add(eventDTO);
+        }
     }
 }

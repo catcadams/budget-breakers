@@ -1,6 +1,8 @@
 package org.launchcode.budget_planning_backend.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.launchcode.budget_planning_backend.data.ContributionsRepository;
+import org.launchcode.budget_planning_backend.data.EventRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.launchcode.budget_planning_backend.service.AuthenticationService;
 import org.launchcode.budget_planning_backend.service.EventService;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,18 +31,27 @@ public class EventController {
     @Autowired
     EventService eventService;
 
+    @Autowired
+    EventRepository eventRepository;
+
+    @Autowired
+    ContributionsRepository contributionsRepository;
+
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     @GetMapping("/{groupID}/list")
-    public ResponseEntity<List<Event>> getEvents(@PathVariable Integer groupID, HttpServletRequest request){
+    public ResponseEntity<List<EventDTO>> getEvents(@PathVariable Integer groupID, HttpServletRequest request){
         logger.info("Inside GetEvents");
 //        User user = authenticationService.getCurrentUser(request);
         User user = authenticationController.getUserFromSession(request.getSession());
         List<Event> listOfEvents = eventService.getEvents(groupID, user);
+        List<EventDTO> listOfEventsDto = new ArrayList<>();
         if (listOfEvents.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }else{
+            eventService.setEventDtoList(listOfEvents, listOfEventsDto);
         }
-        return ResponseEntity.ok(listOfEvents);
+        return ResponseEntity.ok(listOfEventsDto);
     }
 
     @PostMapping("/create")
@@ -81,17 +93,17 @@ public class EventController {
     @PostMapping("/contribute/{userGroupId}/{eventId}")
     public String addContribution(@Valid @RequestBody ContributionDTO contributionDTO, @PathVariable Integer userGroupId, @PathVariable Integer eventId, HttpServletRequest request){
         logger.info("Inside Contribute");
+        Contributions contributions = null;
         // Need to implement get group with groupID
 //        User user = authenticationService.getCurrentUser(request);
         User user = authenticationController.getUserFromSession(request.getSession());
         Event event = eventService.getEventForGroup(user, userGroupId, eventId);
-        Contributions contributions = new Contributions();
 
         //Set Contribution details to event
         if(event !=null) {
-            eventService.addContributionToEvent(user, event, contributions, contributionDTO.getAmountOfContribution());
+            contributions = eventService.addContributionToEvent(user, event, contributionDTO.getAmountOfContribution());
+            logger.info("Contributed Successfully".concat(contributions.toString()));
         }
-        logger.info("Contributed Successfully".concat(contributions.toString()));
         return "Contribution added successfully";
     }
 
@@ -112,6 +124,8 @@ public class EventController {
         contribution.setStatus(Status.COMPLETE);
         event.setEarnings(event.getEarnings() + contribution.getAmountOfContribution());
         eventService.isBudgetReachedForEvent(event);
+        eventRepository.save(event);
+        contributionsRepository.save(contribution);
         logger.info("Contribution approved successfully");
     }
 
