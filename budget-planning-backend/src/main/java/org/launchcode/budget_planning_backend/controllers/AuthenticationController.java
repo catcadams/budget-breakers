@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.AccountTypeUtil;
 import org.launchcode.budget_planning_backend.models.SessionKey;
 import org.launchcode.budget_planning_backend.models.User;
@@ -19,63 +20,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
 public class AuthenticationController {
 
-    @Autowired
-    AuthenticationService authenticationService;
-
-    List<User> users = new ArrayList<>();
     Map<String, String> response = new HashMap<>();
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    private User findByUsername(String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
-    }
-//    @Autowired
-//    UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
+    private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
-        return (User) session.getAttribute(SessionKey.USER.getValue());
+    //For persistence with database connection
+        Integer userId = (Integer) session.getAttribute(userSessionKey);
+        if (userId == null) {
+            return null;
+        }
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return null;
+        }
+        return user.get();
     }
 
-    //For persistence with database connection
-//        Integer userId = (Integer) session.getAttribute(userSessionKey);
-//        if (userId == null) {
-//            return null;
-//        }
-//
-////        Optional<User> user = userRepository.findById(userId);
-////
-////        if (user.isEmpty()) {
-////            return null;
-////        }
-////
-////        return user.get();
-//
-//    }
-//
     private static void setUserInSession(HttpSession session, User user) {
-//        session.setAttribute(userSessionKey, user.getId());
-        session.setAttribute(SessionKey.USER.getValue(), user);
+        session.setAttribute(userSessionKey, user.getId());
     }
 
     @GetMapping()
     public ResponseEntity<User> getCurrentUser(HttpServletRequest request){
-        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = getUserFromSession(request.getSession());
         if(currentUser != null) {
             return ResponseEntity.ok(currentUser);
         }
@@ -93,13 +72,13 @@ public class AuthenticationController {
         }
 
         //For persistence with database connection
-//        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
-//
-//        if (existingUser != null) {
-//            errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists");
-//            model.addAttribute("title", "Register");
-//            return "register";
-//        }
+        User existingUser = userRepository.findByUsername(registerFormDTO.getUsername());
+
+        if (existingUser != null) {
+            logger.info("Username already exists:" + existingUser.getUsername());
+            response.put("message", "A user with that username already exists");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         String password = registerFormDTO.getPassword();
         String verifyPassword = registerFormDTO.getVerifyPassword();
@@ -119,9 +98,7 @@ public class AuthenticationController {
 
         AccountTypeUtil.determineAccountType(newUser);
 
-        //userRepository.save(user);
-        users.add(newUser);
-        //setUserInSession(request.getSession(), newUser);
+        userRepository.save(newUser);
         logger.info("User stored in session: " + newUser.getUsername());
         logger.info("User acct type: " + newUser.getAccountType());
 
@@ -138,7 +115,13 @@ public class AuthenticationController {
 
         HttpSession session = request.getSession(true); // Creates session if it doesn't exist already
 
-        User user = findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        System.out.println(user);
+        if(user == null) {
+            logger.info("Username does not exist: " + user);
+            response.put("message", "Username does not exist. Please try again");
+            return ResponseEntity.badRequest().body(response);
+        }
         if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
             if (session!= null) {
                 session.removeAttribute("user");
@@ -156,27 +139,6 @@ public class AuthenticationController {
         response.put("message", "Invalid credentials");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
-
-    //For persistence with database connection
-//        User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
-//
-//        if (theUser == null) {
-//            errors.rejectValue("username", "user.invalid", "The given username does not exist");
-//            model.addAttribute("title", "Log In");
-//            return "login";
-//        }
-
-//        String password = loginFormDTO.getPassword();
-//
-//        if (!theUser.isMatchingPassword(password)) {
-//            errors.rejectValue("password", "password.invalid", "Invalid password");
-//            model.addAttribute("title", "Log In");
-//            return "login";
-//
-//        setUserInSession(request.getSession(), theUser);
-
-    //return "redirect:";
-//    }
 
 //logout functionality
     @GetMapping("/logout")
@@ -197,4 +159,3 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 }
-//}

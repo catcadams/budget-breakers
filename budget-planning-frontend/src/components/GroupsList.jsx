@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import useCurrentUser from '../hooks/useCurrentUser';
+import familyLogo from "../styles/images/Family.jpg";
 
 import Button from "./Button";
 import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
@@ -33,21 +34,24 @@ const GroupsList = () => {
           <div>
             <h2>All Groups</h2>
           </div>
+          <div className="tiles-container"> 
           <div className="tile-list">
-          {groups.map((group) => (
-            <div
-            key={group.id}
-            className="tile"
-            onClick={() => handleClick(group)}>
-            <h3>{group.name}</h3>
-            <p>{group.description}</p>
-            </div>
-          ))}
+            {groups.map((group) => (
+              <div
+                key={group.id}
+                className="tile"
+                onClick={() => handleClick(group)}>
+                <h3>{group.name}</h3>
+                <img src={familyLogo} className="app-image-list" alt="Family logo" />
+                <p className='app-details-list'>No. of Chores: {group.chores?.length ?? 0}<br></br>No. of Events: {group.events?.length ?? 0}</p>
+              </div>
+            ))}
+          </div>
           </div>
           <div>
-          <Button label="Create New Group" onClick={() => navigate("/groups/create")}>
-            Create New Group
-          </Button>
+            <Button label="Create New Group" onClick={() => navigate("/groups/create")}>
+              Create New Group
+            </Button>
           </div>
         </div>
       )}

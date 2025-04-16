@@ -36,7 +36,6 @@ const SingleGroupPage = () => {
           />
         </div>
         <div className="add-member-btn">
-          {/* This button is a work in progress */}
           <Button label="Add New Member" onClick={() => navigate(`/groups/${userID}/${groupID}/add-member`)}></Button>
         </div>
       </div>
@@ -49,13 +48,7 @@ const SingleGroupPage = () => {
       </div>
       <div className="tiles-container">
         <h3>All Events</h3>
-        {group.events.length === 0 ? (
-          <p>No events available for your group.</p>
-        ) : (
-          <div>
-            <ViewEvents />
-          </div>
-        )}
+        <ViewEvents />
       </div>
       <div className="tiles-container">
         <h3>Group Members</h3>

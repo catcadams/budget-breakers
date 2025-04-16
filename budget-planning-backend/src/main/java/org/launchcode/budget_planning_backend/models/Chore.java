@@ -1,28 +1,42 @@
 package org.launchcode.budget_planning_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
-public class Chore extends AbstractEntity {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
+public class Chore extends AbstractEntity{
 
-    private static int nextId = 0;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
     private Event event;
 
+//    @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL)
     private Contributions contribution;
 
+    @ManyToOne
+    @NotNull(message = "Group is required")
+    //@JsonBackReference
     private UserGroup userGroup;
 
     private Status status;
 
+//    @NotBlank(message = "Amount of earnings for this chore is required.")
     private Double amountOfEarnings;
 
-    public Chore(String name, String description, Double amountOfEarnings){
-        setId(nextId++);
+    public Chore(String name, String description, Double amountOfEarnings) {
         setName(name);
         setDescription(description);
         this.amountOfEarnings = amountOfEarnings;
     }
+
+    public Chore () {}
 
     public Double getAmountOfEarnings() {
         return amountOfEarnings;
@@ -81,9 +95,10 @@ public class Chore extends AbstractEntity {
                 ", description=" + getDescription() +
                 ", amountOfEarnings=" + getAmountOfEarnings() +
                 ", status=" + getStatus() +
-                ", user=" + user +
-                ", event=" + event +
-                ", contribution=" + contribution +
-                ", group=" + userGroup + '}';
+//                ", user=" + user.getId() +
+//                ", event=" + event.getId() +
+//                ", contribution=" + contribution.getId() +
+//                ", group=" + userGroup.getId() +
+                '}';
     }
 }

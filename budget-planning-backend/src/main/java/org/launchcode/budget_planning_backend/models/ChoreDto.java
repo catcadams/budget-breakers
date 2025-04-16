@@ -1,27 +1,28 @@
 package org.launchcode.budget_planning_backend.models;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
 public class ChoreDto extends AbstractEntity {
 
     private UserGroup group;
 
-    private String userGroupName;//temp for dummy data
+    private String userGroupName;
 
-    @Positive(message = "Amount must be a positive number.")
-    @NotNull(message = "Amount is required.")
     private Double amountOfEarnings;
+
+    private Status status;
+
+    private User user;
+
+    private Event event;
 
     public ChoreDto() {}
 
-    //public User getUser() {return user;}
+    public User getUser() {return user;}
 
-    //public void setUser(User user) {this.user = user;}
+    public void setUser(User user) {this.user = user;}
 
-    //public Event getEvent() {return event;}
+    public Event getEvent() {return event;}
 
-    //public void setEvent(Event event) {this.event = event;}
+    public void setEvent(Event event) {this.event = event;}
 
     public UserGroup getUserGroup() {
         return group;
@@ -43,5 +44,13 @@ public class ChoreDto extends AbstractEntity {
 
     public void setUserGroupName(String userGroupName) {
         this.userGroupName = userGroupName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

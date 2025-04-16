@@ -1,8 +1,12 @@
 package org.launchcode.budget_planning_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -10,17 +14,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents an Event which can be a part of any group (A group of family members/friends/both.
+ */
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
 public class Event extends AbstractEntity{
 
-    private static int nextId = 1;
-
     @NotNull
-    @NotBlank(message = "Budget amount is required")
     private double budget;
 
-    @NotNull
-    @NotBlank(message = "Location is required")
-    @Size(min = 4, max = 50 , message = "Location must be  between 4 and 50 characters")
     private String location;
 
     private LocalDate date;
@@ -31,11 +34,11 @@ public class Event extends AbstractEntity{
 
     private boolean isBudgetReached;
 
-    @JsonManagedReference
+    @OneToMany( mappedBy = "event", cascade = CascadeType.ALL)
     private final List<Contributions> contributions = new ArrayList<>();
 
+    @ManyToOne
     @NotNull(message = "Group is required")
-    @JsonBackReference
     private UserGroup userGroup;
 
     public Event(String name, double budget, String location, String description, String date, Status status, double earnings, UserGroup group) {
@@ -47,8 +50,6 @@ public class Event extends AbstractEntity{
         this.status = status;
         this.earnings = earnings;
         this.userGroup = userGroup;
-        this.setId(nextId);
-        nextId++;
     }
 
     public Event(){}
@@ -115,6 +116,7 @@ public class Event extends AbstractEntity{
 
     public void addContributions(Contributions contributions) {
         this.contributions.add(contributions);
+        contributions.setEvent(this);
     }
 
     public boolean isBudgetReached() {

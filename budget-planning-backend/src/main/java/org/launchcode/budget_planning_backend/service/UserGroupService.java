@@ -1,7 +1,8 @@
 package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Email;
+import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
+import org.launchcode.budget_planning_backend.data.UserGroupRepository;
 import org.launchcode.budget_planning_backend.models.Chore;
 import org.launchcode.budget_planning_backend.models.Event;
 import org.launchcode.budget_planning_backend.models.User;
@@ -14,48 +15,46 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * This class contains all the service methods/functions used to create and manage UserGroups.
+ */
 @Service
 public class UserGroupService {
 
     @Autowired
-    AuthenticationService authenticationService;
+    UserGroupRepository userGroupRepository;
+
+    @Autowired
+    AuthenticationController authenticationController;
+
 
     private final Logger logger = LoggerFactory.getLogger(UserGroupService.class);
 
-    public final List<UserGroup> groupsList = new ArrayList<>();
-
-    private final List<UserGroup> groupsByUser = new ArrayList<>();
-
     public void saveGroups(UserGroup group) {
-        groupsList.add(group);
+        userGroupRepository.save(group);
     }
 
-    public List<UserGroup> getAllGroups() {return groupsList;}
-
     public UserGroup getGroupByID(int id) {
-        for (UserGroup group : groupsList) {
-            if(group.getId() == id) {
-                return group;
-            }
-        }
-        return null;
+        Optional<UserGroup> group = userGroupRepository.findById(id);
+        return group.orElse(null);
     }
 
     public UserGroup getGroupByName(String groupName) {
-        for (UserGroup group : groupsList) {
-            if(group.getName().equals(groupName)) {
+        for (UserGroup group : userGroupRepository.findAll()) {
+            if (group.getName().equals(groupName)) {
                 return group;
             }
         }
         return null;
     }
 
-    public List<UserGroup> getGroupsByUser (int userID) {
+    public List<UserGroup> getGroupsByUser(int userID) {
         List<UserGroup> groupsByUser = new ArrayList<>();
-        for (UserGroup group : groupsList) {
+        for (UserGroup group : userGroupRepository.findAll()) {
             for (User user : group.getUsers()) {
-                if(user.getId() == userID && !groupsByUser.contains(group)) {
+                if (user.getId() == userID && !groupsByUser.contains(group)) {
                     groupsByUser.add(group);
                 }
             }
@@ -63,9 +62,9 @@ public class UserGroupService {
         return groupsByUser;
     }
 
-    public UserGroup createNewGroup (UserGroupDTO groupDTO, HttpServletRequest request) {
+    public UserGroup createNewGroup(UserGroupDTO groupDTO, HttpServletRequest request) {
         UserGroup group = new UserGroup(groupDTO.getName(), groupDTO.getDescription());
-        User currentUser = authenticationService.getCurrentUser(request);
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (currentUser != null) {
             group.addUsers(currentUser);
         }
@@ -74,28 +73,25 @@ public class UserGroupService {
     }
 
     public List<Chore> getChoresFromGroup(int groupID) {
-        for (UserGroup group : groupsList) {
-            if(group.getId() == groupID) {
-                return group.getChores();
-            }
+        UserGroup group = getGroupByID(groupID);
+        if(group != null){
+            return group.getChores();
         }
         return null;
     }
 
     public List<Event> getEventsFromGroup(int groupID) {
-        for (UserGroup group : groupsList) {
-            if(group.getId() == groupID) {
-                return group.getEvents();
-            }
+        UserGroup group = getGroupByID(groupID);
+        if(group != null){
+            return group.getEvents();
         }
         return null;
     }
 
     public List<User> getUsersFromGroup(int groupID) {
-        for (UserGroup group : groupsList) {
-            if(group.getId() == groupID) {
-                return group.getUsers();
-            }
+        UserGroup group = getGroupByID(groupID);
+        if(group != null){
+            return group.getUsers();
         }
         return null;
     }
@@ -103,26 +99,21 @@ public class UserGroupService {
     public void addUsersToGroup(int groupID, User user) {
         UserGroup group = getGroupByID(groupID);
         group.addUsers(user);
+        userGroupRepository.save(group);
     }
 
     public void editGroupByID(int groupID, UserGroupDTO userGroupDTO) {
         UserGroup group = getGroupByID(groupID);
         group.setName(userGroupDTO.getName());
         group.setDescription(userGroupDTO.getDescription());
+        userGroupRepository.save(group);
     }
 
-    public void deleteGroupByID(int groupID) {
-        UserGroup groupToDelete = null;
-        for (UserGroup group : groupsList) {
-            if (group.getId() == groupID) {
-                groupToDelete = group;
-                logger.info("Deleted group with ID={}", groupID);
-            }
-        }
-        if (groupToDelete != null) {
-            groupsList.remove(groupToDelete);
-            groupsByUser.remove(groupToDelete);
+    public void deleteGroupByID(Integer groupID) {
+        if(groupID != null) {
+            removeAllUsersFromGroup(groupID);
             logger.info("Deleted group with ID={}", groupID);
+            userGroupRepository.deleteById(groupID);
         } else {
             logger.info("Group with ID={} does not exist. Unable to delete group.", groupID);
         }
@@ -133,11 +124,18 @@ public class UserGroupService {
         if (group == null) {
             return false;
         }
-        for (User user : getGroupByID(groupID).getUsers()) {
-            if(user.getId() == userID) {
+        for (User user : getUsersFromGroup(groupID)) {
+            if (user.getId() == userID) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void removeAllUsersFromGroup(Integer groupID) {
+        UserGroup group = getGroupByID(groupID);
+        group.removeUsers();
+        logger.info("Removed users from "+group.getName());
+        userGroupRepository.save(group);
     }
 }

@@ -1,15 +1,23 @@
 package org.launchcode.budget_planning_backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+/**
+ * This class represents a contribution made to an event which can be a part of any group (A group of family members/friends/both.
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Entity
 public class Contributions extends BaseAbstractEntity{
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
     @NotNull
     private User user;
 
@@ -19,20 +27,16 @@ public class Contributions extends BaseAbstractEntity{
     @NotNull
     private LocalDate date;
 
+    @ManyToOne
+    @JoinColumn(name = "event_id")
     @NotNull
-    @JsonBackReference
+   // @JsonBackReference
     private Event event;
-
-    private int eventID;
 
     @NotNull
     private Status status;
 
-    private static int nextId = 1;
-
     public Contributions() {
-        this.setId(nextId);
-        nextId++;
     }
 
     public User getUser() {return user;}
@@ -56,14 +60,6 @@ public class Contributions extends BaseAbstractEntity{
     public Status getStatus() {return status;}
 
     public void setStatus(Status status) {this.status = status;}
-
-    public int getEventID() {
-        return eventID;
-    }
-
-    public void setEventID(int eventID) {
-        this.eventID = eventID;
-    }
 
     @Override
     public String toString() {

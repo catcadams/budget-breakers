@@ -22,19 +22,12 @@ public class HomeController {
     @Autowired
     AuthenticationService authenticationService;
 
-//    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    @Autowired
+    AuthenticationController authenticationController;
 
     @GetMapping
     public ResponseEntity<String> home(HttpServletRequest request) {
-
-        User user = authenticationService.getCurrentUser(request);
-
-//        if (session != null) {
-//            logger.info("Session ID: " + session.getId());
-//            logger.info("Session User: " + session.getAttribute("user"));
-//        } else {
-//            logger.info("No session found.");
-//        }
+        User user = authenticationController.getUserFromSession(request.getSession());
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You need to be logged in to view this page.");

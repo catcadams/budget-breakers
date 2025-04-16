@@ -1,6 +1,9 @@
 package org.launchcode.budget_planning_backend.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
+import org.launchcode.budget_planning_backend.data.ChoreRepository;
+import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChoreService {
@@ -21,43 +25,52 @@ public class ChoreService {
     AuthenticationService authenticationService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     EventService eventService;
+
+    @Autowired
+    AuthenticationController authenticationController;
+
+    @Autowired
+    ChoreRepository choreRepository;
 
     private final Logger logger = LoggerFactory.getLogger(ChoreService.class);
 
 
-    private final List<Chore> allChores = new ArrayList<>();
-    private final List<Chore> choresByGroup = new ArrayList<>();
-
-    public void saveChore(Chore chore) {
-        allChores.add(chore);
-    }
-
     public Chore getChoreById(int id) {
-        for(Chore chore : allChores){
-            if(chore.getId() == id) {
-                return chore;
-            }
-        }
-        return null;
+        Optional<Chore> choreOptional = choreRepository.findById(id);
+        return choreOptional.orElse(null);
     }
 
     public Chore createNewChore(ChoreDto choreDto) {
-        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
         UserGroup group = userGroupService.getGroupByName(choreDto.getUserGroupName());
+        Chore chore = new Chore(choreDto.getName(), choreDto.getDescription(), choreDto.getAmountOfEarnings());
         chore.setStatus(Status.OPEN);
         chore.setGroup(group);
+        group.addChores(chore);
+        choreRepository.save(chore);
         logger.info("New Chore created: ".concat(chore.toString()));
         return chore;
     }
 
-    public List<Chore> getChoresByGroup(int userGroupId) {
-        choresByGroup.clear();
-        for (Chore chore : allChores) {
-            if (chore.getGroup().getId() == userGroupId) {
-                choresByGroup.add(chore);
+    public List<ChoreDto> getChoresByGroup(int userGroupId) {
+        List<Chore> chores = (List<Chore>) choreRepository.findAll();
+        List<ChoreDto> dtoList = new ArrayList<>();
+        for (Chore chore : chores) {
+            if (chore.getGroup() != null && chore.getGroup().getId() == userGroupId) {
+                ChoreDto dto = new ChoreDto();
+                dto.setId(chore.getId());
+                dto.setName(chore.getName());
+                dto.setAmountOfEarnings(chore.getAmountOfEarnings());
+                dto.setUserGroup(chore.getGroup());
+                dto.setUserGroupName(chore.getGroup().getName());
+                dto.setStatus(chore.getStatus());
+                dtoList.add(dto);
             }
-        } return choresByGroup;
+        }
+        return dtoList;
     }
 
     public void updateChoreDetailsByChoreId(int choreId, ChoreDto choreDto) {
@@ -65,41 +78,50 @@ public class ChoreService {
         chore.setName(choreDto.getName());
         chore.setDescription(choreDto.getDescription());
         chore.setAmountOfEarnings(choreDto.getAmountOfEarnings());
+        choreRepository.save(chore);
     }
 
     public Chore assignChoreToTheUser(int choreId, HttpServletRequest request) {
-        User user = authenticationService.getCurrentUser(request);
+        User user = authenticationController.getUserFromSession(request.getSession());
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.IN_PROGRESS);
         chore.setUser(user);
+        user.addChoreToUser(chore);
+        choreRepository.save(chore);
+        userRepository.save(user);
         logger.info("The chore was assigned to the user:" + chore.toString());
         return chore;
     }
 
     public Chore unassignChore(int choreId, HttpServletRequest request) {
-        User currentUser = authenticationService.getCurrentUser(request);
+//        User currentUser = authenticationService.getCurrentUser(request);
+        User user = authenticationController.getUserFromSession(request.getSession());
         Chore chore = getChoreById(choreId);
-        if(chore.getUser().getId() == currentUser.getId()){
-            chore.setStatus(Status.OPEN);
-            chore.setUser(null);
-            logger.info("The chore was unassigned:" + chore.toString());
-        }
+        chore.setStatus(Status.OPEN);
+        chore.setUser(null);
+        user.removeChoreFromUser(chore);
+        choreRepository.save(chore);
+        userRepository.save(user);
+        logger.info("The chore was unassigned:" + chore.toString());
         return chore;
+
     }
 
     public Chore completeChoreByMinor(int choreId, int eventId, int groupId, HttpServletRequest request) {
         Chore chore = getChoreById(choreId);
-        Event selectedEvent = eventService.getEventForGroup(authenticationService.getCurrentUser(request), groupId,
-                eventId);
+        User currentUser = authenticationController.getUserFromSession(request.getSession());
+        Event selectedEvent = eventService.getEventForGroup(currentUser, groupId, eventId);
         chore.setStatus(Status.PENDING);
         chore.setEvent(selectedEvent);
-        logger.info("Updating chore details after marking the chore as Pending: "+ chore.toString());
+        choreRepository.save(chore);
+        logger.info("Updating chore details after marking the chore as Pending: " + chore.toString());
         return chore;
     }
 
     public Chore confirmChoreByAdult(int choreId) {
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.COMPLETE);
+        choreRepository.save(chore);
         Contributions contributions = new Contributions();
         contributions.setAmountOfContribution(chore.getAmountOfEarnings());
         contributions.setDate(LocalDate.now());
@@ -112,24 +134,23 @@ public class ChoreService {
     }
 
     public void deleteChoreById(int choreId) {
-        Chore choreToDelete = null;
-        for(Chore chore : allChores){
-            if(chore.getId() == choreId) {
-                choreToDelete = chore;
-                logger.info("Deleted the chore with Id={}", choreId);
-            }
-        }
-        if(choreToDelete != null) {
-            allChores.remove(choreToDelete);
+        if (choreRepository.existsById(choreId)) {
+            choreRepository.deleteById(choreId);
             logger.info("Deleted the chore with Id={}", choreId);
-        } else logger.info("There is no chore with given Id. Unable to delete");
+        } else {
+            logger.info("There is no chore with given Id. Unable to delete");
+        }
     }
 
     public Chore rejectChoreByAdult(int choreId) {
         Chore chore = getChoreById(choreId);
+        User user = chore.getUser();
+        user.removeChoreFromUser(chore);
         chore.setStatus(Status.OPEN);
         chore.setEvent(null);
         chore.setUser(null);
+        choreRepository.save(chore);
+        userRepository.save(user);
         return chore;
     }
 }

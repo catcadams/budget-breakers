@@ -24,13 +24,13 @@ function Navbar() {
               <NavLink to="/Home">Home </NavLink>
             </li>
             <li>
+              <NavLink to="/Groups">Groups</NavLink>
+            </li>
+            <li>
               <NavLink to="/Events">Events</NavLink>
             </li>
             <li>
               <NavLink to="/Chores">Chores</NavLink>
-            </li>
-            <li>
-              <NavLink to="/Groups">Groups</NavLink>
             </li>
             <li>
                 <NavLink to="/Login"> Login</NavLink>
