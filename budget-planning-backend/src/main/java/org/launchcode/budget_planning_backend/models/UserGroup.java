@@ -9,12 +9,13 @@ import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class UserGroup extends AbstractEntity{
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private final List<User> users = new ArrayList<>();
 
     // @JsonManagedReference
@@ -46,6 +47,10 @@ public class UserGroup extends AbstractEntity{
         return chores;
     }
 
+//    public void setUsers(List<User> users) {
+//        this.users = users;
+//    }
+
     public void addUsers(User user){
         this.users.add(user);
     }
@@ -60,6 +65,10 @@ public class UserGroup extends AbstractEntity{
 
     public void addEmails(String email) {
         this.userEmails.add(email);
+    }
+
+    public void removeUsers() {
+        this.users.clear();
     }
 
     @Override
