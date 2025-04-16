@@ -59,10 +59,10 @@ public class ChoreService {
                 ChoreDto dto = new ChoreDto();
                 dto.setId(chore.getId());
                 dto.setName(chore.getName());
-                dto.setDescription(chore.getDescription());
                 dto.setAmountOfEarnings(chore.getAmountOfEarnings());
                 dto.setUserGroup(chore.getGroup());
                 dto.setUserGroupName(chore.getGroup().getName());
+                dto.setStatus(chore.getStatus());
                 dtoList.add(dto);
             }
         }
@@ -105,6 +105,7 @@ public class ChoreService {
         Event selectedEvent = eventService.getEventForGroup(currentUser, groupId, eventId);
         chore.setStatus(Status.PENDING);
         chore.setEvent(selectedEvent);
+        choreRepository.save(chore);
         logger.info("Updating chore details after marking the chore as Pending: " + chore.toString());
         return chore;
     }

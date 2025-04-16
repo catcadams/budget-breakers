@@ -177,6 +177,7 @@ public class EventService {
         isBudgetReachedForEvent(event);
         event.addContributions(contributions);
         setEventStatus(contributions.getEvent());
+        saveEventWithContribution(event);
         logger.info("Added contribution to the event:" + contributions.getEvent().toString());
     }
 

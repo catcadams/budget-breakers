@@ -30,7 +30,7 @@ const ChoreCompletionPage = () => {
   
     axios.get(`http://localhost:8080/events/${groupID}/list`, { withCredentials: true })
       .then(response => {
-        const filteredEvents = response.data.filter(isEventBudgetReached);
+        const filteredEvents = response.data.filter(event => !isEventBudgetReached(event));
         setEvents(filteredEvents);
       })
       .catch(() => setError("Failed to load events"))
@@ -82,15 +82,15 @@ const ChoreCompletionPage = () => {
             <div className="event-selection">
               <h2>Select an event to contribute to:</h2>
               {events.map(event => (
-                <label key={event.id} className="event-radio">
+                <label key={event.eventId} className="event-radio">
                   <input
                     type="radio"
                     name="event"
-                    value={event.id}
-                    onChange={() => setSelectedEventId(event.id)}
+                    value={event.eventId}
+                    onChange={() => setSelectedEventId(event.eventId)}
                   />
                    <span class="checkmark"></span>
-                  {event.name}
+                  {event.eventName}
                 </label>
               ))}
             </div>
