@@ -13,8 +13,8 @@ export default function ViewEvents() {
     if (eventLoading) return <p>Loading Events...</p>;
 
     function handleClick(event) {
-      console.log(`Event clicked: ${event.name}`);
-      navigate(`/events/${groupID}/${event.id}`);
+      console.log(`Event clicked: ${event.eventName}`);
+      navigate(`/events/${groupID}/${event.eventId}`);
     }
   return (
     <div className="tiles-container">
@@ -25,10 +25,10 @@ export default function ViewEvents() {
               key={event.id}
               className="tile"
               onClick={() => handleClick(event)}>
-              <h3>{event.name}</h3>    
-              <p>Fund Available: {event.earnings}$</p> 
-              <p>Budget: {event.budget}$</p>
-             <p><progress value={event.earnings} max={event.budget}/></p>                 
+              <h3>{event.eventName}</h3>    
+              <p>Fund Available: {event.eventEarnings}$</p> 
+              <p>Budget: {event.eventBudget}$</p>
+             <p><progress value={event.eventEarnings} max={event.eventBudget}/></p>                 
             </div>
           ))}
         </div>
