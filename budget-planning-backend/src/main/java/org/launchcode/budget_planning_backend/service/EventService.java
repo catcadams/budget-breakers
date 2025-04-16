@@ -1,6 +1,6 @@
 package org.launchcode.budget_planning_backend.service;
 
-import org.launchcode.budget_planning_backend.data.ContributionsRepository;
+import jakarta.transaction.Transactional;
 import org.launchcode.budget_planning_backend.data.EventRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
@@ -20,9 +20,6 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
-
-    @Autowired
-    ContributionsRepository contributionsRepository;
 
     private final Logger logger = LoggerFactory.getLogger(EventService.class);
 
@@ -104,7 +101,6 @@ public class EventService {
             contributions.setStatus(Status.PENDING);
         }
     }
-
     public Contributions addContributionToEvent(User user, Event event, double amountOfContribution){
         if(!user.getAccountType().equals(AccountType.MINOR)){
             event.setEarnings(event.getEarnings() + amountOfContribution);
@@ -116,13 +112,11 @@ public class EventService {
         contributions.setAmountOfContribution(amountOfContribution);
         contributions.setUser(user);
         setContributionStatus(user, contributions);
-        contributions.setEvent(event);
         // Set event status
         isBudgetReachedForEvent(event);
         event.addContributions(contributions);
         setEventStatus(event);
-        contributionsRepository.save(contributions);
-        eventRepository.save(event);
+        saveEventWithContribution(event);
         return contributions;
     }
 
@@ -192,5 +186,10 @@ public class EventService {
             setEventDtoForEvent(event, eventDTO);
             eventDtos.add(eventDTO);
         }
+    }
+
+    @Transactional
+    public void saveEventWithContribution(Event event) {
+        eventRepository.save(event);
     }
 }

@@ -1,10 +1,7 @@
 package org.launchcode.budget_planning_backend.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.launchcode.budget_planning_backend.data.ContributionsRepository;
-import org.launchcode.budget_planning_backend.data.EventRepository;
 import org.launchcode.budget_planning_backend.models.*;
-import org.launchcode.budget_planning_backend.service.AuthenticationService;
 import org.launchcode.budget_planning_backend.service.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,19 +20,10 @@ import java.util.List;
 public class EventController {
 
     @Autowired
-    AuthenticationService authenticationService;
-
-    @Autowired
     AuthenticationController authenticationController;
 
     @Autowired
     EventService eventService;
-
-    @Autowired
-    EventRepository eventRepository;
-
-    @Autowired
-    ContributionsRepository contributionsRepository;
 
     private final Logger logger = LoggerFactory.getLogger(EventController.class);
 
@@ -124,8 +112,8 @@ public class EventController {
         contribution.setStatus(Status.COMPLETE);
         event.setEarnings(event.getEarnings() + contribution.getAmountOfContribution());
         eventService.isBudgetReachedForEvent(event);
-        eventRepository.save(event);
-        contributionsRepository.save(contribution);
+        eventService.saveEventWithContribution(event);
+        //contributionsRepository.save(contribution);
         logger.info("Contribution approved successfully");
     }
 

@@ -2,10 +2,9 @@ package org.launchcode.budget_planning_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -14,7 +13,8 @@ import java.time.LocalDate;
 @Entity
 public class Contributions extends BaseAbstractEntity{
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name="user_id")
     @NotNull
     private User user;
 
@@ -25,8 +25,9 @@ public class Contributions extends BaseAbstractEntity{
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "event_id")
     @NotNull
-    //@JsonBackReference
+   // @JsonBackReference
     private Event event;
 
     @NotNull
