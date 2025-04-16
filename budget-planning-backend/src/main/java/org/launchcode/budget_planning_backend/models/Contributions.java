@@ -9,6 +9,9 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+/**
+ * This class represents a contribution made to an event which can be a part of any group (A group of family members/friends/both.
+ */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Contributions extends BaseAbstractEntity{
