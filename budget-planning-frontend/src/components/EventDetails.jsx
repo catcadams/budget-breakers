@@ -178,12 +178,11 @@ export default function EventDetails() {
       });
   }
   return (
-    <>
-      <div className="tiles-container">
+      <div>
         <div className="title">
           <h3> View Event</h3>
         </div>
-        <div className="contribute-container">
+        <div className="contribute-container tiles-container">
           <div className="progressBar">
             <ProgressBar
               animated
@@ -213,11 +212,11 @@ export default function EventDetails() {
           </div>
           {showConfetti && <Confetti />}
         </div>
-        <div className="event-form-container">
+        <div className="event-form-container tiles-container">
           <p>Event Name: {event.eventName}</p>
           <p>Event Description: {event.eventDescription}</p>
-          <p>Fund Available: {event.eventEarnings}</p>
-          <p>Budget: {event.eventBudget}</p>
+          <p>Fund Available: {event.eventEarnings}$</p>
+          <p>Budget: {event.eventBudget}$</p>
           <p>Location: {event.eventLocation}</p>
           <p>Event Date: {event.eventDate}</p>
           <div className="customButton">
@@ -252,7 +251,7 @@ export default function EventDetails() {
             onConfirm={handleModalClose}
           />
         </div>
-        <div className="contribution-history-container">
+        <div className="contribution-history-container tiles-container">
           <table>
             <thead>
               <tr>
@@ -268,7 +267,7 @@ export default function EventDetails() {
                 <tr key={contribution.id}>
                   <td>{contribution.date}</td>
                   <td>{contribution.name}</td>
-                  <td>{contribution.amountOfContribution}</td>
+                  <td>{contribution.amountOfContribution}$</td>
                   <td>{contribution.status}</td>
                   <td>
                     {contribution.status == "COMPLETE" ? (
@@ -297,6 +296,5 @@ export default function EventDetails() {
           />
         )}
       </div>
-    </>
   );
 }
