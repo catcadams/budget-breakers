@@ -180,14 +180,16 @@ export default function EventDetails() {
   return (
       <div>
         <div className="title">
-          <h3> View Event</h3>
+          <h3> View/Contribute Event</h3>
         </div>
         <div className="contribute-container tiles-container">
+          <h4>Contribute to Event:</h4>
           <div className="progressBar">
             <ProgressBar
               animated
               now={event.eventEarnings}
               max={event.eventBudget}
+              label={`${Math.round((event.eventEarnings/event.eventBudget)*100)}%`}
             />
           </div>
           <div style={{ display: event.budgetAchieved ? "none" : "block" }}>
@@ -213,6 +215,7 @@ export default function EventDetails() {
           {showConfetti && <Confetti />}
         </div>
         <div className="event-form-container tiles-container">
+          <h4>Event Details:</h4>
           <p>Event Name: {event.eventName}</p>
           <p>Event Description: {event.eventDescription}</p>
           <p>Fund Available: {event.eventEarnings}$</p>
@@ -252,39 +255,44 @@ export default function EventDetails() {
           />
         </div>
         <div className="contribution-history-container tiles-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>User</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contributions.map((contribution) => (
-                <tr key={contribution.id}>
-                  <td>{contribution.date}</td>
-                  <td>{contribution.name}</td>
-                  <td>{contribution.amountOfContribution}$</td>
-                  <td>{contribution.status}</td>
-                  <td>
-                    {contribution.status == "COMPLETE" ? (
-                      "APPROVED"
-                    ) : isAdultUser ? (
-                      <Button
-                        label="Approve"
-                        onClick={() => approveContribution(contribution)}
-                      />
-                    ) : (
-                      "PENDING"
-                    )}
-                  </td>
+          <h4>Contribution History: </h4>
+          {contributions.length === 0 ? (
+            <p>No Contributions made yet!! Be the first Hero to contribute!!</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>User</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {contributions.map((contribution) => (
+                  <tr key={contribution.id}>
+                    <td>{contribution.date}</td>
+                    <td>{contribution.name}</td>
+                    <td>{contribution.amountOfContribution}$</td>
+                    <td>{contribution.status}</td>
+                    <td>
+                      {contribution.status == "COMPLETE" ? (
+                        "APPROVED"
+                      ) : isAdultUser ? (
+                        <Button
+                          label="Approve"
+                          onClick={() => approveContribution(contribution)}
+                        />
+                      ) : (
+                        "PENDING"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
         {showModalDelete && (
           <ModalWindow
