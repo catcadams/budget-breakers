@@ -34,7 +34,9 @@ export default function UpdateEventDetails() {
   useEffect(() => {
     const getEvents = () => {
       axios
-        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, { withCredentials: true })
+        .get(`http://localhost:8080/events/${userGroupId}/${eventId}`, {
+          withCredentials: true,
+        })
         .then((response) => {
           setFormData(response.data);
           setErrors({});
@@ -101,7 +103,7 @@ export default function UpdateEventDetails() {
   const handleModalClose = () => {
     setShowModal(false);
     if (modalType === "success") {
-      navigate(`/events/${userGroupId}/list`); 
+      navigate(`/events/${userGroupId}/list`);
     }
   };
   return (
@@ -121,9 +123,7 @@ export default function UpdateEventDetails() {
           value={formData.eventName}
           setFormData={setFormData}
         />
-        {newErrors.eventName && (
-          <p className="error">{newErrors.eventName}</p>
-        )}
+        {newErrors.eventName && <p className="error">{newErrors.eventName}</p>}
         <p>Group Name: {formData.userGroupName}</p>
         <TextAreaInputField
           label="Description"

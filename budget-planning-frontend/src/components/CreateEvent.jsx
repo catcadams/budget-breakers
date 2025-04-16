@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import DateInputField from "./DateInputField";
 import TextInputField from "./TextInputField";
 import NumericInputField from "./NumericInputField";
@@ -7,11 +7,10 @@ import TextAreaInputField from "./TextAreaInputField";
 import DropdownField from "./DropdownField";
 import Button from "./Button";
 import ModalWindow from "./ModalWindow";
-import useCurrentUser from '../hooks/useCurrentUser';
-import { useFetchGroups } from '../hooks/useFetchGroups.jsx';
+import useCurrentUser from "../hooks/useCurrentUser";
+import { useFetchGroups } from "../hooks/useFetchGroups.jsx";
 
 export default function CreateEvent() {
-
   const { user, error } = useCurrentUser();
   const userID = user?.id;
   const { groups, loading, error: groupError } = useFetchGroups(userID ?? -1);
@@ -22,7 +21,7 @@ export default function CreateEvent() {
     eventLocation: "",
     eventDescription: "",
     eventDate: "",
-    userGroupName:"",
+    userGroupName: "",
   });
   const [newErrors, setErrors] = useState({});
   const [message, setMessage] = useState("");
@@ -87,22 +86,24 @@ export default function CreateEvent() {
         setModalType("danger");
         setShowModal(true);
       });
-  }
+  };
 
-  const handleModalClose = () =>{
+  const handleModalClose = () => {
     setShowModal(false);
     if (modalType === "success") {
-      const selectedGroup = groups.find(group => group.name === formData.userGroupName);
+      const selectedGroup = groups.find(
+        (group) => group.name === formData.userGroupName
+      );
       if (selectedGroup) {
-      navigate(`/groups/${user.id}/${selectedGroup.id}`);
+        navigate(`/groups/${user.id}/${selectedGroup.id}`);
       } else {
-      navigate(`/groups`);
+        navigate(`/groups`);
       }
     }
-  }
+  };
 
   return (
-    <div className="pageBody">
+    <div className="pageBody tiles-container">
       <form className="createEventForm">
         <h3> Create Event</h3>
         <TextInputField
@@ -121,8 +122,16 @@ export default function CreateEvent() {
         {newErrors.eventBudget && (
           <p className="error">{newErrors.eventBudget}</p>
         )}
-        <DropdownField label="Group: " options={groups.map(group => group.name)} name="userGroupName" placeholder="Select your group" setFormData={setFormData} />
-        {newErrors.userGroupName && <p className="error">{newErrors.userGroupName}</p>}
+        <DropdownField
+          label="Group: "
+          options={groups.map((group) => group.name)}
+          name="userGroupName"
+          placeholder="Select your group"
+          setFormData={setFormData}
+        />
+        {newErrors.userGroupName && (
+          <p className="error">{newErrors.userGroupName}</p>
+        )}
         <TextInputField
           label="Location"
           name="eventLocation"
@@ -147,9 +156,10 @@ export default function CreateEvent() {
           showState={showModal}
           message={message}
           type={modalType}
-          onClose={() => handleModalClose()} onConfirm={handleModalClose}
+          onClose={() => handleModalClose()}
+          onConfirm={handleModalClose}
         />
       </form>
     </div>
-  )
+  );
 }
