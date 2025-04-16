@@ -139,6 +139,7 @@ public class UserGroupService {
     public void addUsersToGroup(int groupID, User user) {
         UserGroup group = getGroupByID(groupID);
         group.addUsers(user);
+        userGroupRepository.save(group);
     }
 
     public void editGroupByID(int groupID, UserGroupDTO userGroupDTO) {

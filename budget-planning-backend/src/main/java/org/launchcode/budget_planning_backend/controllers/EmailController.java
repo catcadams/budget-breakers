@@ -1,6 +1,6 @@
 package org.launchcode.budget_planning_backend.controllers;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.Invitation;
 import org.launchcode.budget_planning_backend.models.User;
@@ -27,12 +27,15 @@ public class EmailController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/accept")
-    public ResponseEntity<String> acceptInvitation(@RequestParam String token, HttpSession session) {
-        System.out.println("Received token: " + token);
-        Integer authenticatedUserId = (Integer) session.getAttribute("user");
+    @Autowired
+    AuthenticationController authenticationController;
 
-        if (authenticatedUserId == null) {
+    @GetMapping("/accept")
+    public ResponseEntity<String> acceptInvitation(@RequestParam String token, HttpServletRequest request) {
+        System.out.println("Received token: " + token);
+        User authenticatedUser = authenticationController.getUserFromSession(request.getSession());
+
+        if (authenticatedUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in to accept an invitation.");
         }
 
@@ -49,7 +52,7 @@ public class EmailController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This invitation is expired or already used.");
         }
 
-        Optional<User> userInDb = userRepository.findById(authenticatedUserId);
+        Optional<User> userInDb = userRepository.findById(authenticatedUser.getId());
         if(userInDb.isPresent()) {
             User currentUser = userInDb.get();
 
@@ -58,8 +61,7 @@ public class EmailController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("This invitation is not for the logged-in user.");
             }
 
-
-            int userGroupId = invitation.getGroup().getId();
+            int userGroupId = invitation.getUserGroup().getId();
 
             System.out.println("Id for group: " + userGroupId);
             userGroupService.addUsersToGroup(userGroupId, currentUser);

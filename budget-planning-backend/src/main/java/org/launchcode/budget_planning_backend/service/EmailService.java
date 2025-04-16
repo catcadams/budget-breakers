@@ -1,5 +1,6 @@
 package org.launchcode.budget_planning_backend.service;
 
+import org.launchcode.budget_planning_backend.data.InvitationRepository;
 import org.launchcode.budget_planning_backend.models.Invitation;
 import org.launchcode.budget_planning_backend.models.UserGroup;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,19 +18,21 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    private final Map<String, Invitation> tokenStore = new ConcurrentHashMap<>();
+    @Autowired
+    InvitationRepository invitationRepository;
 
-    public void saveInvitation(String token, Invitation invitation) {
-        tokenStore.put(token, invitation);
-        System.out.println("Saved invitation with token: " + token);
+//    private final Map<String, Invitation> tokenStore = new ConcurrentHashMap<>();
+
+    public void saveInvitation(Invitation invitation) {
+        invitationRepository.save(invitation);
     }
 
     public Optional<Invitation> findByToken(String token) {
-        return Optional.ofNullable(tokenStore.get(token));
+        return Optional.ofNullable(invitationRepository.findByToken(token));
     }
 
     public void markAsUsed(String token) {
-        Invitation invitation = tokenStore.get(token);
+        Invitation invitation = invitationRepository.findByToken(token);
         if (invitation != null) {
             invitation.setUsed(true);
         }
@@ -50,9 +53,9 @@ public class EmailService {
             Invitation invitation = new Invitation();
             invitation.setEmail(email);
             invitation.setToken(token);
-            invitation.setGroup(group);
+            invitation.setUserGroup(group);
             invitation.setExpiryDate(LocalDateTime.now().plusDays(7));
-            saveInvitation(token, invitation);
+            saveInvitation(invitation);
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
