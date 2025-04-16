@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "./Button";
 import { useFetchEvents } from "../hooks/useFetchEvents";
+import EventLogo from "../styles/images/EventLogo.jpg";
 
 export default function ViewEvents() {
   const { groupID } = useParams();
@@ -25,8 +26,8 @@ export default function ViewEvents() {
             onClick={() => handleClick(event)}
           >
             <h3>{event.eventName}</h3>
-            <p>Fund Available: {event.eventEarnings}$</p>
-            <p>Budget: {event.eventBudget}$</p>
+            <img src={EventLogo} className="app-image-list" alt="Event logo" />
+            <p className="app-details-list">Fund Available: {event.eventEarnings}$ <br></br>Budget: {event.eventBudget}$</p>
             <p>
               <progress value={event.eventEarnings} max={event.eventBudget} />
             </p>
