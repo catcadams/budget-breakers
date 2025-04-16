@@ -163,6 +163,12 @@ public class EventService {
 
     public void deleteEvent(User user, int userGroupId, int eventId){
         Event event = getEventForGroup(user, userGroupId, eventId);
+        List<Chore> choresInGroup = userGroupService.getChoresFromGroup(userGroupId);
+        for(Chore chore : choresInGroup) {
+            if(chore.getEvent() == event) {
+                chore.setEvent(null);
+            }
+        }
         userGroupService.getEventsFromGroup(userGroupId).remove(event);
         eventRepository.delete(event);
     }

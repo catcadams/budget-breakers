@@ -1,7 +1,9 @@
 package org.launchcode.budget_planning_backend.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +18,9 @@ public class User extends BaseAbstractEntity{
 
     @ManyToMany
     private final List<UserGroup> userGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<Chore> chores = new ArrayList<>();
 
     @NotBlank(message = "Firstname is required")
     private String firstName;
@@ -122,6 +127,18 @@ public class User extends BaseAbstractEntity{
 
     public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
+    }
+
+    public List<Chore> getChores() {
+        return chores;
+    }
+
+    public void addChoreToUser(Chore chore) {
+        this.chores.add(chore);
+    }
+
+    public void removeChoreFromUser(Chore chore) {
+        this.chores.remove(chore);
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.launchcode.budget_planning_backend.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.launchcode.budget_planning_backend.controllers.AuthenticationController;
 import org.launchcode.budget_planning_backend.data.ChoreRepository;
+import org.launchcode.budget_planning_backend.data.UserRepository;
 import org.launchcode.budget_planning_backend.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,9 @@ public class ChoreService {
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     EventService eventService;
@@ -82,18 +86,22 @@ public class ChoreService {
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.IN_PROGRESS);
         chore.setUser(user);
+        user.addChoreToUser(chore);
         choreRepository.save(chore);
+        userRepository.save(user);
         logger.info("The chore was assigned to the user:" + chore.toString());
         return chore;
     }
 
     public Chore unassignChore(int choreId, HttpServletRequest request) {
 //        User currentUser = authenticationService.getCurrentUser(request);
-        //User currentUser = authenticationController.getUserFromSession(request.getSession());
+        User user = authenticationController.getUserFromSession(request.getSession());
         Chore chore = getChoreById(choreId);
         chore.setStatus(Status.OPEN);
         chore.setUser(null);
+        user.removeChoreFromUser(chore);
         choreRepository.save(chore);
+        userRepository.save(user);
         logger.info("The chore was unassigned:" + chore.toString());
         return chore;
 
@@ -136,10 +144,13 @@ public class ChoreService {
 
     public Chore rejectChoreByAdult(int choreId) {
         Chore chore = getChoreById(choreId);
+        User user = chore.getUser();
+        user.removeChoreFromUser(chore);
         chore.setStatus(Status.OPEN);
         chore.setEvent(null);
         chore.setUser(null);
         choreRepository.save(chore);
+        userRepository.save(user);
         return chore;
     }
 }
