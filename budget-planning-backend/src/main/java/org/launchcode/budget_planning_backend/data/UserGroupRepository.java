@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserGroupRepository extends CrudRepository<UserGroup, Integer> {
+    UserGroup findByGroupName(String name);
 }
