@@ -1,7 +1,8 @@
 .pageBody {
   align-items: center;
   text-align: center;
-  
+  color: chocolate;
+  font-weight: bold;
 }
 
 .App{
