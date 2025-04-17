@@ -1,6 +1,5 @@
 package org.launchcode.budget_planning_backend.models.dto;
 
-import jakarta.validation.constraints.Email;
 import org.launchcode.budget_planning_backend.models.*;
 
 import java.util.List;
@@ -14,8 +13,6 @@ public class UserGroupDTO extends AbstractEntity {
     private Chore chore;
 
     private List<String> emails;
-
-//    private List<Email> userEmails;
 
     public UserGroupDTO() {}
 
@@ -51,11 +48,4 @@ public class UserGroupDTO extends AbstractEntity {
         this.emails = emails;
     }
 
-//    public List<Email> getUserEmails() {
-//        return userEmails;
-//    }
-//
-//    public void setUserEmails(List<Email> userEmails) {
-//        this.userEmails = userEmails;
-//    }
 }
