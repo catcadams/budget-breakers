@@ -58,6 +58,9 @@ Some potential future developments for this project:
 * A user account page that has history of all completed chores and contributions they have made
 * An option to "save up" earnings from chores rather than immediately contribute chore earnings to an event
 * An option to "pay out" earnings from chores rather than immediately contribute chore earnings to an event
+* Restrict over contributing to an event, Save the chores for furture event contributions
+* Enhance Location specific planning(Splitting stay, food etc) using API calls for each events
+* Contributions can be linked to actual transactions like Zelle, apple pay
 - --
 ## Contributors
 * [Kayalvizhi Rajendran](https://github.com/KayalvizhiRajendran)
