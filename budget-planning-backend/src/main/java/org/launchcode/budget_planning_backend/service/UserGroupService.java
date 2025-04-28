@@ -67,6 +67,7 @@ public class UserGroupService {
         User currentUser = authenticationController.getUserFromSession(request.getSession());
         if (currentUser != null) {
             group.addUsers(currentUser);
+            currentUser.getUserGroups().add(group);
         }
         logger.info("New Group: ".concat(group.toString()));
         return group;

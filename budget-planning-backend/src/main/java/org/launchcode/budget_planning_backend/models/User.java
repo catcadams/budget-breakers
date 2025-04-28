@@ -13,6 +13,8 @@ import java.util.List;
 public class User extends BaseAbstractEntity{
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_user_groups", joinColumns = {@JoinColumn(name = "user_id")},
+    inverseJoinColumns = {@JoinColumn(name = "user_group_id")})
     private final List<UserGroup> userGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

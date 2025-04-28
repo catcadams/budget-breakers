@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class UserGroup extends AbstractEntity{
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "userGroups")
     private final List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
