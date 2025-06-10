@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import '../index.css'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import PasswordInputField from "./PasswordInputField";
 import TextInputField from "./TextInputField";
+import '../styles/loginPageStyle.css'
 
 export default function LoginForm () {
 
@@ -13,11 +14,11 @@ export default function LoginForm () {
     const [isSubmit, setIsSubmit] = useState(false);
 
            let navigate = useNavigate();
-           const routeChange = () =>{
-                 event.preventDefault();
-                 let path = `/register`;
-                 navigate(path);
-           };
+          //  const routeChange = () =>{
+          //        event.preventDefault();
+          //        let path = `/register`;
+          //        navigate(path);
+          //  };
 
            const handleSubmit = async (event) => {
               event.preventDefault();
@@ -78,7 +79,11 @@ export default function LoginForm () {
                 <p>{formErrors.password}</p>
 
                 <Button label="Login" onClick={handleSubmit} />
-                <Button label="Register" onClick={routeChange} />
+            </div>
+            <div className="register">
+              <p>Don't have an account yet?
+              <Link to="/register" className="register-link">Register here!</Link>
+              </p>
             </div>
         </form>
       )

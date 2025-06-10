@@ -119,7 +119,7 @@ useEffect(() => {
       return (
         <form onSubmit={handleSubmit}>
             <div className="pageBody">
-            <h1>Registration</h1>
+            <h1>Create New Account</h1>
             <TextInputField label="First name" name="firstName" value={formData.firstName} setFormData={setFormData} />
             <p>{formErrors.firstName}</p>
 
@@ -142,7 +142,6 @@ useEffect(() => {
             <p>{formErrors.verifyPassword}</p>
 
             <Button label="Register" onClick={handleSubmit} />
-            <Button label="Login" onClick={routeChange} />
             </div>
             <ModalWindow showState={showModal} message={message} type={modalType} onClose={() => handleClose()} />
         </form>

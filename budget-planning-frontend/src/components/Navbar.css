@@ -3,7 +3,6 @@ nav ul .active {
 }
 nav{
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background-color: lightcyan;
     position: sticky;
@@ -12,15 +11,16 @@ nav{
 
 nav .title{
     font-size: 3rem;
-    margin: 1rem;
+    padding-left: 0.5rem;
     font-weight: bold;
     color: chocolate;
     text-decoration: none;
-
+    justify-self: left;
 }
 
 nav ul{
      display: flex;
+     margin-left: auto;
 }
 
 nav ul li{
