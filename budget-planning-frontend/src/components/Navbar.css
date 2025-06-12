@@ -3,7 +3,6 @@ nav ul .active {
 }
 nav{
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background-color: lightcyan;
     position: sticky;
@@ -12,15 +11,16 @@ nav{
 
 nav .title{
     font-size: 3rem;
-    margin: 1rem;
+    padding-left: 0.5rem;
     font-weight: bold;
     color: chocolate;
     text-decoration: none;
-
+    justify-self: left;
 }
 
 nav ul{
      display: flex;
+     margin-left: auto;
 }
 
 nav ul li{
@@ -45,24 +45,6 @@ nav ul li a:not(.active):hover{
     height: 10em;
     width: 10em;
     float: left;
-  }
-
-  nav .menu{
-    display: none;
-    position: absolute;
-    top: 0.75rem;
-    right: 0.5rem;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 2.25rem;
-    height: 2rem;
-  }
-
-  nav .menu span{
-    height: 0.4rem;
-    width:100%;
-    background-color: chocolate;
-    border-radius: 0.2rem;
   }
 
   @media(max-width: 480px){

@@ -42,10 +42,7 @@ public class AuthenticationController {
             return null;
         }
         Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            return null;
-        }
-        return user.get();
+        return user.orElse(null);
     }
 
     private static void setUserInSession(HttpSession session, User user) {
@@ -92,9 +89,9 @@ public class AuthenticationController {
                 registerFormDTO.getLastName(),
                 registerFormDTO.getDateOfBirth(),
                 registerFormDTO.getEmail(),
-                registerFormDTO.getUsername(),
-                registerFormDTO.getPassword(),
-                registerFormDTO.getVerifyPassword());
+                registerFormDTO.getUsername());
+
+        newUser.setPassword(registerFormDTO.getPassword());
 
         AccountTypeUtil.determineAccountType(newUser);
 
@@ -122,7 +119,7 @@ public class AuthenticationController {
             response.put("message", "Username does not exist. Please try again");
             return ResponseEntity.badRequest().body(response);
         }
-        if (user != null && loginFormDTO.getPassword().equals(user.getPassword())) {
+        if (user != null && user.isMatchingPassword(loginFormDTO.getPassword())) {
             if (session!= null) {
                 session.removeAttribute("user");
             }

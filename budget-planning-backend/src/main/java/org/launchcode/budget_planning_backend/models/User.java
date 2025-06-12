@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.aop.framework.autoproxy.target.AbstractBeanFactoryBasedTargetSourceCreator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,25 +33,27 @@ public class User extends BaseAbstractEntity{
     @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
     private String username;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
-    protected String password;
+//    @NotBlank(message = "Password is required")
+//    @Size(min = 4, max = 15, message = "Username must be between 4 and 15 characters")
+    private String pwHash;
 
-    @NotBlank(message = "Password is required")
-    private String verifyPassword;
+//    @NotBlank(message = "Password is required")
+//    private String verifyPassword;
 
     private String email;
 
     private AccountType accountType;
 
-    public User(String firstName, String lastName, LocalDate dateOfBirth, String email, String username, String password, String verifyPassword) {
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    public User(String firstName, String lastName, LocalDate dateOfBirth, String email, String username) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.username = username;
-        this.password = password;
-        this.verifyPassword = verifyPassword;
+//        this.pwHash = encoder.encode(password);
+//        this.verifyPassword = verifyPassword;
     }
 
     public User(){}
@@ -87,20 +91,20 @@ public class User extends BaseAbstractEntity{
     }
 
     public String getPassword() {
-        return password;
+        return pwHash;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.pwHash = encoder.encode(password);
     }
 
-    public String getVerifyPassword() {
-        return verifyPassword;
-    }
-
-    public void setVerifyPassword(String verifyPassword) {
-        this.verifyPassword = verifyPassword;
-    }
+//    public String getVerifyPassword() {
+//        return verifyPassword;
+//    }
+//
+//    public void setVerifyPassword(String verifyPassword) {
+//        this.verifyPassword = verifyPassword;
+//    }
 
     public String getEmail() {
         return email;
@@ -137,6 +141,10 @@ public class User extends BaseAbstractEntity{
         this.chores.remove(chore);
     }
 
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -145,8 +153,8 @@ public class User extends BaseAbstractEntity{
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", verifyPassword='" + verifyPassword + '\'' +
+                ", password='" + pwHash + '\'' +
+//                ", verifyPassword='" + verifyPassword + '\'' +
                 ", email='" + email + '\'' +
                 ", accountType=" + accountType +
                 '}';
