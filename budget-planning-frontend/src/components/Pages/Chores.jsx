@@ -5,7 +5,6 @@ import LoginCheck from "../LoginCheck"
 function Chores() {
   return (
     <div>
-      <LoginCheck />
       <ChoreCreationForm />
     </div>
   )

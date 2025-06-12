@@ -5,7 +5,6 @@ import LoginCheck from "../LoginCheck"
 function Groups () {
   return (
     <div>
-        <LoginCheck />
         <GroupsList />
     </div>
   )
