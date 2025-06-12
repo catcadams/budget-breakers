@@ -26,7 +26,10 @@ function Navbar() {
                 <NavLink to="/Chores">Chores</NavLink>
               </li>
               <li>
-                <NavLink to="/Logout"> Logout</NavLink>
+                <NavLink to="/user">Account Center</NavLink>
+              </li>
+              <li>
+                <NavLink to="/Logout">Logout</NavLink>
               </li>
             </ul>
         </nav>

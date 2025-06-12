@@ -26,6 +26,7 @@ import ChoreCompletionPage from "./components/ChoreCompletionPage";
 import AddNewMember from "./components/AddNewMember";
 import LoginNavbar from "./components/LoginNavBar";
 import { Outlet } from "react-router-dom";
+import UserAccount from "./components/UserAccount";
 
 function App() {
   const AppLayout = () => (
@@ -93,6 +94,7 @@ function App() {
             path="/chores/:choreId/congrats"
             element={<ChoreCompletionPage />}
           />
+          <Route path="/user" element={<UserAccount />} />
         </Route>
       </Routes>
     </>

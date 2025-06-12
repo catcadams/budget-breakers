@@ -5,7 +5,6 @@ import LoginCheck from "../LoginCheck.jsx"
 export default function Events() {
   return (
     <div>
-      <LoginCheck />
       <CreateEvent />
     </div>
   )
